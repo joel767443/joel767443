@@ -2,26 +2,47 @@
 
 **{{ title_line }}**
 
-{{ tagline }}
+{{ hero_paragraph }}
+
+### Where I add the most value
+
+{{ hero_value_bullets }}
 
 ---
 
-## Snapshot
+## What I’m looking for
 
-- **Total repositories analyzed**: {{ total_projects }}
-- **Portfolio complexity score**: {{ complexity_score }}
-- **Primary architectures**: {{ primary_architectures_line }}
-- **Top languages**: {{ top_languages_line }}
+{{ what_im_looking_for_section }}
 
 ---
 
-## Technologies
+## Impact highlights
+
+{{ impact_highlights_section }}
+
+---
+
+## Technical profile at a glance
+
+- **Repositories analyzed**: {{ total_projects }}
+- **Architectures used in production projects**: {{ primary_architectures_line }}
+- **Top languages by usage**: {{ top_languages_line }}
+
+{{ snapshot_intro }}
+
+---
+
+## Technologies I work with
+
+{{ technologies_intro }}
 
 {{ technologies_section }}
 
 ---
 
-## Architecture Experience
+## Architecture experience
+
+{{ architecture_intro }}
 
 {{ architecture_paragraph }}
 
@@ -29,10 +50,14 @@
 
 ---
 
-## Skill Graph
+## Skill graph
 
 ![Skills](graphs/skills_chart.png)
 
 {{ skills_caption }}
 
 ---
+
+## How this portfolio is generated
+
+{{ generation_note }}

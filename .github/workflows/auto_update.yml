@@ -22,11 +22,11 @@ jobs:
 
       - run: pip install -r requirements.txt
 
-      - run: python scripts/initial_scan.py
-      - run: python scripts/tech_stack_detector.py
-      - run: python scripts/architecture_detector.py
-      - run: python scripts/repo_summarizer.py
-      - run: python scripts/skill_graph.py
-      - run: python scripts/generate_portfolio.py
-      - run: python scripts/capability_report.py
-      - run: python scripts/update_profile.py
+      # - run: python scripts/initial_scan.py
+      # - run: python scripts/tech_stack_detector.py
+      # - run: python scripts/architecture_detector.py
+      # - run: python scripts/repo_summarizer.py
+      # - run: python scripts/skill_graph.py
+      # - run: python scripts/generate_portfolio.py
+      # - run: python scripts/capability_report.py
+      # - run: python scripts/update_profile.py

@@ -146,25 +146,10 @@ def build_featured_projects_section(projects: List[Dict[str, Any]]) -> str:
         langs = languages_summary(p.get("languages", {}))
 
         if url:
-            lines.append(f"- **[{name}]({url})**  ")
+            lines.append(f"- **[{name}]({url})** – {langs}")
         else:
-            lines.append(f"- **{name}**  ")
-        lines.append(f"  {langs}  ")
+            lines.append(f"- **{name}** – {langs}")
         lines.append(f"  {desc}")
-    return "\n".join(lines)
-
-
-def build_all_projects_section(projects: List[Dict[str, Any]]) -> str:
-    if not projects:
-        return "_No repositories found._"
-    lines = []
-    for p in projects:
-        name = p.get("name", "Unnamed")
-        url = p.get("url", "")
-        if url:
-            lines.append(f"- [{name}]({url})")
-        else:
-            lines.append(f"- {name}")
     return "\n".join(lines)
 
 
@@ -197,7 +182,6 @@ def main() -> None:
     tech_section = build_technologies_section(tech_stack)
     arch_paragraph, arch_list, primary_arch_line = build_architecture_summaries(architecture or {})
     featured_section = build_featured_projects_section(projects)
-    all_projects_section = build_all_projects_section(projects)
     top_langs_line = format_top_languages(tech_stack)
 
     # Simple caption for skills graph
@@ -215,20 +199,80 @@ def main() -> None:
     with template_path.open(encoding="utf-8") as f:
         template = f.read()
 
+    # Build recruiter- and founder-friendly narrative pieces
+    total_repos = total_projects_report or len(projects)
+    hero_paragraph = (
+        "Senior systems architect and full stack engineer focused on AI-native products, "
+        "trading and quantitative tools, and scalable SaaS platforms."
+    )
+    hero_value_bullets = (
+        "- **AI & trading systems**: Python/MQL5 engines, backtesting, and automation.\n"
+        "- **Scalable APIs & backends**: PHP/Laravel, microservices, Docker-based deployments.\n"
+        "- **End-to-end product delivery**: from prototype to production across web, mobile, and cloud."
+    )
+
+    what_im_looking_for_section = (
+        "- Senior backend or full stack roles building AI-powered products or data-heavy systems.\n"
+        "- Early engineering hire or founding engineer roles at product-focused startups.\n"
+        "- Positions where I own architecture decisions and help teams ship reliably to production."
+    )
+
+    counts = architecture.get("counts", {}) if architecture else {}
+    ml_count = counts.get("Machine Learning Systems", 0)
+    api_count = counts.get("API Architecture", 0)
+    micro_count = counts.get("Microservices", 0)
+    impact_lines = [
+        f"- Designed and maintained AI/ML and quantitative trading projects across **{ml_count}** repositories."
+        if ml_count
+        else "- Designed and maintained multiple AI/ML and quantitative trading projects.",
+        f"- Built and integrated REST-style APIs and backend services in **{api_count}**+ codebases using PHP/Laravel, Python, and JavaScript."
+        if api_count
+        else "- Built and integrated REST-style APIs and backend services using PHP/Laravel, Python, and JavaScript.",
+        f"- Applied service-oriented and microservice patterns in **{micro_count}** projects with Dockerized deployments."
+        if micro_count
+        else "- Applied service-oriented and microservice patterns with Dockerized deployments.",
+        f"- Curated and actively maintain a portfolio of **{total_repos}** repositories that showcase production-grade code, automation, and CI/CD."
+        if total_repos
+        else "- Maintain a portfolio of repositories that showcase production-grade code, automation, and CI/CD.",
+    ]
+    impact_highlights_section = "\n".join(impact_lines)
+
+    snapshot_intro = (
+        "These metrics are derived automatically from my GitHub activity and give a quick view "
+        "of where I spend most of my time."
+    )
+    technologies_intro = (
+        "Heavier percentages indicate where I have the deepest hands-on experience; "
+        "PHP, Python, and Swift are my most-used languages."
+    )
+    architecture_intro = (
+        "I design and work with architectures that support real-world constraints like latency, "
+        "throughput, and iterative delivery across ML systems, APIs, and microservices."
+    )
+    generation_note = (
+        "This portfolio is generated from my GitHub repositories using custom Python tooling "
+        "in the `scripts/` folder, combining language stats, architecture detection, and project summaries."
+    )
+
     context = {
         "name": "Yoweli Kachala",
         "title_line": "Senior Systems Architect • Full Stack Engineer",
-        "tagline": "Designing and shipping AI-native systems, distributed backends, and production-ready trading infrastructure across web, mobile, and cloud.",
+        "hero_paragraph": hero_paragraph,
+        "hero_value_bullets": hero_value_bullets,
+        "what_im_looking_for_section": what_im_looking_for_section,
+        "impact_highlights_section": impact_highlights_section,
         "total_projects": str(total_projects_report),
-        "complexity_score": str(complexity_score) if complexity_score else "N/A",
         "primary_architectures_line": primary_arch_line or "Not enough architecture data yet.",
         "top_languages_line": top_langs_line,
+        "snapshot_intro": snapshot_intro,
+        "technologies_intro": technologies_intro,
         "technologies_section": tech_section,
+        "architecture_intro": architecture_intro,
         "architecture_paragraph": arch_paragraph,
         "architecture_list": arch_list,
-        "featured_projects_section": featured_section,
-        "all_projects_section": all_projects_section,
         "skills_caption": skills_caption,
+        "generation_note": generation_note,
+        "featured_projects_section": featured_section,
     }
 
     rendered = render_template(template, context)

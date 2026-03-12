@@ -2,20 +2,46 @@
 
 **Senior Systems Architect • Full Stack Engineer**
 
-Designing and shipping AI-native systems, distributed backends, and production-ready trading infrastructure across web, mobile, and cloud.
+Senior systems architect and full stack engineer focused on AI-native products, trading and quantitative tools, and scalable SaaS platforms.
+
+### Where I add the most value
+
+- **AI & trading systems**: Python/MQL5 engines, backtesting, and automation.
+- **Scalable APIs & backends**: PHP/Laravel, microservices, Docker-based deployments.
+- **End-to-end product delivery**: from prototype to production across web, mobile, and cloud.
 
 ---
 
-## Snapshot
+## What I’m looking for
 
-- **Total repositories analyzed**: 40
-- **Portfolio complexity score**: N/A
-- **Primary architectures**: Machine Learning Systems (25), API Architecture (9), AI-Native Architecture (9)
-- **Top languages**: PHP (23.96%), Python (22.86%), Swift (19.99%), Laravel (7%), Blade (6.85%)
+- Senior backend or full stack roles building AI-powered products or data-heavy systems.
+- Early engineering hire or founding engineer roles at product-focused startups.
+- Positions where I own architecture decisions and help teams ship reliably to production.
 
 ---
 
-## Technologies
+## Impact highlights
+
+- Designed and maintained AI/ML and quantitative trading projects across **25** repositories.
+- Built and integrated REST-style APIs and backend services in **9**+ codebases using PHP/Laravel, Python, and JavaScript.
+- Applied service-oriented and microservice patterns in **4** projects with Dockerized deployments.
+- Curated and actively maintain a portfolio of **40** repositories that showcase production-grade code, automation, and CI/CD.
+
+---
+
+## Technical profile at a glance
+
+- **Repositories analyzed**: 40
+- **Architectures used in production projects**: Machine Learning Systems (25), API Architecture (9), AI-Native Architecture (9)
+- **Top languages by usage**: PHP (23.96%), Python (22.86%), Swift (19.99%), Laravel (7%), Blade (6.85%)
+
+These metrics are derived automatically from my GitHub activity and give a quick view of where I spend most of my time.
+
+---
+
+## Technologies I work with
+
+Heavier percentages indicate where I have the deepest hands-on experience; PHP, Python, and Swift are my most-used languages.
 
 | Technology | Usage |
 |-----------|-------|
@@ -57,7 +83,9 @@ Designing and shipping AI-native systems, distributed backends, and production-r
 
 ---
 
-## Architecture Experience
+## Architecture experience
+
+I design and work with architectures that support real-world constraints like latency, throughput, and iterative delivery across ML systems, APIs, and microservices.
 
 Across 40 repositories, recurring architecture patterns include Machine Learning Systems, API Architecture, AI-Native Architecture.
 
@@ -70,7 +98,7 @@ Across 40 repositories, recurring architecture patterns include Machine Learning
 
 ---
 
-## Skill Graph
+## Skill graph
 
 ![Skills](graphs/skills_chart.png)
 
@@ -78,6 +106,6 @@ _Skill graph highlighting strongest technologies: PHP, Python, Swift._
 
 ---
 
-## How This README Is Generated
+## How this portfolio is generated
 
-This README is generated automatically from analysis data in `data/` and `reports/`, using the scripts in the `scripts/` directory.
+This portfolio is generated from my GitHub repositories using custom Python tooling in the `scripts/` folder, combining language stats, architecture detection, and project summaries.
