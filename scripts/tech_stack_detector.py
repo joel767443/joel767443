@@ -14,47 +14,33 @@ HEADERS = {"Authorization": f"token {TOKEN}"}
 REPOS_JSON = "data/projects.json"
 TECH_STACK_JSON = "data/tech_stack.json"
 
-# Expanded list of frameworks/tools to detect
-FRAMEWORKS = {
-    # PHP frameworks
-    "Laravel": {"file": "composer.json", "keyword": "laravel/framework"},
-    "Symfony": {"file": "composer.json", "keyword": "symfony"},
-    "Yii": {"file": "composer.json", "keyword": "yiisoft"},
-    "CodeIgniter": {"file": "composer.json", "keyword": "codeigniter"},
-    "CakePHP": {"file": "composer.json", "keyword": "cakephp"},
-    "Zend": {"file": "composer.json", "keyword": "zendframework"},
-    "Phalcon": {"file": "composer.json", "keyword": "phalcon"},
-    
-    # Python frameworks
-    "Django": {"file": "requirements.txt", "keyword": "django"},
-    "Flask": {"file": "requirements.txt", "keyword": "flask"},
-    "FastAPI": {"file": "requirements.txt", "keyword": "fastapi"},
-    "Tornado": {"file": "requirements.txt", "keyword": "tornado"},
-    "Pyramid": {"file": "requirements.txt", "keyword": "pyramid"},
-    
-    # JS/Node frameworks
-    "Vue": {"file": "package.json", "keyword": "vue"},
-    "React": {"file": "package.json", "keyword": "react"},
-    "React Native": {"file": "package.json", "keyword": "react-native"},
-    "Angular": {"file": "package.json", "keyword": "angular"},
-    "Next.js": {"file": "package.json", "keyword": "next"},
-    "Nuxt.js": {"file": "package.json", "keyword": "nuxt"},
-    "Express": {"file": "package.json", "keyword": "express"},
-    "NestJS": {"file": "package.json", "keyword": "nestjs"},
-    
-    # Ruby frameworks
-    "Rails": {"file": "Gemfile", "keyword": "rails"},
-    "Sinatra": {"file": "Gemfile", "keyword": "sinatra"},
-    
-    # DevOps / Cloud / DB / tools
-    "Docker": {"file": "docker-compose.yml", "keyword": None},
-    "Kubernetes": {"file": "k8s.yaml", "keyword": None},
-    "PostgreSQL": {"file": ".sql", "keyword": None},
-    "MySQL": {"file": ".sql", "keyword": None},
-    "Redis": {"file": ".conf", "keyword": "redis"},
-    "Terraform": {"file": ".tf", "keyword": None},
-    "Ansible": {"file": ".yml", "keyword": "ansible"},
-}
+
+def _load_frameworks_config() -> dict:
+    """
+    Load frameworks configuration from frameworks.json located next to this script.
+
+    Returns an empty dict if the file is missing or invalid, printing a warning.
+    """
+    script_dir = os.path.dirname(__file__)
+    config_path = os.path.join(script_dir, "frameworks.json")
+
+    try:
+        with open(config_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+            if isinstance(data, dict):
+                return data
+            print(f"Warning: frameworks config at {config_path} is not a JSON object; ignoring.")
+            return {}
+    except FileNotFoundError:
+        print(f"Warning: frameworks config file not found at {config_path}; no frameworks will be detected.")
+        return {}
+    except json.JSONDecodeError as e:
+        print(f"Warning: could not parse frameworks config at {config_path}: {e}")
+        return {}
+
+
+# Expanded list of frameworks/tools to detect, loaded from JSON
+FRAMEWORKS = _load_frameworks_config()
 
 # ------------------------------
 # STEP 1: Load repos

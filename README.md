@@ -4,6 +4,7 @@ This repo contains small utilities to analyze your own GitHub repositories and s
 
 - **`scripts/initial_scan.py`**: Fetches all repositories for the authenticated user, computes per-repo language percentages, prints a global language breakdown, and saves structured data to `data/projects.json`.
 - **`scripts/architecture_detector.py`**: Reads `data/projects.json`, applies simple keyword-based heuristics to infer common architecture patterns across your repos, and writes them to `data/architecture.json`.
+- **`scripts/tech_stack_detector.py`**: Reads `data/projects.json`, queries the GitHub API for repo contents, and combines language usage with detected frameworks/tools into `data/tech_stack.json`. Framework detection rules are configured via `scripts/frameworks.json`.
 
 ### Prerequisites
 
@@ -69,6 +70,21 @@ This will read `data/projects.json`, infer high-level architectures, and save th
 ```bash
 python scripts/architecture_detector.py
 ```
+
+- **Step 3: Detect tech stack (languages + frameworks/tools)**
+
+This will read `data/projects.json`, inspect repo contents via the GitHub API to detect frameworks/tools using the rules in `scripts/frameworks.json`, and save the combined results to `data/tech_stack.json`.
+
+```bash
+python scripts/tech_stack_detector.py
+```
+
+### Extending framework detection
+
+- To add or adjust framework/tool detection rules, edit `scripts/frameworks.json`.
+- Each key is the display name of a framework/tool, and each value is an object with:
+  - `file`: a filename or extension to look for in the repo root (e.g., `package.json`, `composer.json`, `.tf`).
+  - `keyword`: an optional string to search for inside that file (use `null` to only check for file existence).
 
 ### Output
 
