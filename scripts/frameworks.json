@@ -27,5 +27,21 @@
   "MySQL": { "file": ".sql", "keyword": null },
   "Redis": { "file": ".conf", "keyword": "redis" },
   "Terraform": { "file": ".tf", "keyword": null },
-  "Ansible": { "file": ".yml", "keyword": "ansible" }
+  "Ansible": { "file": ".yml", "keyword": "ansible" },
+  "Svelte": { "file": "package.json", "keyword": "svelte" },
+  "SvelteKit": { "file": "package.json", "keyword": "@sveltejs/kit" },
+  "Astro": { "file": "package.json", "keyword": "astro" },
+  "Solid.js": { "file": "package.json", "keyword": "solid-js" },
+  "Qwik": { "file": "package.json", "keyword": "@builder.io/qwik" },
+  "Remix": { "file": "package.json", "keyword": "@remix-run" },
+  "Tailwind CSS": { "file": "package.json", "keyword": "tailwindcss" },
+  "Prisma": { "file": "package.json", "keyword": "prisma" },
+  "Spring Boot": { "file": "pom.xml", "keyword": "spring-boot-starter" },
+  "Quarkus": { "file": "pom.xml", "keyword": "quarkus" },
+  "ASP.NET Core": { "file": "*.csproj", "keyword": "Microsoft.AspNetCore" },
+  "Gin": { "file": "go.mod", "keyword": "github.com/gin-gonic/gin" },
+  "Bun": { "file": "bun.lockb", "keyword": null },
+  "Hono": { "file": "package.json", "keyword": "hono" },
+  "Supabase": { "file": ".env", "keyword": "SUPABASE_" },
+  "Vite": { "file": "package.json", "keyword": "vite" }
 }
