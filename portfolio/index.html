@@ -1,14 +1,842 @@
-
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<title>Developer Portfolio</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Developer Portfolio – Yoweli Kachala</title>
+    <style>
+        :root {
+            --bg: #050816;
+            --bg-alt: #0b1020;
+            --card-bg: #111827;
+            --accent: #22c55e;
+            --accent-soft: rgba(34, 197, 94, 0.15);
+            --accent-2: #38bdf8;
+            --text: #f9fafb;
+            --muted: #9ca3af;
+            --border: #1f2937;
+            --radius-lg: 16px;
+            --radius-md: 10px;
+            --shadow-soft: 0 22px 40px rgba(15, 23, 42, 0.85);
+            --shadow-subtle: 0 12px 30px rgba(15, 23, 42, 0.6);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+            background: radial-gradient(circle at top, #0f172a 0, #020617 45%, #000 100%);
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        main {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 40px 20px 64px;
+        }
+
+        header.hero {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            margin-bottom: 40px;
+        }
+
+        .hero-title-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        h1 {
+            font-size: clamp(2.4rem, 3vw, 2.8rem);
+            letter-spacing: -0.04em;
+            margin: 0;
+        }
+
+        .hero-pill {
+            padding: 6px 12px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, rgba(34, 197, 94, .14), rgba(56, 189, 248, .18));
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            color: var(--muted);
+            white-space: nowrap;
+        }
+
+        .hero-subtitle {
+            max-width: 620px;
+            color: var(--muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 4px;
+        }
+
+        .meta-pill {
+            padding: 4px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.26);
+            font-size: 0.78rem;
+            color: var(--muted);
+            background: rgba(15, 23, 42, 0.9);
+        }
+
+        section {
+            margin-top: 32px;
+            padding: 22px 22px 20px;
+            border-radius: var(--radius-lg);
+            background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.09), transparent 55%),
+                        radial-gradient(circle at top right, rgba(34, 197, 94, 0.12), transparent 55%),
+                        rgba(15, 23, 42, 0.96);
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            box-shadow: var(--shadow-soft);
+        }
+
+        section + section {
+            margin-top: 24px;
+        }
+
+        section header.section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        section h2 {
+            margin: 0;
+            font-size: 1.1rem;
+            letter-spacing: 0.09em;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: #e5e7eb;
+        }
+
+        .section-kicker {
+            font-size: 0.78rem;
+            color: var(--muted);
+        }
+
+        .skill-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .skill-chip {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 10px;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            font-size: 0.8rem;
+            color: var(--muted);
+            background: rgba(15, 23, 42, 0.98);
+            backdrop-filter: blur(18px);
+        }
+
+        .skill-primary {
+            border-color: rgba(34, 197, 94, 0.5);
+            background: linear-gradient(90deg, rgba(34, 197, 94, 0.18), rgba(34, 197, 94, 0.04));
+            color: #bbf7d0;
+        }
+
+        .skill-secondary {
+            border-color: rgba(56, 189, 248, 0.42);
+            background: linear-gradient(90deg, rgba(56, 189, 248, 0.16), rgba(56, 189, 248, 0.03));
+            color: #e0f2fe;
+        }
+
+        .skill-tertiary {
+            opacity: 0.9;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 14px;
+        }
+
+        .project-card {
+            padding: 14px 14px 12px;
+            border-radius: var(--radius-md);
+            background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.08), transparent 60%),
+                        rgba(15, 23, 42, 0.96);
+            border: 1px solid rgba(51, 65, 85, 0.85);
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .project-card header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 6px;
+        }
+
+        .project-card h3 {
+            font-size: 0.98rem;
+            margin: 0;
+        }
+
+        .project-card a {
+            color: #e5e7eb;
+            text-decoration: none;
+        }
+
+        .project-card a:hover {
+            color: var(--accent-2);
+        }
+
+        .badge {
+            padding: 2px 8px;
+            font-size: 0.7rem;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.6);
+            color: var(--muted);
+            white-space: nowrap;
+        }
+
+        .badge-public {
+            border-color: rgba(34, 197, 94, 0.8);
+            color: #a7f3d0;
+        }
+
+        .project-summary {
+            font-size: 0.86rem;
+            color: var(--muted);
+            margin: 4px 0 6px;
+            line-height: 1.5;
+        }
+
+        .project-meta {
+            font-size: 0.78rem;
+            color: #9ca3af;
+            margin: 0;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            margin-top: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.86rem;
+        }
+
+        th, td {
+            padding: 6px 8px;
+            text-align: left;
+        }
+
+        thead tr {
+            background: rgba(15, 23, 42, 0.96);
+        }
+
+        tbody tr:nth-child(even) {
+            background: rgba(15, 23, 42, 0.88);
+        }
+
+        tbody tr:nth-child(odd) {
+            background: rgba(15, 23, 42, 0.72);
+        }
+
+        th {
+            color: #e5e7eb;
+            border-bottom: 1px solid rgba(55, 65, 81, 0.9);
+        }
+
+        td {
+            color: var(--muted);
+        }
+
+        footer {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 0 20px 40px;
+            font-size: 0.78rem;
+            color: var(--muted);
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        footer a {
+            color: var(--accent-2);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 720px) {
+            main {
+                padding-top: 28px;
+            }
+            section {
+                padding: 18px 16px 15px;
+            }
+            .hero-title-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
 </head>
-
 <body>
+    <main>
+        <header class="hero">
+            <div class="hero-title-row">
+                <div>
+                    <div class="hero-pill">AI-Augmented Software Engineer</div>
+                    <h1>Yoweli Kachala</h1>
+                </div>
+            </div>
+            <p class="hero-subtitle">
+                Building AI-native systems, microservices, Laravel applications, and data-driven trading tools.
+                This portfolio is generated directly from my GitHub activity to reflect how I actually ship software.
+            </p>
+            <div class="hero-meta">
+                <span class="meta-pill">Architectures: AI-Native · ML Systems · APIs · Event-Driven</span>
+                <span class="meta-pill">Back end: PHP · Laravel · Microservices</span>
+                <span class="meta-pill">AI/Quant: Python · MQL5 · Automation</span>
+            </div>
+        </header>
 
-<h1>Yoweli Kachala</h1>
+        <section id="skills">
+            <header class="section-header">
+                <h2>TECHNICAL SKILL MAP</h2>
+                <span class="section-kicker">Weighted by code volume across GitHub</span>
+            </header>
+            <div class="skill-grid">
+                <span class="skill-chip skill-primary" title="23.96% of codebase">PHP</span>
+<span class="skill-chip skill-primary" title="22.86% of codebase">Python</span>
+<span class="skill-chip skill-primary" title="19.99% of codebase">Swift</span>
+<span class="skill-chip skill-secondary" title="7% of codebase">Laravel</span>
+<span class="skill-chip skill-secondary" title="6.85% of codebase">Blade</span>
+<span class="skill-chip skill-secondary" title="6.15% of codebase">MQL5</span>
+<span class="skill-chip skill-secondary" title="6% of codebase">Vite</span>
+<span class="skill-chip skill-secondary" title="4.45% of codebase">Vue</span>
+<span class="skill-chip skill-secondary" title="3% of codebase">Docker</span>
+<span class="skill-chip skill-tertiary" title="2.94% of codebase">HTML</span>
+<span class="skill-chip skill-tertiary" title="2.93% of codebase">CSS</span>
+<span class="skill-chip skill-tertiary" title="2.86% of codebase">Java</span>
+<span class="skill-chip skill-tertiary" title="2.85% of codebase">JavaScript</span>
+<span class="skill-chip skill-tertiary" title="2% of codebase">Tailwind CSS</span>
+<span class="skill-chip skill-tertiary" title="1.01% of codebase">SCSS</span>
+<span class="skill-chip skill-tertiary" title="1% of codebase">Symfony</span>
+<span class="skill-chip skill-tertiary" title="1% of codebase">Express</span>
+<span class="skill-chip skill-tertiary" title="1% of codebase">FastAPI</span>
+<span class="skill-chip skill-tertiary" title="1% of codebase">Flask</span>
+<span class="skill-chip skill-tertiary" title="0.87% of codebase">Less</span>
+<span class="skill-chip skill-tertiary" title="0.8% of codebase">Hack</span>
+<span class="skill-chip skill-tertiary" title="0.71% of codebase">TypeScript</span>
+<span class="skill-chip skill-tertiary" title="0.48% of codebase">C++</span>
+<span class="skill-chip skill-tertiary" title="0.42% of codebase">PowerShell</span>
+<span class="skill-chip skill-tertiary" title="0.28% of codebase">Dockerfile</span>
+<span class="skill-chip skill-tertiary" title="0.18% of codebase">Shell</span>
+<span class="skill-chip skill-tertiary" title="0.14% of codebase">Cython</span>
+<span class="skill-chip skill-tertiary" title="0.11% of codebase">Roff</span>
+<span class="skill-chip skill-tertiary" title="0.05% of codebase">CMake</span>
+<span class="skill-chip skill-tertiary" title="0.04% of codebase">Makefile</span>
+<span class="skill-chip skill-tertiary" title="0.04% of codebase">Batchfile</span>
+<span class="skill-chip skill-tertiary" title="0.03% of codebase">C</span>
+<span class="skill-chip skill-tertiary" title="0.0% of codebase">Fortran</span>
+<span class="skill-chip skill-tertiary" title="0.0% of codebase">Meson</span>
+<span class="skill-chip skill-tertiary" title="0.0% of codebase">Smarty</span>
+            </div>
+        </section>
 
-<h2>Projects</h2>
+        <section id="projects">
+            <header class="section-header">
+                <h2>SELECTED PROJECTS</h2>
+                <span class="section-kicker">Real repositories, summarized from GitHub</span>
+            </header>
+            <div class="projects-grid">
+                
+            <article class="project-card">
+                <header>
+                    <h3><a href="https://github.com/joel767443/github-developer-intelligence" target="_blank" rel="noopener noreferrer">github-developer-intelligence</a></h3>
+                    <span class="badge badge-public">Public</span>
+                </header>
+                <p class="project-summary">An AI-powered developer intelligence platform that analyzes GitHub repositories, detects technologies and architecture patterns, summarizes projects, generates skill graphs,…</p>
+                <p class="project-meta"><strong>Tech:</strong> Python (65.69%), HTML (34.31%)</p>
+            </article>
+            
 
-<ul>
-<li><a href="https://github.com/CapeEUC/social-hub">social-hub</a> - No README summary available.</li><li><a href="https://github.com/joel767443/BasApp">BasApp</a> - No README summary available.</li><li><a href="https://github.com/joel767443/BaseApp">BaseApp</a> - No README summary available.</li><li><a href="https://github.com/joel767443/CapeRidaz">CapeRidaz</a> - No README summary available.</li><li><a href="https://github.com/joel767443/CapeRidazAndroid">CapeRidazAndroid</a> - No README summary available.</li><li><a href="https://github.com/joel767443/CapeRidazMobileIOS">CapeRidazMobileIOS</a> - No README summary available.</li><li><a href="https://github.com/joel767443/chek_this">chek_this</a> - No README summary available.</li><li><a href="https://github.com/joel767443/chembe-aes-trust">chembe-aes-trust</a> - No README summary available.</li><li><a href="https://github.com/joel767443/chembe-trust">chembe-trust</a> - No README summary available.</li><li><a href="https://github.com/joel767443/coming-soon">coming-soon</a> - No README summary available.</li><li><a href="https://github.com/joel767443/Emendis-php-assesment">Emendis-php-assesment</a> - No README summary available.</li><li><a href="https://github.com/joel767443/fromWorkAi">fromWorkAi</a> - No README summary available.</li><li><a href="https://github.com/joel767443/github-developer-intelligence">github-developer-intelligence</a> - </li><li><a href="https://github.com/joel767443/handyhire">handyhire</a> - No README summary available.</li><li><a href="https://github.com/joel767443/joel767443">joel767443</a> - # 💫 About Me: I am working on Laravel Scaffolding System for Rapid WebApp Development<br>This project is a Laravel-based scaffolding system aimed at accelerating web application development. It automates the creation of essential components like pages, routes, controllers, models, migrations, factories, and repositories, saving developers significant setup time. The system also facilitates integrations with third-party APIs (payment gateways, accounting systems), and supports authentication and authorization. The goal is to streamline development, reduce errors, and ensure consistency with Laravel's best practices.<br><br>Key Features:<br>Automated Component Generation: Quickly creates pages, routes, controllers, models, and database migrations.<br>Repository Pattern: Ensures clean separation of concerns for better maintainability.<br>API Integrations: Pre-configured for services like Stripe, PayPal, and QuickBooks.<br>Customizable: Easily adapt generated code for specific app needs.<br>Benefits:<br>Faster Development: Speeds up the setup process by automating common tasks.<br>Consistency & Extensibility: Ensures scalable, maintainable code and easy integration of new features.<br>Productivity Boost: Ideal for startups, agencies, and enterprise solutions.<br>Use Cases:<br>Startups can quickly prototype applications.<br>Agencies can rapidly deliver tailored Laravel solutions.<br>Enterprises can simplify complex, large-scale application development.<br>Additional Statements:<br><br>Collaborative Vision: "I am looking to collaborate on projects that have a meaningful impact and make a real difference in people's lives."<br>Learning Progress: "I am currently finalizing a course in AI and Machine Learning."   ## 🌐 Socials:</li><li><a href="https://github.com/joel767443/JoelAI_EA">JoelAI_EA</a> - No README summary available.</li><li><a href="https://github.com/joel767443/laravel-crud-package">laravel-crud-package</a> - No README summary available.</li><li><a href="https://github.com/joel767443/lumen-microservice">lumen-microservice</a> - # Lumen PHP Microservice  [![License](https://img.shields.io/packagist/l/laravel/framework)](https://packagist.org/packages/laravel/lumen-framework)  This microservice is meant to register and authenticate users through API. All interaction is through APIs and it uses RestFull API.</li><li><a href="https://github.com/joel767443/microservice">microservice</a> - No README summary available.</li><li><a href="https://github.com/joel767443/MineAiTrade">MineAiTrade</a> - No README summary available.</li><li><a href="https://github.com/joel767443/mxi">mxi</a> - No README summary available.</li><li><a href="https://github.com/joel767443/organisor">organisor</a> - No README summary available.</li><li><a href="https://github.com/joel767443/pm">pm</a> - No README summary available.</li><li><a href="https://github.com/joel767443/Raccoon">Raccoon</a> - # Setup  `git clone git@github.com:joel767443/Raccoon.git`  `cd Raccoon/front-end`</li><li><a href="https://github.com/joel767443/Ridaz">Ridaz</a> - No README summary available.</li><li><a href="https://github.com/joel767443/RunOptimisation">RunOptimisation</a> - No README summary available.</li><li><a href="https://github.com/joel767443/salert">salert</a> - No README summary available.</li><li><a href="https://github.com/joel767443/test_proj">test_proj</a> - No README summary available.</li><li><a href="https://github.com/joel767443/TradeAi">TradeAi</a> - No README summary available.</li><li><a href="https://github.com/joel767443/TradinAiWorking">TradinAiWorking</a> - No README summary available.</li><li><a href="https://github.com/joel767443/tradingEaAiEnabled">tradingEaAiEnabled</a> - No README summary available.</li><li><a href="https://github.com/joel767443/TrAiFinal">TrAiFinal</a> - No README summary available.</li><li><a href="https://github.com/joel767443/YoDate">YoDate</a> - No README summary available.</li><li><a href="https://github.com/joel767443/yoproj">yoproj</a> - No README summary available.</li><li><a href="https://github.com/joel767443/yow-mini-framewrk">yow-mini-framewrk</a> - # yow-mini-framewrk - Motivated by people who would rather use vanilla PHP than PHP frameworks</li><li><a href="https://github.com/joel767443/YoweliKachalaEaAi">YoweliKachalaEaAi</a> - No README summary available.</li><li><a href="https://github.com/joel767443/YowFitIOS">YowFitIOS</a> - No README summary available.</li><li><a href="https://github.com/joel767443/YowFitMicroservice">YowFitMicroservice</a> - No README summary available.</li><li><a href="https://github.com/joel767443/YowFitWeb">YowFitWeb</a> - # Yo Health: A Comprehensive Health Tracking Application  I am developing a resilient database architecture for **Yo Health**, an innovative health app built on Laravel that aims to monitor and enhance users' overall well-being. The app encompasses diverse features, including calendar scheduling, exercise tracking, recipe management, weight monitoring, and seamless work schedule integration.  ## Table of Contents</li><li><a href="https://github.com/joel767443/zoook">zoook</a> - No README summary available.</li></ul></body></html>
+            <article class="project-card">
+                <header>
+                    <h3><a href="https://github.com/joel767443/joel767443" target="_blank" rel="noopener noreferrer">joel767443</a></h3>
+                    <span class="badge badge-public">Public</span>
+                </header>
+                <p class="project-summary">Config files for my GitHub profile.</p>
+                <p class="project-meta"><strong>Tech:</strong> Unknown</p>
+            </article>
+            
+
+            <article class="project-card">
+                <header>
+                    <h3><a href="https://github.com/joel767443/lumen-microservice" target="_blank" rel="noopener noreferrer">lumen-microservice</a></h3>
+                    <span class="badge badge-public">Public</span>
+                </header>
+                <p class="project-summary">This code will for a microservice that runs in a docker container (using specified ports for Nginx and MySQL to avoid conflict with server setup). This repository is using webflow…</p>
+                <p class="project-meta"><strong>Tech:</strong> PHP (95.72%), Dockerfile (3.24%), Shell (1.04%)</p>
+            </article>
+            
+
+            <article class="project-card">
+                <header>
+                    <h3><a href="https://github.com/joel767443/Raccoon" target="_blank" rel="noopener noreferrer">Raccoon</a></h3>
+                    <span class="badge badge-public">Public</span>
+                </header>
+                <p class="project-summary">`git clone git@github.com:joel767443/Raccoon.git` `cd Raccoon/front-end`</p>
+                <p class="project-meta"><strong>Tech:</strong> Vue (48.42%), PHP (43.73%), CSS (3.93%), JavaScript (3.1%)</p>
+            </article>
+            
+
+            <article class="project-card">
+                <header>
+                    <h3><a href="https://github.com/joel767443/RunOptimisation" target="_blank" rel="noopener noreferrer">RunOptimisation</a></h3>
+                    <span class="badge badge-public">Public</span>
+                </header>
+                <p class="project-summary">No README summary available.</p>
+                <p class="project-meta"><strong>Tech:</strong> MQL5 (75.37%), Python (24.63%)</p>
+            </article>
+            
+
+            <article class="project-card">
+                <header>
+                    <h3><a href="https://github.com/joel767443/yow-mini-framewrk" target="_blank" rel="noopener noreferrer">yow-mini-framewrk</a></h3>
+                    <span class="badge badge-public">Public</span>
+                </header>
+                <p class="project-summary">yow-mini-framewrk - Motivated by people who would rather use vanilla PHP than PHP frameworks</p>
+                <p class="project-meta"><strong>Tech:</strong> PHP (71.99%), Hack (28.01%)</p>
+            </article>
+            
+
+            <article class="project-card">
+                <header>
+                    <h3><a href="https://github.com/joel767443/YowFitIOS" target="_blank" rel="noopener noreferrer">YowFitIOS</a></h3>
+                    <span class="badge badge-public">Public</span>
+                </header>
+                <p class="project-summary">No README summary available.</p>
+                <p class="project-meta"><strong>Tech:</strong> Swift (100.0%)</p>
+            </article>
+            
+
+            <article class="project-card">
+                <header>
+                    <h3><a href="https://github.com/joel767443/YowFitMicroservice" target="_blank" rel="noopener noreferrer">YowFitMicroservice</a></h3>
+                    <span class="badge badge-public">Public</span>
+                </header>
+                <p class="project-summary">No README summary available.</p>
+                <p class="project-meta"><strong>Tech:</strong> Unknown</p>
+            </article>
+            
+
+            <article class="project-card">
+                <header>
+                    <h3><a href="https://github.com/joel767443/YowFitWeb" target="_blank" rel="noopener noreferrer">YowFitWeb</a></h3>
+                    <span class="badge badge-public">Public</span>
+                </header>
+                <p class="project-summary">I am developing a resilient database architecture for **Yo Health**, an innovative health app built on Laravel that aims to monitor and enhance users' overall well-being. The app…</p>
+                <p class="project-meta"><strong>Tech:</strong> JavaScript (67.72%), CSS (12.59%), PHP (11.81%), Blade (7.18%)</p>
+            </article>
+            
+
+            <article class="project-card">
+                <header>
+                    <h3><a href="https://github.com/joel767443/BasApp" target="_blank" rel="noopener noreferrer">BasApp</a></h3>
+                    <span class="badge badge-private">Private</span>
+                </header>
+                <p class="project-summary">No README summary available.</p>
+                <p class="project-meta"><strong>Tech:</strong> Swift (100.0%)</p>
+            </article>
+            
+
+            <article class="project-card">
+                <header>
+                    <h3><a href="https://github.com/joel767443/BaseApp" target="_blank" rel="noopener noreferrer">BaseApp</a></h3>
+                    <span class="badge badge-private">Private</span>
+                </header>
+                <p class="project-summary">No README summary available.</p>
+                <p class="project-meta"><strong>Tech:</strong> Swift (100.0%)</p>
+            </article>
+            
+
+            <article class="project-card">
+                <header>
+                    <h3><a href="https://github.com/joel767443/CapeRidaz" target="_blank" rel="noopener noreferrer">CapeRidaz</a></h3>
+                    <span class="badge badge-private">Private</span>
+                </header>
+                <p class="project-summary">No README summary available.</p>
+                <p class="project-meta"><strong>Tech:</strong> Vue (72.04%), TypeScript (24.4%), HTML (3.16%), JavaScript (0.23%)</p>
+            </article>
+            
+
+            <article class="project-card">
+                <header>
+                    <h3><a href="https://github.com/joel767443/CapeRidazAndroid" target="_blank" rel="noopener noreferrer">CapeRidazAndroid</a></h3>
+                    <span class="badge badge-private">Private</span>
+                </header>
+                <p class="project-summary">No README summary available.</p>
+                <p class="project-meta"><strong>Tech:</strong> Java (100.0%)</p>
+            </article>
+            
+
+            <article class="project-card">
+                <header>
+                    <h3><a href="https://github.com/joel767443/CapeRidazMobileIOS" target="_blank" rel="noopener noreferrer">CapeRidazMobileIOS</a></h3>
+                    <span class="badge badge-private">Private</span>
+                </header>
+                <p class="project-summary">No README summary available.</p>
+                <p class="project-meta"><strong>Tech:</strong> Swift (99.64%), TypeScript (0.36%)</p>
+            </article>
+            
+
+            <article class="project-card">
+                <header>
+                    <h3><a href="https://github.com/joel767443/chek_this" target="_blank" rel="noopener noreferrer">chek_this</a></h3>
+                    <span class="badge badge-private">Private</span>
+                </header>
+                <p class="project-summary">No README summary available.</p>
+                <p class="project-meta"><strong>Tech:</strong> Python (100.0%)</p>
+            </article>
+            
+
+            <article class="project-card">
+                <header>
+                    <h3><a href="https://github.com/joel767443/chembe-aes-trust" target="_blank" rel="noopener noreferrer">chembe-aes-trust</a></h3>
+                    <span class="badge badge-private">Private</span>
+                </header>
+                <p class="project-summary">No README summary available.</p>
+                <p class="project-meta"><strong>Tech:</strong> HTML (62.33%), CSS (30.42%), JavaScript (5.82%), PHP (1.43%)</p>
+            </article>
+            
+
+            <article class="project-card">
+                <header>
+                    <h3><a href="https://github.com/joel767443/chembe-trust" target="_blank" rel="noopener noreferrer">chembe-trust</a></h3>
+                    <span class="badge badge-private">Private</span>
+                </header>
+                <p class="project-summary">No README summary available.</p>
+                <p class="project-meta"><strong>Tech:</strong> PHP (47.97%), Blade (29.49%), CSS (18.3%), JavaScript (3.55%)</p>
+            </article>
+            
+
+            <article class="project-card">
+                <header>
+                    <h3><a href="https://github.com/joel767443/coming-soon" target="_blank" rel="noopener noreferrer">coming-soon</a></h3>
+                    <span class="badge badge-private">Private</span>
+                </header>
+                <p class="project-summary">No README summary available.</p>
+                <p class="project-meta"><strong>Tech:</strong> CSS (36.88%), SCSS (30.42%), Less (30.03%), HTML (2.13%)</p>
+            </article>
+            
+
+            <article class="project-card">
+                <header>
+                    <h3><a href="https://github.com/joel767443/Emendis-php-assesment" target="_blank" rel="noopener noreferrer">Emendis-php-assesment</a></h3>
+                    <span class="badge badge-private">Private</span>
+                </header>
+                <p class="project-summary">No README summary available.</p>
+                <p class="project-meta"><strong>Tech:</strong> PHP (100.0%)</p>
+            </article>
+            
+
+            <article class="project-card">
+                <header>
+                    <h3><a href="https://github.com/joel767443/fromWorkAi" target="_blank" rel="noopener noreferrer">fromWorkAi</a></h3>
+                    <span class="badge badge-private">Private</span>
+                </header>
+                <p class="project-summary">No README summary available.</p>
+                <p class="project-meta"><strong>Tech:</strong> Python (69.07%), MQL5 (30.93%)</p>
+            </article>
+            
+
+            <article class="project-card">
+                <header>
+                    <h3><a href="https://github.com/joel767443/handyhire" target="_blank" rel="noopener noreferrer">handyhire</a></h3>
+                    <span class="badge badge-private">Private</span>
+                </header>
+                <p class="project-summary">No README summary available.</p>
+                <p class="project-meta"><strong>Tech:</strong> PHP (69.65%), Blade (20.51%), JavaScript (8.93%), Vue (0.45%)</p>
+            </article>
+            
+
+            <article class="project-card">
+                <header>
+                    <h3><a href="https://github.com/joel767443/JoelAI_EA" target="_blank" rel="noopener noreferrer">JoelAI_EA</a></h3>
+                    <span class="badge badge-private">Private</span>
+                </header>
+                <p class="project-summary">No README summary available.</p>
+                <p class="project-meta"><strong>Tech:</strong> Python (100.0%)</p>
+            </article>
+            
+
+            <article class="project-card">
+                <header>
+                    <h3><a href="https://github.com/joel767443/laravel-crud-package" target="_blank" rel="noopener noreferrer">laravel-crud-package</a></h3>
+                    <span class="badge badge-private">Private</span>
+                </header>
+                <p class="project-summary">No README summary available.</p>
+                <p class="project-meta"><strong>Tech:</strong> PHP (91.75%), Blade (8.25%)</p>
+            </article>
+            
+
+            <article class="project-card">
+                <header>
+                    <h3><a href="https://github.com/joel767443/microservice" target="_blank" rel="noopener noreferrer">microservice</a></h3>
+                    <span class="badge badge-private">Private</span>
+                </header>
+                <p class="project-summary">No README summary available.</p>
+                <p class="project-meta"><strong>Tech:</strong> PHP (93.94%), Dockerfile (6.06%)</p>
+            </article>
+            
+
+            <article class="project-card">
+                <header>
+                    <h3><a href="https://github.com/joel767443/MineAiTrade" target="_blank" rel="noopener noreferrer">MineAiTrade</a></h3>
+                    <span class="badge badge-private">Private</span>
+                </header>
+                <p class="project-summary">No README summary available.</p>
+                <p class="project-meta"><strong>Tech:</strong> Python (88.49%), C++ (5.42%), Cython (5.06%), C (0.9%)</p>
+            </article>
+            
+
+            <article class="project-card">
+                <header>
+                    <h3><a href="https://github.com/joel767443/mxi" target="_blank" rel="noopener noreferrer">mxi</a></h3>
+                    <span class="badge badge-private">Private</span>
+                </header>
+                <p class="project-summary">No README summary available.</p>
+                <p class="project-meta"><strong>Tech:</strong> Python (76.11%), MQL5 (23.89%)</p>
+            </article>
+            
+
+            <article class="project-card">
+                <header>
+                    <h3><a href="https://github.com/joel767443/organisor" target="_blank" rel="noopener noreferrer">organisor</a></h3>
+                    <span class="badge badge-private">Private</span>
+                </header>
+                <p class="project-summary">No README summary available.</p>
+                <p class="project-meta"><strong>Tech:</strong> Swift (100.0%)</p>
+            </article>
+            
+
+            <article class="project-card">
+                <header>
+                    <h3><a href="https://github.com/joel767443/pm" target="_blank" rel="noopener noreferrer">pm</a></h3>
+                    <span class="badge badge-private">Private</span>
+                </header>
+                <p class="project-summary">No README summary available.</p>
+                <p class="project-meta"><strong>Tech:</strong> PHP (64.77%), Blade (34.73%), JavaScript (0.26%), SCSS (0.23%)</p>
+            </article>
+            
+
+            <article class="project-card">
+                <header>
+                    <h3><a href="https://github.com/joel767443/Ridaz" target="_blank" rel="noopener noreferrer">Ridaz</a></h3>
+                    <span class="badge badge-private">Private</span>
+                </header>
+                <p class="project-summary">No README summary available.</p>
+                <p class="project-meta"><strong>Tech:</strong> Swift (100.0%)</p>
+            </article>
+            
+
+            <article class="project-card">
+                <header>
+                    <h3><a href="https://github.com/joel767443/salert" target="_blank" rel="noopener noreferrer">salert</a></h3>
+                    <span class="badge badge-private">Private</span>
+                </header>
+                <p class="project-summary">No README summary available.</p>
+                <p class="project-meta"><strong>Tech:</strong> PHP (57.28%), Blade (29.67%), JavaScript (8.67%), SCSS (4.38%)</p>
+            </article>
+            
+
+            <article class="project-card">
+                <header>
+                    <h3><a href="https://github.com/CapeEUC/social-hub" target="_blank" rel="noopener noreferrer">social-hub</a></h3>
+                    <span class="badge badge-private">Private</span>
+                </header>
+                <p class="project-summary">My all the was social app</p>
+                <p class="project-meta"><strong>Tech:</strong> PHP (50.66%), Blade (48.29%), JavaScript (0.78%), SCSS (0.23%)</p>
+            </article>
+            
+
+            <article class="project-card">
+                <header>
+                    <h3><a href="https://github.com/joel767443/test_proj" target="_blank" rel="noopener noreferrer">test_proj</a></h3>
+                    <span class="badge badge-private">Private</span>
+                </header>
+                <p class="project-summary">No README summary available.</p>
+                <p class="project-meta"><strong>Tech:</strong> Unknown</p>
+            </article>
+            
+
+            <article class="project-card">
+                <header>
+                    <h3><a href="https://github.com/joel767443/TradeAi" target="_blank" rel="noopener noreferrer">TradeAi</a></h3>
+                    <span class="badge badge-private">Private</span>
+                </header>
+                <p class="project-summary">No README summary available.</p>
+                <p class="project-meta"><strong>Tech:</strong> Python (67.19%), MQL5 (16.01%), C++ (11.41%), Shell (2.34%)</p>
+            </article>
+            
+
+            <article class="project-card">
+                <header>
+                    <h3><a href="https://github.com/joel767443/TradinAiWorking" target="_blank" rel="noopener noreferrer">TradinAiWorking</a></h3>
+                    <span class="badge badge-private">Private</span>
+                </header>
+                <p class="project-summary">No README summary available.</p>
+                <p class="project-meta"><strong>Tech:</strong> Unknown</p>
+            </article>
+            
+
+            <article class="project-card">
+                <header>
+                    <h3><a href="https://github.com/joel767443/tradingEaAiEnabled" target="_blank" rel="noopener noreferrer">tradingEaAiEnabled</a></h3>
+                    <span class="badge badge-private">Private</span>
+                </header>
+                <p class="project-summary">No README summary available.</p>
+                <p class="project-meta"><strong>Tech:</strong> Python (56.13%), MQL5 (22.29%), PowerShell (14.66%), Roff (3.8%)</p>
+            </article>
+            
+
+            <article class="project-card">
+                <header>
+                    <h3><a href="https://github.com/joel767443/TrAiFinal" target="_blank" rel="noopener noreferrer">TrAiFinal</a></h3>
+                    <span class="badge badge-private">Private</span>
+                </header>
+                <p class="project-summary">No README summary available.</p>
+                <p class="project-meta"><strong>Tech:</strong> Python (63.21%), MQL5 (36.36%), Batchfile (0.43%)</p>
+            </article>
+            
+
+            <article class="project-card">
+                <header>
+                    <h3><a href="https://github.com/joel767443/YoDate" target="_blank" rel="noopener noreferrer">YoDate</a></h3>
+                    <span class="badge badge-private">Private</span>
+                </header>
+                <p class="project-summary">No README summary available.</p>
+                <p class="project-meta"><strong>Tech:</strong> Swift (100.0%)</p>
+            </article>
+            
+
+            <article class="project-card">
+                <header>
+                    <h3><a href="https://github.com/joel767443/yoproj" target="_blank" rel="noopener noreferrer">yoproj</a></h3>
+                    <span class="badge badge-private">Private</span>
+                </header>
+                <p class="project-summary">No README summary available.</p>
+                <p class="project-meta"><strong>Tech:</strong> Blade (61.5%), PHP (37.94%), CSS (0.29%), JavaScript (0.26%)</p>
+            </article>
+            
+
+            <article class="project-card">
+                <header>
+                    <h3><a href="https://github.com/joel767443/YoweliKachalaEaAi" target="_blank" rel="noopener noreferrer">YoweliKachalaEaAi</a></h3>
+                    <span class="badge badge-private">Private</span>
+                </header>
+                <p class="project-summary">No README summary available.</p>
+                <p class="project-meta"><strong>Tech:</strong> Python (89.66%), MQL5 (10.34%)</p>
+            </article>
+            
+
+            <article class="project-card">
+                <header>
+                    <h3><a href="https://github.com/joel767443/zoook" target="_blank" rel="noopener noreferrer">zoook</a></h3>
+                    <span class="badge badge-private">Private</span>
+                </header>
+                <p class="project-summary">No README summary available.</p>
+                <p class="project-meta"><strong>Tech:</strong> Unknown</p>
+            </article>
+            
+            </div>
+        </section>
+
+        <section id="architecture">
+            <header class="section-header">
+                <h2>ARCHITECTURE FOOTPRINT</h2>
+                <span class="section-kicker">Inferred patterns detected across repositories</span>
+            </header>
+            
+    <p>Detected across 40 repositories.</p>
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>Architecture</th>
+                    <th>Repos</th>
+                    <th>Share</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            <tr>
+                <td>Machine Learning Systems</td>
+                <td>25</td>
+                <td>62.5%</td>
+            </tr>
+            
+            <tr>
+                <td>API Architecture</td>
+                <td>9</td>
+                <td>22.5%</td>
+            </tr>
+            
+            <tr>
+                <td>AI-Native Architecture</td>
+                <td>9</td>
+                <td>22.5%</td>
+            </tr>
+            
+            <tr>
+                <td>Event-Driven Architecture</td>
+                <td>8</td>
+                <td>20.0%</td>
+            </tr>
+            
+            <tr>
+                <td>Microservices</td>
+                <td>4</td>
+                <td>10.0%</td>
+            </tr>
+            
+            <tr>
+                <td>Serverless Architecture</td>
+                <td>1</td>
+                <td>2.5%</td>
+            </tr>
+            
+            </tbody>
+        </table>
+    </div>
+    
+        </section>
+    </main>
+
+    <footer>
+        <span>Generated automatically by <code>github-developer-intelligence</code>.</span>
+        <span>Source: <a href="https://github.com/joel767443/github-developer-intelligence" target="_blank" rel="noopener noreferrer">GitHub</a></span>
+    </footer>
+</body>
+</html>
