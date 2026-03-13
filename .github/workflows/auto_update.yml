@@ -20,7 +20,7 @@ jobs:
         with:
           python-version: 3.11
 
-      - run: pip install -r requirements.txt
+      #- run: pip install -r requirements.txt
 
       # - run: python scripts/initial_scan.py
       # - run: python scripts/tech_stack_detector.py
