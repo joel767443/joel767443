@@ -1,117 +1,64 @@
-## Yoweli Kachala
 
-**Senior Systems Architect • Full Stack Engineer**
+# Yoweli Kachala
 
-Senior systems architect and full stack engineer focused on AI-native products, trading and quantitative tools, and scalable SaaS platforms.
+Senior Systems Architect | Full Stack Engineer
 
-### Where I add the most value
+## Technologies
 
-- **AI & trading systems**: Python/MQL5 engines, backtesting, and automation.
-- **Scalable APIs & backends**: PHP/Laravel, microservices, Docker-based deployments.
-- **End-to-end product delivery**: from prototype to production across web, mobile, and cloud.
+PHP • Python • Swift • Laravel • Blade • Vue • MQL5 • Vite • Java • HTML • Symfony • Docker • Tailwind CSS • React • Express • Flask • FastAPI • JavaScript • Hack • TypeScript • CSS • PowerShell • SCSS • C++ • Dockerfile • Shell • Less • Roff • CMake • Makefile • Batchfile • Stylus
 
----
+## Projects
 
-## What I’m looking for
+- [social-hub](https://github.com/CapeEUC/social-hub)
+- [alertforge-messaging-engine](https://github.com/joel767443/alertforge-messaging-engine)
+- [cape-euc](https://github.com/joel767443/cape-euc)
+- [caperidaz-android](https://github.com/joel767443/caperidaz-android)
+- [caperidaz-base-ios](https://github.com/joel767443/caperidaz-base-ios)
+- [caperidaz-ios](https://github.com/joel767443/caperidaz-ios)
+- [caperidaz-web](https://github.com/joel767443/caperidaz-web)
+- [chembe-equipment-loans](https://github.com/joel767443/chembe-equipment-loans)
+- [chembe-trust](https://github.com/joel767443/chembe-trust)
+- [cnn-lstm-forex-optimiser](https://github.com/joel767443/cnn-lstm-forex-optimiser)
+- [corporate-website-laravel](https://github.com/joel767443/corporate-website-laravel)
+- [emendis-php-assessment](https://github.com/joel767443/emendis-php-assessment)
+- [eugene-property-management](https://github.com/joel767443/eugene-property-management)
+- [eurusd-lstm-attention-ea](https://github.com/joel767443/eurusd-lstm-attention-ea)
+- [finpulse-billing-engine](https://github.com/joel767443/finpulse-billing-engine)
+- [fleetpulse-realtime-tracker](https://github.com/joel767443/fleetpulse-realtime-tracker)
+- [flx-transport-engine](https://github.com/joel767443/flx-transport-engine)
+- [forex-multi-timeframe-predictor](https://github.com/joel767443/forex-multi-timeframe-predictor)
+- [github-developer-intelligence](https://github.com/joel767443/github-developer-intelligence)
+- [github-profile-readme](https://github.com/joel767443/github-profile-readme)
+- [govpayroll-enterprise-system](https://github.com/joel767443/govpayroll-enterprise-system)
+- [handyhire-marketplace](https://github.com/joel767443/handyhire-marketplace)
+- [joai-ml-trading-optimiser](https://github.com/joel767443/joai-ml-trading-optimiser)
+- [joelai-mt5-trading-ea](https://github.com/joel767443/joelai-mt5-trading-ea)
+- [laravel-project-automator](https://github.com/joel767443/laravel-project-automator)
+- [laravel-scaffolding-package](https://github.com/joel767443/laravel-scaffolding-package)
+- [lstm-gru-attention-forex-model](https://github.com/joel767443/lstm-gru-attention-forex-model)
+- [lstm-mt5-trading-bot](https://github.com/joel767443/lstm-mt5-trading-bot)
+- [lumen-code-generator](https://github.com/joel767443/lumen-code-generator)
+- [lumen-microservice](https://github.com/joel767443/lumen-microservice)
+- [medisync-health-api](https://github.com/joel767443/medisync-health-api)
+- [mineai-eurusd-trader](https://github.com/joel767443/mineai-eurusd-trader)
+- [my-transport](https://github.com/joel767443/my-transport)
+- [orderflow-microservices](https://github.com/joel767443/orderflow-microservices)
+- [organisor-macos](https://github.com/joel767443/organisor-macos)
+- [portfolio-website](https://github.com/joel767443/portfolio-website)
+- [predictledger-financial-ml](https://github.com/joel767443/predictledger-financial-ml)
+- [raccoon-php-vue-crud](https://github.com/joel767443/raccoon-php-vue-crud)
+- [ridaz-cycling-ios](https://github.com/joel767443/ridaz-cycling-ios)
+- [schoolalert-management](https://github.com/joel767443/schoolalert-management)
+- [sm-orb-multicurrency-trader](https://github.com/joel767443/sm-orb-multicurrency-trader)
+- [swiftui-card-template](https://github.com/joel767443/swiftui-card-template)
+- [tenanthub-saas-engine](https://github.com/joel767443/tenanthub-saas-engine)
+- [tradeai-gru-forex-system](https://github.com/joel767443/tradeai-gru-forex-system)
+- [vitatrack-ios](https://github.com/joel767443/vitatrack-ios)
+- [yodate-ios](https://github.com/joel767443/yodate-ios)
+- [yofit-ios](https://github.com/joel767443/yofit-ios)
+- [yow-php-mini-framework](https://github.com/joel767443/yow-php-mini-framework)
 
-- Senior backend or full stack roles building AI-powered products or data-heavy systems.
-- Early engineering hire or founding engineer roles at product-focused startups.
-- Positions where I own architecture decisions and help teams ship reliably to production.
 
----
-
-## Impact highlights
-
-- Designed and maintained AI/ML and quantitative trading projects across **25** repositories.
-- Built and integrated REST-style APIs and backend services in **9**+ codebases using PHP/Laravel, Python, and JavaScript.
-- Applied service-oriented and microservice patterns in **4** projects with Dockerized deployments.
-- Curated and actively maintain a portfolio of **40** repositories that showcase production-grade code, automation, and CI/CD.
-
----
-
-## From my CV
-
-{{ cv_summary_section }}
-
----
-
-## Technical profile at a glance
-
-- **Repositories analyzed**: 40
-- **Architectures used in production projects**: Machine Learning Systems (25), AI-Native Architecture (9), API Architecture (9)
-- **Top languages by usage**: PHP (23.96%), Python (22.58%), Swift (19.99%), Laravel (7%), Blade (6.85%)
-
-These metrics are derived automatically from my GitHub activity and give a quick view of where I spend most of my time.
-
----
-
-## Technologies I work with
-
-Heavier percentages indicate where I have the deepest hands-on experience; PHP, Python, and Swift are my most-used languages.
-
-| Technology | Usage |
-|-----------|-------|
-| PHP | 23.96% |
-| Python | 22.58% |
-| Swift | 19.99% |
-| Laravel | 7% |
-| Blade | 6.85% |
-| MQL5 | 6.15% |
-| Vite | 6% |
-| Vue | 4.45% |
-| HTML | 3.21% |
-| Docker | 3% |
-| CSS | 2.93% |
-| Java | 2.86% |
-| JavaScript | 2.85% |
-| Tailwind CSS | 2% |
-| SCSS | 1.01% |
-| Symfony | 1% |
-| Express | 1% |
-| FastAPI | 1% |
-| Flask | 1% |
-| Less | 0.87% |
-| Hack | 0.8% |
-| TypeScript | 0.71% |
-| C++ | 0.48% |
-| PowerShell | 0.42% |
-| Dockerfile | 0.28% |
-| Shell | 0.18% |
-| Cython | 0.14% |
-| Roff | 0.11% |
-| CMake | 0.05% |
-| Makefile | 0.04% |
-| Batchfile | 0.04% |
-| C | 0.03% |
-| Fortran | 0.0% |
-| Meson | 0.0% |
-| Smarty | 0.0% |
-
----
-
-## Architecture experience
-
-I design and work with architectures that support real-world constraints like latency, throughput, and iterative delivery across ML systems, APIs, and microservices.
-
-Across 40 repositories, recurring architecture patterns include Machine Learning Systems, AI-Native Architecture, API Architecture.
-
-- **Machine Learning Systems**: 25 repos
-- **AI-Native Architecture**: 9 repos
-- **API Architecture**: 9 repos
-- **Event-Driven Architecture**: 8 repos
-- **Microservices**: 4 repos
-- **Serverless Architecture**: 1 repos
-
----
-
-## Skill graph
+## Skill Graph
 
 ![Skills](graphs/skills_chart.png)
-
-_Skill graph highlighting strongest technologies: PHP, Python, Swift._
-
----
-
-## How this portfolio is generated
-
-This portfolio is generated from my GitHub repositories using custom Python tooling in the `scripts/` folder, combining language stats, architecture detection, and project summaries.
