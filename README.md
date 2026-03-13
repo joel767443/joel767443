@@ -29,11 +29,17 @@ Senior systems architect and full stack engineer focused on AI-native products, 
 
 ---
 
+## From my CV
+
+{{ cv_summary_section }}
+
+---
+
 ## Technical profile at a glance
 
 - **Repositories analyzed**: 40
-- **Architectures used in production projects**: Machine Learning Systems (25), API Architecture (9), AI-Native Architecture (9)
-- **Top languages by usage**: PHP (23.96%), Python (22.86%), Swift (19.99%), Laravel (7%), Blade (6.85%)
+- **Architectures used in production projects**: Machine Learning Systems (25), AI-Native Architecture (9), API Architecture (9)
+- **Top languages by usage**: PHP (23.96%), Python (22.58%), Swift (19.99%), Laravel (7%), Blade (6.85%)
 
 These metrics are derived automatically from my GitHub activity and give a quick view of where I spend most of my time.
 
@@ -46,15 +52,15 @@ Heavier percentages indicate where I have the deepest hands-on experience; PHP, 
 | Technology | Usage |
 |-----------|-------|
 | PHP | 23.96% |
-| Python | 22.86% |
+| Python | 22.58% |
 | Swift | 19.99% |
 | Laravel | 7% |
 | Blade | 6.85% |
 | MQL5 | 6.15% |
 | Vite | 6% |
 | Vue | 4.45% |
+| HTML | 3.21% |
 | Docker | 3% |
-| HTML | 2.94% |
 | CSS | 2.93% |
 | Java | 2.86% |
 | JavaScript | 2.85% |
@@ -87,11 +93,11 @@ Heavier percentages indicate where I have the deepest hands-on experience; PHP, 
 
 I design and work with architectures that support real-world constraints like latency, throughput, and iterative delivery across ML systems, APIs, and microservices.
 
-Across 40 repositories, recurring architecture patterns include Machine Learning Systems, API Architecture, AI-Native Architecture.
+Across 40 repositories, recurring architecture patterns include Machine Learning Systems, AI-Native Architecture, API Architecture.
 
 - **Machine Learning Systems**: 25 repos
-- **API Architecture**: 9 repos
 - **AI-Native Architecture**: 9 repos
+- **API Architecture**: 9 repos
 - **Event-Driven Architecture**: 8 repos
 - **Microservices**: 4 repos
 - **Serverless Architecture**: 1 repos

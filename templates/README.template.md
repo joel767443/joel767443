@@ -22,6 +22,12 @@
 
 ---
 
+## From my CV
+
+{{ cv_summary_section }}
+
+---
+
 ## Technical profile at a glance
 
 - **Repositories analyzed**: {{ total_projects }}
