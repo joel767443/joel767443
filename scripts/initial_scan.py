@@ -1,7 +1,10 @@
-import requests
+import base64
 import json
 import os
+
+import requests
 from dotenv import load_dotenv
+
 
 load_dotenv()
 
@@ -10,6 +13,32 @@ TOKEN = os.getenv("GITHUB_TOKEN")
 headers = {
     "Authorization": f"token {TOKEN}"
 }
+
+
+def get_readme_summary(owner: str, repo_name: str) -> str:
+    if not TOKEN:
+        # If we don't have a token, still try unauthenticated (may fail on private repos).
+        readme_headers = {}
+    else:
+        readme_headers = headers
+
+    url = f"https://api.github.com/repos/{owner}/{repo_name}/readme"
+    try:
+        response = requests.get(url, headers=readme_headers)
+    except requests.RequestException:
+        return "No README summary available."
+
+    if response.status_code != 200:
+        return "No README summary available."
+
+    try:
+        content = base64.b64decode(response.json().get("content", "")).decode()
+    except Exception:
+        return "No README summary available."
+
+    summary_lines = content.split("\n")[0:5]
+    return " ".join(summary_lines) if summary_lines else "No README summary available."
+
 
 repos = []
 page = 1
@@ -42,17 +71,22 @@ for repo in repos:
                 language_percentages[lang] = pct
                 global_language_bytes[lang] = global_language_bytes.get(lang, 0) + bytes_count
 
+    owner = repo["owner"]["login"]
+    repo_name = repo["name"]
+    summary = get_readme_summary(owner, repo_name)
+
     project = {
-        "name": repo["name"],
+        "name": repo_name,
         "url": repo["html_url"],
         "languages": language_percentages,  # Only non-zero percentages
         "description": repo["description"],
-        "private": repo["private"]
+        "private": repo["private"],
+        "summary": summary,
     }
 
     projects.append(project)
 
-# Save per-repo projects with language percentages
+# Save per-repo projects with language percentages and README summaries
 os.makedirs("data", exist_ok=True)
 with open("data/projects.json", "w") as f:
     json.dump(projects, f, indent=4)
