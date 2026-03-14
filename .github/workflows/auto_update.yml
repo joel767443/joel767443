@@ -12,21 +12,31 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    env:
+      GITHUB_TOKEN: ${{ secrets.API_TOKEN_GITHUB }}
+
     steps:
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.API_TOKEN_GITHUB }}
 
       - uses: actions/setup-python@v4
         with:
           python-version: 3.11
 
-      #- run: pip install -r requirements.txt
+      - run: pip install -r requirements.txt
 
-      # - run: python scripts/initial_scan.py
-      # - run: python scripts/tech_stack_detector.py
-      # - run: python scripts/architecture_detector.py
-      # - run: python scripts/repo_summarizer.py
-      # - run: python scripts/skill_graph.py
-      # - run: python scripts/generate_portfolio.py
-      # - run: python scripts/capability_report.py
-      # - run: python scripts/update_profile.py
+      - run: python scripts/initial_scan.py
+      - run: python scripts/tech_stack_detector.py
+      - run: python scripts/architecture_detector.py
+      - run: python scripts/generate_portfolio.py
+      - run: python scripts/generate_site.py
+      - run: python scripts/generate_readme.py
+
+      - name: Commit and push generated site and README
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md site/site.html portfolio/README.md
+          git diff --staged --quiet || (git commit -m "CI: regenerate site and README" && git push)
