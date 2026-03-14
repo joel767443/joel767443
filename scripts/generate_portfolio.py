@@ -463,6 +463,15 @@ def generate_html(projects, tech_stack, arch_data, cv_data, skill_categories):
             white-space: nowrap;
         }}
 
+        .hero-headline {{
+            margin: 0.5rem 0 0;
+            font-size: 1.05rem;
+            font-weight: 500;
+            letter-spacing: -0.02em;
+            color: var(--muted);
+            line-height: 1.4;
+        }}
+
         .hero-subtitle {{
             max-width: 1300px;
             color: var(--muted);
@@ -929,8 +938,8 @@ def generate_html(projects, tech_stack, arch_data, cv_data, skill_categories):
         <header class="hero">
             <div class="hero-title-row">
                 <div>
-                    <div class="hero-pill">{html.escape(hero_pill)}</div>
                     <h1>{hero_name}</h1>
+                    <p class="hero-headline">{html.escape(hero_pill)}</p>
                 </div>
             </div>
             <div class="hero-subtitle">

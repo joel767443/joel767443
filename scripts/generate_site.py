@@ -484,7 +484,7 @@ def main() -> None:
         "resume_url": "cv.pdf",
         "github_url": "#",
         "linkedin_url": "#",
-        "image_url": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face",
+        "image_url": "img/me.jpeg",
         "email": (cv_data.get("email") or "").strip() or "your@email.com",
         "phone": (cv_data.get("mobile_number") or cv_data.get("phone") or "").strip() or "—",
         "location": "Cape Town, South Africa",
