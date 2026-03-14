@@ -45,8 +45,64 @@ def _e(s: str) -> str:
     return html_module.escape(s) if s else ""
 
 
+# Canonical casing for tech/product keywords (lowercase key -> display form)
+TECH_KEYWORDS = {
+    "php": "PHP",
+    "html": "HTML",
+    "css": "CSS",
+    "sql": "SQL",
+    "json": "JSON",
+    "xml": "XML",
+    "api": "API",
+    "rest": "REST",
+    "graphql": "GraphQL",
+    "javascript": "JavaScript",
+    "typescript": "TypeScript",
+    "node": "Node.js",
+    "nodejs": "Node.js",
+    "react": "React",
+    "vue": "Vue",
+    "angular": "Angular",
+    "nextjs": "Next.js",
+    "nuxt": "Nuxt",
+    "laravel": "Laravel",
+    "django": "Django",
+    "rails": "Rails",
+    "express": "Express",
+    "fastapi": "FastAPI",
+    "docker": "Docker",
+    "kubernetes": "Kubernetes",
+    "terraform": "Terraform",
+    "aws": "AWS",
+    "gcp": "GCP",
+    "ios": "iOS",
+    "android": "Android",
+    "swift": "Swift",
+    "kotlin": "Kotlin",
+    "python": "Python",
+    "java": "Java",
+    "csharp": "C#",
+    "c++": "C++",
+    "go": "Go",
+    "rust": "Rust",
+    "redis": "Redis",
+    "mongodb": "MongoDB",
+    "postgresql": "PostgreSQL",
+    "mysql": "MySQL",
+    "github": "GitHub",
+    "gitlab": "GitLab",
+    "figma": "Figma",
+    "vite": "Vite",
+    "webpack": "Webpack",
+    "jest": "Jest",
+    "cypress": "Cypress",
+}
+
+
 def format_project_name(raw: str) -> str:
-    """Convert repo-style names to display format: eugene-property-management -> Eugene Property Management."""
+    """Convert repo-style names to display format: eugene-property-management -> Eugene Property Management.
+    Uses TECH_KEYWORDS so e.g. Php -> PHP, Javascript -> JavaScript.
+    """
     if not raw or not raw.strip():
         return raw
     s = raw.strip()
@@ -57,8 +113,11 @@ def format_project_name(raw: str) -> str:
     for p in parts:
         if not p:
             continue
-        if p.isupper() and len(p) > 1:
-            result.append(p)  # Keep API, README, etc.
+        key = p.lower()
+        if key in TECH_KEYWORDS:
+            result.append(TECH_KEYWORDS[key])
+        elif p.isupper() and len(p) > 1:
+            result.append(p)  # Keep README, etc.
         else:
             result.append(p[0].upper() + p[1:].lower() if len(p) > 1 else p.upper())
     return " ".join(result)
