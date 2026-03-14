@@ -2,11 +2,39 @@ import json
 from pathlib import Path
 from textwrap import shorten
 
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data"
 PORTFOLIO_DIR = ROOT / "portfolio"
 PORTFOLIO_FILE = PORTFOLIO_DIR / "index.html"
+
+# Map tech_stack keys to CV skill categories (Languages, Tools, Frontend, Backend, Backend as a service)
+SKILL_CATEGORIES = {
+    "languages": {
+        "PHP", "Python", "Swift", "Java", "JavaScript", "TypeScript", "HTML", "CSS",
+        "MQL5", "Hack", "C++", "Shell", "PowerShell", "SCSS", "Less", "Roff", "Blade",
+    },
+    "tools": {
+        "Docker", "Dockerfile", "Vite", "Makefile", "Terraform", "Ansible", "CMake",
+        "Batchfile", "Git", "Github",
+    },
+    "frontend": {
+        "Vue", "React", "Tailwind CSS", "Svelte", "SvelteKit", "Astro", "Solid.js",
+        "Qwik", "Remix", "Next.js", "Nuxt.js", "Angular",
+    },
+    "backend": {
+        "Laravel", "Symfony", "Django", "Flask", "FastAPI", "Express", "NestJS",
+        "Rails", "Sinatra", "Spring Boot", "Quarkus", "ASP.NET Core", "Gin", "Hono",
+        "Tornado", "Pyramid", "Yii", "CodeIgniter", "CakePHP", "Zend", "Phalcon",
+        "Prisma", "Bun",
+    },
+    "backend_services": {
+        "Supabase", "PostgreSQL", "MySQL", "Redis", "Kubernetes", "AWS",
+    },
+}
 
 
 def load_json(path, default=None):
@@ -39,12 +67,17 @@ def format_languages(languages):
     return ", ".join(f"{lang} ({pct}%)" for lang, pct in top)
 
 
+def _skill_category(name):
+    """Return category key for a tech name, or 'other'."""
+    for cat, keys in SKILL_CATEGORIES.items():
+        if name in keys:
+            return cat
+    return "other"
+
+
 def build_projects_section(projects):
-    # Prefer public repos first, then private
-    sorted_projects = sorted(
-        projects,
-        key=lambda p: (p.get("private", False), p.get("name", "").lower()),
-    )
+    # Projects are already filtered to public; sort by name
+    sorted_projects = sorted(projects, key=lambda p: p.get("name", "").lower())
 
     items_html = []
     for p in sorted_projects:
@@ -52,14 +85,13 @@ def build_projects_section(projects):
         url = p.get("url", "#")
         summary = normalize_summary(p)
         langs = format_languages(p.get("languages", {}))
-        privacy = "Private" if p.get("private") else "Public"
 
         items_html.append(
             f"""
             <article class="project-card">
                 <header>
                     <h3><a href="{url}" target="_blank" rel="noopener noreferrer">{name}</a></h3>
-                    <span class="badge badge-{privacy.lower()}">{privacy}</span>
+                    <span class="badge badge-public">Public</span>
                 </header>
                 <p class="project-summary">{summary}</p>
                 <p class="project-meta"><strong>Tech:</strong> {langs}</p>
@@ -70,21 +102,134 @@ def build_projects_section(projects):
     return "\n".join(items_html)
 
 
-def build_skill_section(tech_stack):
+def build_technical_skills_grouped(tech_stack):
+    """Build Technical skills section with subsections: Languages, Tools, Frontend, Backend, Backend as a service, Other."""
     if not tech_stack:
         return "<p>No tech stack data available yet.</p>"
 
-    # Sort by percentage desc
     sorted_stack = sorted(tech_stack.items(), key=lambda x: x[1], reverse=True)
-
-    chips = []
+    category_labels = {
+        "languages": "Languages",
+        "tools": "Tools",
+        "frontend": "Frontend libraries and frameworks",
+        "backend": "Backend libraries and frameworks",
+        "backend_services": "Backend as a service / Services",
+        "other": "Other",
+    }
+    grouped = {cat: [] for cat in category_labels}
     for name, pct in sorted_stack:
+        cat = _skill_category(name)
         level = "primary" if pct >= 10 else "secondary" if pct >= 3 else "tertiary"
-        chips.append(
-            f'<span class="skill-chip skill-{level}" title="{pct}% of codebase">{name}</span>'
-        )
+        grouped[cat].append((name, pct, level))
 
-    return "\n".join(chips)
+    parts = []
+    for cat_key, label in category_labels.items():
+        items = grouped.get(cat_key) or []
+        if not items:
+            continue
+        chips = " ".join(
+            f'<span class="skill-chip skill-{level}" title="{pct}%">{name}</span>'
+            for name, pct, level in items
+        )
+        parts.append(
+            f'<div class="skill-group"><h3 class="skill-group-title">{label}</h3>'
+            f'<div class="skill-grid">{chips}</div></div>'
+        )
+    if not parts:
+        return "<p>No tech stack data available yet.</p>"
+    return "\n".join(parts)
+
+
+def build_experience_section(cv_data):
+    """Build Professional experience from CV experience list (flat list of strings)."""
+    experience = cv_data.get("experience") or []
+    if not experience:
+        return "<p>No experience data.</p>"
+    # Render as list of items; pyresparser gives flat list (company, title, dates, location, bullets)
+    lines = []
+    for i, item in enumerate(experience):
+        s = (item or "").strip()
+        if not s or s.startswith("Page "):
+            continue
+        lines.append(f"<li class=\"cv-item\">{s}</li>")
+    if not lines:
+        return "<p>No experience data.</p>"
+    return "<ul class=\"cv-list\">" + "".join(lines) + "</ul>"
+
+
+def build_education_section(cv_data):
+    """Build Education from CV degree and college_name."""
+    degree = cv_data.get("degree") or []
+    college = cv_data.get("college_name")
+    if isinstance(degree, str):
+        degree = [degree] if degree else []
+    if not degree and not college:
+        return "<p>No education data.</p>"
+    lines = []
+    if college:
+        lines.append(f"<li class=\"cv-item\">{college}</li>")
+    for d in degree:
+        if d and str(d).strip():
+            lines.append(f"<li class=\"cv-item\">{d}</li>")
+    if not lines:
+        return "<p>No education data.</p>"
+    return "<ul class=\"cv-list\">" + "".join(lines) + "</ul>"
+
+
+def build_certifications_section(cv_data):
+    """Build Certifications from CV certifications key if present."""
+    certs = cv_data.get("certifications")
+    if certs is None:
+        certs = []
+    if isinstance(certs, str) and certs.strip():
+        certs = [certs]
+    if not certs:
+        return "<p>None listed.</p>"
+    lines = [f"<li class=\"cv-item\">{c}</li>" for c in certs if c and str(c).strip()]
+    if not lines:
+        return "<p>None listed.</p>"
+    return "<ul class=\"cv-list\">" + "".join(lines) + "</ul>"
+
+
+def generate_skills_chart(tech_stack, arch_data, output_path):
+    """Generate skills + architecture bar chart and save to output_path (e.g. portfolio/skills_chart.png)."""
+    skill_names = list(tech_stack.keys()) if tech_stack else []
+    skill_values = list(tech_stack.values()) if tech_stack else []
+    arch_counts = (arch_data or {}).get("counts", {})
+    arch_names = list(arch_counts.keys())
+    arch_values = list(arch_counts.values())
+    has_arch = bool(arch_counts)
+
+    if has_arch:
+        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 8))
+    else:
+        fig, ax1 = plt.subplots(1, 1, figsize=(10, 4))
+
+    if skill_names:
+        ax1.bar(skill_names, skill_values, color=(0.13, 0.77, 0.37, 0.85))
+        ax1.set_title("Developer Skill Distribution")
+        ax1.set_xticks(range(len(skill_names)))
+        ax1.set_xticklabels(skill_names, rotation=45, ha="right")
+        ax1.set_facecolor((0.06, 0.09, 0.16, 0.98))
+        ax1.tick_params(colors="#9ca3af")
+        ax1.spines["bottom"].set_color("#374151")
+        ax1.spines["left"].set_color("#374151")
+    if has_arch:
+        ax2.bar(arch_names, arch_values, color=(0.22, 0.74, 0.97, 0.85))
+        ax2.set_title("Detected Architectures Across Repositories")
+        ax2.set_xticks(range(len(arch_names)))
+        ax2.set_xticklabels(arch_names, rotation=45, ha="right")
+        ax2.set_facecolor((0.06, 0.09, 0.16, 0.98))
+        ax2.tick_params(colors="#9ca3af")
+        ax2.spines["bottom"].set_color("#374151")
+        ax2.spines["left"].set_color("#374151")
+
+    fig.patch.set_facecolor((0.06, 0.09, 0.16, 0.98))
+    fig.tight_layout()
+    output_path = Path(output_path)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(output_path, facecolor=fig.get_facecolor(), edgecolor="none")
+    plt.close(fig)
 
 
 def build_architecture_section(arch_data):
@@ -128,10 +273,14 @@ def build_architecture_section(arch_data):
     """
 
 
-def generate_html(projects, tech_stack, arch_data):
+def generate_html(projects, tech_stack, arch_data, cv_data):
     projects_html = build_projects_section(projects)
-    skills_html = build_skill_section(tech_stack)
+    skills_grouped_html = build_technical_skills_grouped(tech_stack)
     arch_html = build_architecture_section(arch_data)
+    experience_html = build_experience_section(cv_data)
+    education_html = build_education_section(cv_data)
+    certifications_html = build_certifications_section(cv_data)
+    hero_name = (cv_data.get("name") or "Yoweli Kachala").strip() or "Yoweli Kachala"
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -300,6 +449,47 @@ def generate_html(projects, tech_stack, arch_data):
             opacity: 0.9;
         }}
 
+        .skill-group {{
+            margin-bottom: 20px;
+        }}
+
+        .skill-group:last-child {{
+            margin-bottom: 0;
+        }}
+
+        .skill-group-title {{
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #d1d5db;
+            margin: 0 0 8px 0;
+            letter-spacing: 0.05em;
+        }}
+
+        .cv-list {{
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }}
+
+        .cv-item {{
+            font-size: 0.9rem;
+            color: var(--muted);
+            line-height: 1.55;
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(55, 65, 81, 0.5);
+        }}
+
+        .cv-item:last-child {{
+            border-bottom: none;
+        }}
+
+        #skills-graph img {{
+            max-width: 100%;
+            height: auto;
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(55, 65, 85, 0.85);
+        }}
+
         .projects-grid {{
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -441,7 +631,7 @@ def generate_html(projects, tech_stack, arch_data):
             <div class="hero-title-row">
                 <div>
                     <div class="hero-pill">AI-Augmented Software Engineer</div>
-                    <h1>Yoweli Kachala</h1>
+                    <h1>{hero_name}</h1>
                 </div>
             </div>
             <p class="hero-subtitle">
@@ -457,18 +647,45 @@ def generate_html(projects, tech_stack, arch_data):
 
         <section id="skills">
             <header class="section-header">
-                <h2>TECHNICAL SKILL MAP</h2>
+                <h2>Technical skills</h2>
                 <span class="section-kicker">Weighted by code volume across GitHub</span>
             </header>
-            <div class="skill-grid">
-                {skills_html}
-            </div>
+            {skills_grouped_html}
+        </section>
+
+        <section id="skills-graph">
+            <header class="section-header">
+                <h2>Skill distribution</h2>
+                <span class="section-kicker">Languages and architectures</span>
+            </header>
+            <img src="skills_chart.png" alt="Skills and architectures" />
+        </section>
+
+        <section id="experience">
+            <header class="section-header">
+                <h2>Professional experience</h2>
+            </header>
+            {experience_html}
+        </section>
+
+        <section id="education">
+            <header class="section-header">
+                <h2>Education</h2>
+            </header>
+            {education_html}
+        </section>
+
+        <section id="certifications">
+            <header class="section-header">
+                <h2>Certifications</h2>
+            </header>
+            {certifications_html}
         </section>
 
         <section id="projects">
             <header class="section-header">
-                <h2>SELECTED PROJECTS</h2>
-                <span class="section-kicker">Real repositories, summarized from GitHub</span>
+                <h2>Featured Projects</h2>
+                <span class="section-kicker">Public repositories, summarized from GitHub</span>
             </header>
             <div class="projects-grid">
                 {projects_html}
@@ -495,11 +712,14 @@ def generate_html(projects, tech_stack, arch_data):
 
 def main():
     projects = load_json(DATA_DIR / "projects.json", default=[])
+    projects = [p for p in projects if not p.get("private", True)]
     tech_stack = load_json(DATA_DIR / "tech_stack.json", default={})
     architecture = load_json(DATA_DIR / "architecture.json", default={})
+    cv_data = load_json(DATA_DIR / "cv_extracted.json", default={})
 
     PORTFOLIO_DIR.mkdir(parents=True, exist_ok=True)
-    html = generate_html(projects, tech_stack, architecture)
+    generate_skills_chart(tech_stack, architecture, PORTFOLIO_DIR / "skills_chart.png")
+    html = generate_html(projects, tech_stack, architecture, cv_data)
     PORTFOLIO_FILE.write_text(html, encoding="utf-8")
 
     print(f"Portfolio written to {PORTFOLIO_FILE}")
