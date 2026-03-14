@@ -39,7 +39,7 @@ Senior systems architect and full stack engineer focused on AI-native products, 
 
 - **Repositories analyzed**: 49
 - **Architectures used in production projects**: Machine Learning Systems (36), API Architecture (17), AI-Native Architecture (16)
-- **Top languages by usage**: PHP (32.54%), Python (21.32%), Swift (17.94%), Laravel (12%), Blade (9.55%)
+- **Top languages by usage**: PHP (32.54%), Python (21.09%), Swift (17.94%), Laravel (12%), Blade (9.55%)
 
 These metrics are derived automatically from my GitHub activity and give a quick view of where I spend most of my time.
 
@@ -52,15 +52,15 @@ Heavier percentages indicate where I have the deepest hands-on experience; PHP, 
 | Technology | Usage |
 |-----------|-------|
 | PHP | 32.54% |
-| Python | 21.32% |
+| Python | 21.09% |
 | Swift | 17.94% |
 | Laravel | 12% |
 | Blade | 9.55% |
 | Vue | 7.15% |
 | MQL5 | 5.52% |
 | Vite | 5% |
+| HTML | 2.82% |
 | Java | 2.56% |
-| HTML | 2.55% |
 | Tailwind CSS | 2% |
 | Symfony | 2% |
 | Docker | 2% |
@@ -68,7 +68,7 @@ Heavier percentages indicate where I have the deepest hands-on experience; PHP, 
 | Express | 1% |
 | Flask | 1% |
 | FastAPI | 1% |
-| CSS | 0.92% |
+| CSS | 0.89% |
 | JavaScript | 0.86% |
 | Hack | 0.73% |
 | TypeScript | 0.63% |
