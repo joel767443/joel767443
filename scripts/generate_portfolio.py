@@ -13,7 +13,7 @@ if str(_script_dir) not in sys.path:
     sys.path.insert(0, str(_script_dir))
 from common import ROOT, DATA_DIR, PORTFOLIO_DIR, load_json
 
-PORTFOLIO_FILE = PORTFOLIO_DIR / "index.html"
+PORTFOLIO_README = PORTFOLIO_DIR / "README.md"
 
 # Fallback when data/skill_categories.json is missing (same shape as JSON)
 DEFAULT_SKILL_CATEGORIES = {
@@ -274,6 +274,230 @@ def build_certifications_section(cv_data):
     if not blocks:
         return "<p>None listed.</p>"
     return '<div class="cert-entries">' + "".join(blocks) + "</div>"
+
+
+def build_projects_section_md(projects):
+    sorted_projects = sorted(projects, key=lambda p: p.get("name", "").lower())
+    lines = []
+    for p in sorted_projects:
+        name = p.get("name", "Unnamed Repo")
+        url = p.get("url", "#")
+        summary = normalize_summary(p)
+        langs = format_languages(p.get("languages", {}))
+        lines.append(f"- **[{name}]({url})** — {summary}  \n  *Tech:* {langs}")
+    return "\n".join(lines) if lines else "*No public projects yet.*"
+
+
+def build_technical_skills_grouped_md(tech_stack, skill_categories):
+    if not tech_stack or not skill_categories:
+        return "*No tech stack data available yet.*"
+    sorted_stack = sorted(tech_stack.items(), key=lambda x: x[1], reverse=True)
+    grouped = {cat_key: [] for cat_key in skill_categories}
+    for name, pct in sorted_stack:
+        cat = _skill_category(name, skill_categories)
+        grouped.setdefault(cat, []).append((name, pct))
+    parts = []
+    for cat_key in skill_categories:
+        label = skill_categories[cat_key].get("label", cat_key) if isinstance(skill_categories[cat_key], dict) else cat_key
+        items = grouped.get(cat_key) or []
+        if not items:
+            continue
+        chips = " · ".join(f"**{name}**" if pct >= 10 else f"*{name}*" for name, pct in items)
+        parts.append(f"**{label}**  \n{chips}\n")
+    return "\n".join(parts) if parts else "*No tech stack data available yet.*"
+
+
+def build_architecture_section_md(arch_data):
+    if not arch_data:
+        return "*No architecture insights computed yet.*"
+    counts = arch_data.get("counts", {})
+    total = arch_data.get("total_repos_processed") or sum(counts.values()) or 0
+    if not counts:
+        return "*No architecture patterns detected yet.*"
+    lines = ["| Architecture | Repos | Share |", "|-------------|-------|-------|"]
+    for name, count in sorted(counts.items(), key=lambda x: x[1], reverse=True):
+        pct = (count / total * 100) if total else 0
+        lines.append(f"| {name} | {count} | {pct:.1f}% |")
+    return f"*Detected across {total} repositories.*\n\n" + "\n".join(lines)
+
+
+def build_experience_section_md(cv_data):
+    entries = cv_data.get("experience_entries")
+    if isinstance(entries, list) and entries and isinstance(entries[0], dict):
+        blocks = []
+        for e in entries:
+            title = (e.get("title") or "").strip()
+            company = (e.get("company") or "").strip()
+            dates = (e.get("dates") or "").strip()
+            location = (e.get("location") or "").strip()
+            description = e.get("description")
+            if isinstance(description, list):
+                bullets = [str(b).strip() for b in description if b and str(b).strip()]
+            elif description:
+                s = str(description).strip()
+                bullets = [p.strip() for p in s.split(". ") if p.strip()]
+                bullets = [b + "." if not b.endswith(".") else b for b in bullets]
+            else:
+                bullets = []
+            skills = e.get("skills") or []
+            if isinstance(skills, str):
+                skills = [s.strip() for s in skills.split(",") if s.strip()]
+            if not title and not company:
+                continue
+            block = f"**{title or '—'}** | *{dates}*  \n{company or '—'}" + (f" · {location}" if location else "")
+            if bullets:
+                block += "\n\n" + "\n".join(f"- {b}" for b in bullets)
+            if skills:
+                block += "\n\n" + " ".join(f"`{s}`" for s in skills if s)
+            blocks.append(block)
+        if blocks:
+            return "\n\n---\n\n".join(blocks)
+    experience = cv_data.get("experience") or []
+    if not experience:
+        return "*No experience data.*"
+    return "\n".join(f"- {item}" for item in experience if item and str(item).strip() and not str(item).strip().startswith("Page "))
+
+
+def build_education_section_md(cv_data):
+    education = cv_data.get("education")
+    if isinstance(education, list) and education and isinstance(education[0], dict):
+        entries = education
+    else:
+        degree = cv_data.get("degree") or []
+        college = cv_data.get("college_name") or ""
+        if isinstance(degree, str):
+            degree = [degree] if degree else []
+        entries = [
+            {"degree": (d or "").strip(), "institution": college or "", "dates": "", "location": ""}
+            for d in degree
+            if d and str(d).strip()
+        ]
+        if not entries and college:
+            entries = [{"degree": "", "institution": college, "dates": "", "location": ""}]
+    if not entries:
+        return "*No education data.*"
+    lines = []
+    for e in entries:
+        degree_title = (e.get("degree") or "").strip()
+        institution = (e.get("institution") or "").strip()
+        dates = (e.get("dates") or "").strip()
+        location = (e.get("location") or "").strip()
+        line = f"**{degree_title or '—'}**" + (f" | *{dates}*" if dates else "")
+        line += f"  \n{institution or '—'}" + (f" · {location}" if location else "")
+        lines.append(line)
+    return "\n\n".join(lines)
+
+
+def build_certifications_section_md(cv_data):
+    certs = cv_data.get("certifications")
+    if certs is None:
+        certs = []
+    if isinstance(certs, str) and certs.strip():
+        certs = [certs]
+    if not certs:
+        return "*None listed.*"
+    lines = []
+    for c in certs:
+        if isinstance(c, dict):
+            name = (c.get("name") or "").strip()
+            issuer = (c.get("issuer") or "").strip()
+            issued = (c.get("issued") or "").strip()
+            if not name and not issuer:
+                continue
+            line = f"**{name or '—'}**" + (f" · *Issued {issued}*" if issued else "")
+            line += f"  \n{issuer or '—'}"
+            lines.append(line)
+        elif c and str(c).strip():
+            lines.append(f"**{c}**")
+    return "\n\n".join(lines) if lines else "*None listed.*"
+
+
+def generate_markdown(projects, tech_stack, arch_data, cv_data, skill_categories):
+    """Build portfolio as README Markdown (same content as HTML, no CSS)."""
+    projects_md = build_projects_section_md(projects)
+    skills_md = build_technical_skills_grouped_md(tech_stack, skill_categories)
+    arch_md = build_architecture_section_md(arch_data)
+    experience_md = build_experience_section_md(cv_data)
+    education_md = build_education_section_md(cv_data)
+    certifications_md = build_certifications_section_md(cv_data)
+
+    first_name = (cv_data.get("first_name") or "").strip()
+    last_name = (cv_data.get("last_name") or "").strip()
+    if first_name or last_name:
+        hero_name = f"{first_name} {last_name}".strip()
+    else:
+        hero_name = (cv_data.get("name") or "Contact Durbanville").strip() or "Contact Durbanville"
+    hero_pill = (cv_data.get("headline") or "AI-Augmented Software Engineer").strip() or "AI-Augmented Software Engineer"
+    raw_summary = (cv_data.get("summary") or "").strip() or "Building AI-native systems, microservices, Laravel applications, and data-driven trading tools. This portfolio is generated directly from my GitHub activity to reflect how I actually ship software."
+    summary_paragraphs = [p.strip() for p in raw_summary.split("\n\n") if p.strip()]
+    if not summary_paragraphs:
+        summary_paragraphs = [raw_summary]
+
+    md = f"""# {hero_name}
+
+*{hero_pill}*
+
+"""
+
+    for p in summary_paragraphs:
+        md += p + "\n\n"
+
+    md += f"""---
+
+## Architecture footprint
+
+*Inferred patterns detected across repositories*
+
+{arch_md}
+
+---
+
+## Technical skills
+
+*Weighted by code volume across GitHub*
+
+{skills_md}
+
+---
+
+## Skill distribution
+
+*Languages and architectures*
+
+![Skills and architectures](skills_chart.png)
+
+---
+
+## Professional experience
+
+{experience_md}
+
+---
+
+## Education
+
+{education_md}
+
+---
+
+## Certifications
+
+{certifications_md}
+
+---
+
+## Featured projects
+
+*Public repositories, summarized from GitHub*
+
+{projects_md}
+
+---
+
+*Generated automatically by [github-developer-intelligence](https://github.com/joel767443/github-developer-intelligence).*
+"""
+
+    return md
 
 
 def generate_skills_chart(tech_stack, arch_data, output_path):
@@ -1022,10 +1246,10 @@ def main():
 
     PORTFOLIO_DIR.mkdir(parents=True, exist_ok=True)
     generate_skills_chart(tech_stack, architecture, PORTFOLIO_DIR / "skills_chart.png")
-    html = generate_html(projects, tech_stack, architecture, cv_data, skill_categories)
-    PORTFOLIO_FILE.write_text(html, encoding="utf-8")
+    readme_md = generate_markdown(projects, tech_stack, architecture, cv_data, skill_categories)
+    PORTFOLIO_README.write_text(readme_md, encoding="utf-8")
 
-    print(f"Portfolio written to {PORTFOLIO_FILE}")
+    print(f"Portfolio written to {PORTFOLIO_README}")
 
 
 if __name__ == "__main__":

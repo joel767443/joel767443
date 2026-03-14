@@ -8,7 +8,7 @@ Automated pipeline that combines **GitHub repository data** and **CV extraction*
 - **Detects tech stack & architecture** – Builds language percentages and architecture patterns across repositories.
 - **Extracts structured CV data** – Parses a PDF CV into JSON (experience, education, certifications, contact, first/last name).
 - **Generates outputs**:
-  - **Portfolio** (`portfolio/index.html`) – Dark-themed portfolio with skills chart, experience, education, certifications, and public projects.
+  - **Portfolio** (`portfolio/README.md`) – Markdown portfolio with skills chart image, experience, education, certifications, and public projects.
   - **Personal site** (`site/site.html`) – Styled site from `templates/site.md` with hero, skills (including skill distribution bars), experience (with bullet points), projects (formatted names, public only), and contact.
   - **README** (`README.md`) – Generated from `templates/README.template.md` with technologies, architecture summary, and featured projects.
 
@@ -39,7 +39,7 @@ Run scripts in this order to (re)build the `data/` directory and all outputs:
 | 2 | `python scripts/tech_stack_detector.py` | `data/tech_stack.json` |
 | 3 | `python scripts/architecture_detector.py` | `data/architecture.json` |
 | 4 | `python scripts/extract_cv.py [path/to/cv.pdf]` | `data/cv_extracted.json` |
-| 5 | `python scripts/generate_portfolio.py` | `portfolio/index.html`, `portfolio/skills_chart.png`, and `data/skill_categories.json` if missing |
+| 5 | `python scripts/generate_portfolio.py` | `portfolio/README.md`, `portfolio/skills_chart.png`, and `data/skill_categories.json` if missing |
 | 6 | `python scripts/generate_site.py` | `site/site.html` |
 | 7 | `python scripts/generate_readme.py` | `README.md` |
 
@@ -54,7 +54,7 @@ See [docs/REGENERATION.md](docs/REGENERATION.md) for the same order and notes.
 │   ├── architecture.json    # Detected architecture patterns
 │   ├── cv_extracted.json    # Parsed CV (name, experience, education, certifications)
 │   └── skill_categories.json
-├── portfolio/               # Generated portfolio page + skills chart
+├── portfolio/               # Generated portfolio README + skills chart image
 ├── site/                    # Generated personal site (site.html, index.html, css/)
 ├── templates/
 │   ├── site.md              # Site template (placeholders like {{ name }}, {{ experience_entries }})
