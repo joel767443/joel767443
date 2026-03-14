@@ -1,19 +1,12 @@
 import json
+import sys
 from pathlib import Path
 from typing import List, Dict, Any, Tuple
 
-
-ROOT = Path(__file__).resolve().parent.parent
-DATA_DIR = ROOT / "data"
-REPORTS_DIR = ROOT / "reports"
-TEMPLATES_DIR = ROOT / "templates"
-
-
-def load_json(path: Path) -> Any:
-    if not path.exists():
-        return None
-    with path.open(encoding="utf-8") as f:
-        return json.load(f)
+_script_dir = Path(__file__).resolve().parent
+if str(_script_dir) not in sys.path:
+    sys.path.insert(0, str(_script_dir))
+from common import ROOT, DATA_DIR, TEMPLATES_DIR, REPORTS_DIR, load_json, render_template
 
 
 def load_capability_report(path: Path) -> Tuple[int, int]:
@@ -153,15 +146,6 @@ def build_featured_projects_section(projects: List[Dict[str, Any]]) -> str:
     return "\n".join(lines)
 
 
-def render_template(template: str, context: Dict[str, str]) -> str:
-    # Very simple placeholder replacement: {{ key }}
-    result = template
-    for key, value in context.items():
-        placeholder = "{{ " + key + " }}"
-        result = result.replace(placeholder, value)
-    return result
-
-
 def main() -> None:
     projects_path = DATA_DIR / "projects.json"
     tech_stack_path = DATA_DIR / "tech_stack.json"
@@ -170,9 +154,9 @@ def main() -> None:
     template_path = TEMPLATES_DIR / "README.template.md"
     output_readme_path = ROOT / "README.md"
 
-    projects = load_json(projects_path) or []
-    tech_stack = load_json(tech_stack_path) or {}
-    architecture = load_json(arch_path) or {}
+    projects = load_json(projects_path, default=None) or []
+    tech_stack = load_json(tech_stack_path, default=None) or {}
+    architecture = load_json(arch_path, default=None) or {}
     total_projects_report, complexity_score = load_capability_report(capability_report_path)
 
     # Fallback for total projects if capability report is missing

@@ -1,5 +1,8 @@
+import os
+
 import requests
 from dotenv import load_dotenv
+
 load_dotenv()
 
 # ────────────────────────────────────────────────
@@ -7,10 +10,9 @@ load_dotenv()
 
 # 1. Your OAuth 2.0 access token with scope: w_member_social
 #    (Get it via authorization code flow + refresh as needed)
-# Replace with your actual values
-TOKEN = os.getenv("ACCESS_TOKEN")
-TOKEN = os.getenv("PERSON_ID")
-        # ← CHANGE THIS (e.g. from "sub" in /v2/userinfo)
+ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
+# 2. Your LinkedIn person URN / ID (e.g. from "sub" in /v2/userinfo)
+PERSON_ID = os.getenv("PERSON_ID")
 
 # 3. Optional: Use the most recent version (update monthly if needed)
 #    Current/recent ones: 202511, 202512, 202601, etc. — check docs if errors occur

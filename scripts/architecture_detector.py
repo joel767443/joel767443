@@ -83,82 +83,88 @@ def get_repo_files(owner, repo):
 # MAIN
 # ────────────────────────────────────────────────
 
-with open(REPOS_JSON, encoding="utf-8") as f:
-    projects = json.load(f)
 
-print(f"Loaded {len(projects)} repositories\n")
+def main() -> None:
+    with open(REPOS_JSON, encoding="utf-8") as f:
+        projects = json.load(f)
 
-architectures = defaultdict(int)
-skipped = 0
+    print(f"Loaded {len(projects)} repositories\n")
 
-for idx, p in enumerate(projects, 1):
-    # Robust full_name handling
-    full_name = p.get("full_name")
-    if not full_name:
-        repo_name = p.get("name")
-        if not repo_name:
-            print(f"[{idx}] Skipping - no name or full_name: {p}")
+    architectures = defaultdict(int)
+    skipped = 0
+
+    for idx, p in enumerate(projects, 1):
+        # Robust full_name handling
+        full_name = p.get("full_name")
+        if not full_name:
+            repo_name = p.get("name")
+            if not repo_name:
+                print(f"[{idx}] Skipping - no name or full_name: {p}")
+                skipped += 1
+                continue
+            owner = YOUR_GITHUB_USERNAME
+            full_name = f"{owner}/{repo_name}"
+
+        if "/" not in full_name:
+            print(f"[{idx}] Skipping malformed repo: {full_name}")
             skipped += 1
             continue
-        owner = YOUR_GITHUB_USERNAME
-        full_name = f"{owner}/{repo_name}"
-    
-    if "/" not in full_name:
-        print(f"[{idx}] Skipping malformed repo: {full_name}")
-        skipped += 1
-        continue
 
-    owner, repo = full_name.split("/", 1)
-    repo_lower = repo.lower()
+        owner, repo = full_name.split("/", 1)
+        repo_lower = repo.lower()
 
-    print(f"[{idx}/{len(projects)}] Processing {full_name} ... ", end="")
+        print(f"[{idx}/{len(projects)}] Processing {full_name} ... ", end="")
 
-    text = " ".join([
-        p.get("name", "").lower(),
-        (p.get("description") or "").lower(),
-        " ".join(t.lower() for t in p.get("topics", [])),
-        " ".join(get_repo_files(owner, repo))
-    ])
+        text = " ".join([
+            p.get("name", "").lower(),
+            (p.get("description") or "").lower(),
+            " ".join(t.lower() for t in p.get("topics", [])),
+            " ".join(get_repo_files(owner, repo))
+        ])
 
-    detected = set()
-    for arch, keywords in ARCH_KEYWORDS.items():
-        if any(kw in text for kw in keywords):
-            detected.add(arch)
+        detected = set()
+        for arch, keywords in ARCH_KEYWORDS.items():
+            if any(kw in text for kw in keywords):
+                detected.add(arch)
 
-    if detected:
-        architectures.update({arch: architectures[arch] + 1 for arch in detected})
-        print(f"→ {', '.join(detected)}")
+        if detected:
+            architectures.update({arch: architectures[arch] + 1 for arch in detected})
+            print(f"→ {', '.join(detected)}")
+        else:
+            print("→ no architecture detected")
+
+        time.sleep(1.0)  # Gentle on API
+
+    # ────────────────────────────────────────────────
+    # OUTPUT
+    # ────────────────────────────────────────────────
+
+    if skipped > 0:
+        print(f"\nSkipped {skipped} repos due to missing/invalid name/full_name")
+
+    unique_arch = sorted(architectures.keys())
+
+    output_data = {
+        "detected_architectures": unique_arch,
+        "counts": dict(architectures),
+        "total_repos_processed": len(projects) - skipped,
+        "timestamp": time.strftime("%Y-%m-%d %H:%M:%S")
+    }
+
+    with open(ARCH_JSON, "w", encoding="utf-8") as f:
+        json.dump(output_data, f, indent=2, ensure_ascii=False)
+
+    print("\n" + "="*70)
+    print(f"Results saved to {ARCH_JSON}")
+    print(f"Processed {len(projects) - skipped} / {len(projects)} repos")
+    if architectures:
+        print("Detected architectures:")
+        for arch, count in sorted(architectures.items(), key=lambda x: -x[1]):
+            print(f"  {arch:28} : {count:3d}")
     else:
-        print("→ no architecture detected")
+        print("No architectures detected — check if repos have relevant files (e.g. docker-compose.yml, .ipynb) or increase keyword coverage.")
+    print("="*70)
 
-    time.sleep(1.0)  # Gentle on API
 
-# ────────────────────────────────────────────────
-# OUTPUT
-# ────────────────────────────────────────────────
-
-if skipped > 0:
-    print(f"\nSkipped {skipped} repos due to missing/invalid name/full_name")
-
-unique_arch = sorted(architectures.keys())
-
-output_data = {
-    "detected_architectures": unique_arch,
-    "counts": dict(architectures),
-    "total_repos_processed": len(projects) - skipped,
-    "timestamp": time.strftime("%Y-%m-%d %H:%M:%S")
-}
-
-with open(ARCH_JSON, "w", encoding="utf-8") as f:
-    json.dump(output_data, f, indent=2, ensure_ascii=False)
-
-print("\n" + "="*70)
-print(f"Results saved to {ARCH_JSON}")
-print(f"Processed {len(projects) - skipped} / {len(projects)} repos")
-if architectures:
-    print("Detected architectures:")
-    for arch, count in sorted(architectures.items(), key=lambda x: -x[1]):
-        print(f"  {arch:28} : {count:3d}")
-else:
-    print("No architectures detected — check if repos have relevant files (e.g. docker-compose.yml, .ipynb) or increase keyword coverage.")
-print("="*70)
+if __name__ == "__main__":
+    main()

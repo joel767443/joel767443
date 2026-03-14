@@ -8,34 +8,17 @@ structure so css/styles.css applies the same design.
 
 import html as html_module
 import json
+import sys
 from pathlib import Path
 from textwrap import shorten
 
-ROOT = Path(__file__).resolve().parent.parent
-TEMPLATES_DIR = ROOT / "templates"
-DATA_DIR = ROOT / "data"
-SITE_DIR = ROOT / "site"
+_script_dir = Path(__file__).resolve().parent
+if str(_script_dir) not in sys.path:
+    sys.path.insert(0, str(_script_dir))
+from common import ROOT, DATA_DIR, TEMPLATES_DIR, SITE_DIR, load_json, render_template
+
 SITE_TEMPLATE = TEMPLATES_DIR / "site.md"
 OUTPUT_HTML = SITE_DIR / "site.html"
-
-
-def load_json(path: Path, default=None):
-    if default is None:
-        default = {}
-    try:
-        with open(path, encoding="utf-8") as f:
-            return json.load(f)
-    except (FileNotFoundError, json.JSONDecodeError):
-        return default
-
-
-def render_template(template: str, context: dict) -> str:
-    """Replace {{ key }} placeholders with context values."""
-    result = template
-    for key, value in context.items():
-        placeholder = "{{ " + key + " }}"
-        result = result.replace(placeholder, str(value))
-    return result
 
 
 # --- HTML builders (match site/index.html structure and classes) ---
@@ -450,10 +433,10 @@ def build_contact_html(ctx: dict) -> str:
 
 
 def main() -> None:
-    cv_data = load_json(DATA_DIR / "cv_extracted.json")
-    skill_categories = load_json(DATA_DIR / "skill_categories.json")
-    tech_stack = load_json(DATA_DIR / "tech_stack.json")
-    projects = load_json(DATA_DIR / "projects.json") or []
+    cv_data = load_json(DATA_DIR / "cv_extracted.json", default={}) or {}
+    skill_categories = load_json(DATA_DIR / "skill_categories.json", default={}) or {}
+    tech_stack = load_json(DATA_DIR / "tech_stack.json", default={}) or {}
+    projects = load_json(DATA_DIR / "projects.json", default=[]) or []
     projects = [p for p in projects if not p.get("private", True)]
 
     # Prefer first + last name so {{ name }} is not an address/place (e.g. Durbanville)

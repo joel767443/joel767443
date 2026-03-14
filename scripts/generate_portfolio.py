@@ -1,5 +1,6 @@
 import html
 import json
+import sys
 from pathlib import Path
 from textwrap import shorten
 
@@ -7,9 +8,11 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-ROOT = Path(__file__).resolve().parent.parent
-DATA_DIR = ROOT / "data"
-PORTFOLIO_DIR = ROOT / "portfolio"
+_script_dir = Path(__file__).resolve().parent
+if str(_script_dir) not in sys.path:
+    sys.path.insert(0, str(_script_dir))
+from common import ROOT, DATA_DIR, PORTFOLIO_DIR, load_json
+
 PORTFOLIO_FILE = PORTFOLIO_DIR / "index.html"
 
 # Fallback when data/skill_categories.json is missing (same shape as JSON)
@@ -36,14 +39,6 @@ DEFAULT_SKILL_CATEGORIES = {
     },
     "other": {"label": "Other", "items": []},
 }
-
-
-def load_json(path, default=None):
-    try:
-        with open(path, encoding="utf-8") as f:
-            return json.load(f)
-    except (FileNotFoundError, json.JSONDecodeError):
-        return default if default is not None else {}
 
 
 def normalize_summary(proj):

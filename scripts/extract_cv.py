@@ -14,6 +14,7 @@ import argparse
 import io
 import json
 import re
+import types
 from pathlib import Path
 
 try:
@@ -82,11 +83,10 @@ if ez_parser is None:
                 i += 1
         return {"contact": contact, "skills": skills, "languages": languages, "certifications": certifications, "honors": honors, "summary": summary}
 
-    class _VendoredParser:
-        extract_pdf = staticmethod(_vendored_extract_pdf)
-        get_many = staticmethod(_vendored_get_many)
-
-    ez_parser = _VendoredParser()
+    ez_parser = types.SimpleNamespace(
+        extract_pdf=_vendored_extract_pdf,
+        get_many=_vendored_get_many,
+    )
 
 # Regexes for contact parsing from ez-parse "contact" list
 _EMAIL_RE = re.compile(r"[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+")
