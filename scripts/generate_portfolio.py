@@ -442,6 +442,7 @@ def generate_markdown(projects, tech_stack, arch_data, cv_data, skill_categories
     for p in summary_paragraphs:
         md += p + "\n\n"
 
+    md += "\n[View styled portfolio (HTML)](index.html)\n\n"
     md += f"""---
 
 ## Architecture footprint
@@ -1248,8 +1249,11 @@ def main():
     generate_skills_chart(tech_stack, architecture, PORTFOLIO_DIR / "skills_chart.png")
     readme_md = generate_markdown(projects, tech_stack, architecture, cv_data, skill_categories)
     PORTFOLIO_README.write_text(readme_md, encoding="utf-8")
+    portfolio_html = generate_html(projects, tech_stack, architecture, cv_data, skill_categories)
+    (PORTFOLIO_DIR / "index.html").write_text(portfolio_html, encoding="utf-8")
 
     print(f"Portfolio written to {PORTFOLIO_README}")
+    print(f"Portfolio HTML written to {PORTFOLIO_DIR / 'index.html'}")
 
 
 if __name__ == "__main__":
