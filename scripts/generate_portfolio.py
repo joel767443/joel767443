@@ -1,3 +1,4 @@
+import html
 import json
 from pathlib import Path
 from textwrap import shorten
@@ -380,6 +381,12 @@ def generate_html(projects, tech_stack, arch_data, cv_data):
     education_html = build_education_section(cv_data)
     certifications_html = build_certifications_section(cv_data)
     hero_name = (cv_data.get("name") or "Contact Durbanville").strip() or "Contact Durbanville"
+    raw_summary = (cv_data.get("summary") or "").strip() or "Building AI-native systems, microservices, Laravel applications, and data-driven trading tools. This portfolio is generated directly from my GitHub activity to reflect how I actually ship software."
+    # Support multiple paragraphs: split on double newline and wrap each in <p>
+    summary_paragraphs = [p.strip() for p in raw_summary.split("\n\n") if p.strip()]
+    if not summary_paragraphs:
+        summary_paragraphs = [raw_summary]
+    hero_summary = "".join(f"<p>{html.escape(p)}</p>" for p in summary_paragraphs)
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -455,10 +462,18 @@ def generate_html(projects, tech_stack, arch_data, cv_data):
         }}
 
         .hero-subtitle {{
-            max-width: 620px;
+            max-width: 1300px;
             color: var(--muted);
             font-size: 0.95rem;
             line-height: 1.6;
+        }}
+
+        .hero-subtitle p {{
+            margin: 0 0 0.75em 0;
+        }}
+
+        .hero-subtitle p:last-child {{
+            margin-bottom: 0;
         }}
 
         .hero-meta {{
@@ -874,7 +889,7 @@ def generate_html(projects, tech_stack, arch_data, cv_data):
         }}
 
         footer {{
-            max-width: 1280px;
+            max-width: 1300px;
             margin: 0 auto;
             padding: 0 20px 40px;
             font-size: 0.78rem;
@@ -916,10 +931,9 @@ def generate_html(projects, tech_stack, arch_data, cv_data):
                     <h1>{hero_name}</h1>
                 </div>
             </div>
-            <p class="hero-subtitle">
-                Building AI-native systems, microservices, Laravel applications, and data-driven trading tools.
-                This portfolio is generated directly from my GitHub activity to reflect how I actually ship software.
-            </p>
+            <div class="hero-subtitle">
+                {hero_summary}
+            </div>
             <div class="hero-meta">
                 <span class="meta-pill">Architectures: AI-Native · ML Systems · APIs · Event-Driven</span>
                 <span class="meta-pill">Back end: PHP · Laravel · Microservices</span>
