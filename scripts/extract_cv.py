@@ -709,14 +709,26 @@ def extract_cv_to_json(pdf_path: str, output_json: str = None) -> dict:
                 if any(kw in line.lower() for kw in ("engineer", "architect", "specialist", "developer")) and not _EMAIL_RE.search(line) and not _PHONE_RE.search(line):
                     headline = line
                     break
-    # Derive first_name, last_name from name (in case contact dict didn't have them)
+    # Derive first_name, last_name: prefer "First Last" from name, else from email local part
     name_str = (contact.get("name") or "").strip()
     first_name = (contact.get("first_name") or "").strip()
     last_name = (contact.get("last_name") or "").strip()
-    if name_str and not (first_name or last_name):
+    if name_str:
         parts = name_str.split(None, 1)
-        first_name = parts[0] if parts else ""
-        last_name = (parts[1] if len(parts) > 1 else "").strip()
+        if len(parts) >= 2:
+            first_name = parts[0]
+            last_name = (parts[1] or "").strip()
+        elif not (first_name or last_name):
+            first_name = parts[0] if parts else ""
+            last_name = (parts[1] if len(parts) > 1 else "").strip()
+    if (first_name and not last_name) and contact.get("email"):
+        local = (contact.get("email") or "").split("@")[0].strip()
+        if local and re.search(r"[._\-]", local):
+            name_parts = re.split(r"[._\-]+", local)
+            name_parts = [p.strip().title() for p in name_parts if p.strip()]
+            if len(name_parts) >= 2:
+                first_name = name_parts[0]
+                last_name = " ".join(name_parts[1:]).strip()
 
     extracted_data = {
         "name": contact["name"],
@@ -776,6 +788,13 @@ def extract_cv_to_json(pdf_path: str, output_json: str = None) -> dict:
             for key in ("experience_entries", "education", "certifications"):
                 if not extracted_data.get(key) and key in existing and existing[key]:
                     extracted_data[key] = existing[key]
+            # Keep existing first_name/last_name when extraction left last_name empty (e.g. single-word "name" from PDF)
+            if not (extracted_data.get("last_name") or "").strip():
+                ex_first = (existing.get("first_name") or "").strip()
+                ex_last = (existing.get("last_name") or "").strip()
+                if ex_first or ex_last:
+                    extracted_data["first_name"] = ex_first or extracted_data["first_name"]
+                    extracted_data["last_name"] = ex_last
         except (json.JSONDecodeError, OSError):
             pass
 
