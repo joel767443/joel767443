@@ -1,84 +1,115 @@
-# GitHub Developer Intelligence
+## Yoweli Kachala
 
-Automated pipeline that combines **GitHub repository data** and **CV extraction** to generate a developer portfolio, a personal site, and an up-to-date README—all from a single source of truth.
+**Senior Systems Architect • Full Stack Engineer**
 
-## What it does
+Senior systems architect and full stack engineer focused on AI-native products, trading and quantitative tools, and scalable SaaS platforms.
 
-- **Scans your GitHub** – Fetches public repos, READMEs, and language stats via the GitHub API.
-- **Detects tech stack & architecture** – Builds language percentages and architecture patterns across repositories.
-- **Extracts structured CV data** – Parses a PDF CV into JSON (experience, education, certifications, contact, first/last name).
-- **Generates outputs**:
-  - **Portfolio** (`portfolio/README.md`) – Markdown portfolio with skills chart image, experience, education, certifications, and public projects.
-  - **Personal site** (`site/site.html`) – Styled site from `templates/site.md` with hero, skills (including skill distribution bars), experience (with bullet points), projects (formatted names, public only), and contact.
-  - **README** (`README.md`) – Generated from `templates/README.template.md` with technologies, architecture summary, and featured projects.
+### Where I add the most value
 
-All generated content uses the same data so your profile stays consistent across portfolio, site, and README.
+- **AI & trading systems**: Python/MQL5 engines, backtesting, and automation.
+- **Scalable APIs & backends**: PHP/Laravel, microservices, Docker-based deployments.
+- **End-to-end product delivery**: from prototype to production across web, mobile, and cloud.
 
-## Requirements
+---
 
-- Python 3.8+
-- [GitHub token](https://github.com/settings/tokens) (optional but recommended for higher rate limits and private repo access)
+## What I’m looking for
 
-```bash
-pip install -r requirements.txt
-```
+- Senior backend or full stack roles building AI-powered products or data-heavy systems.
+- Early engineering hire or founding engineer roles at product-focused startups.
+- Positions where I own architecture decisions and help teams ship reliably to production.
 
-Create a `.env` file in the project root (see `example.env`):
+---
 
-```
-GITHUB_TOKEN=your_github_token_here
-```
+## Impact highlights
 
-## Pipeline order
+- Designed and maintained AI/ML and quantitative trading projects across **36** repositories.
+- Built and integrated REST-style APIs and backend services in **17**+ codebases using PHP/Laravel, Python, and JavaScript.
+- Applied service-oriented and microservice patterns in **3** projects with Dockerized deployments.
+- Curated and actively maintain a portfolio of **49** repositories that showcase production-grade code, automation, and CI/CD.
 
-Run scripts in this order to (re)build the `data/` directory and all outputs:
+---
 
-| Step | Script | Produces |
-|------|--------|----------|
-| 1 | `python scripts/initial_scan.py` | `data/projects.json` |
-| 2 | `python scripts/tech_stack_detector.py` | `data/tech_stack.json` |
-| 3 | `python scripts/architecture_detector.py` | `data/architecture.json` |
-| 4 | `python scripts/extract_cv.py [path/to/cv.pdf]` | `data/cv_extracted.json` |
-| 5 | `python scripts/generate_portfolio.py` | `portfolio/README.md`, `portfolio/skills_chart.png`, and `data/skill_categories.json` if missing |
-| 6 | `python scripts/generate_site.py` | `site/site.html` |
-| 7 | `python scripts/generate_readme.py` | `README.md` |
+## From my CV
 
-See [docs/REGENERATION.md](docs/REGENERATION.md) for the same order and notes.
+{{ cv_summary_section }}
 
-## Project layout
+---
 
-```
-├── data/                    # Generated data (git-ignored or committed per your choice)
-│   ├── projects.json        # Repos from GitHub
-│   ├── tech_stack.json      # Language/framework percentages
-│   ├── architecture.json    # Detected architecture patterns
-│   ├── cv_extracted.json    # Parsed CV (name, experience, education, certifications)
-│   └── skill_categories.json
-├── portfolio/               # Generated portfolio README + skills chart image
-├── site/                    # Generated personal site (site.html, index.html, css/)
-├── templates/
-│   ├── site.md              # Site template (placeholders like {{ name }}, {{ experience_entries }})
-│   └── README.template.md   # README template
-├── scripts/
-│   ├── initial_scan.py      # GitHub repos → projects.json
-│   ├── tech_stack_detector.py
-│   ├── architecture_detector.py
-│   ├── extract_cv.py       # CV PDF → cv_extracted.json
-│   ├── generate_portfolio.py
-│   ├── generate_site.py     # Site from template + data
-│   └── generate_readme.py
-├── requirements.txt
-└── README.md                # This file (can be overwritten by generate_readme.py)
-```
+## Technical profile at a glance
 
-## Features
+- **Repositories analyzed**: 49
+- **Architectures used in production projects**: Machine Learning Systems (36), API Architecture (17), AI-Native Architecture (16)
+- **Top languages by usage**: PHP (32.54%), Python (21.32%), Swift (17.94%), Laravel (12%), Blade (9.55%)
 
-- **Name handling** – CV extractor prefers “First Last”–style names over single words (e.g. place names). Portfolio and site use `first_name` + `last_name` when present so the displayed name is correct.
-- **Public projects only** – Site and portfolio list only public repositories.
-- **Project name formatting** – Repo names like `eugene-property-management` are shown as “Eugene Property Management”; tech keywords (e.g. PHP, JavaScript) use correct casing.
-- **Skill distribution** – Site includes a bar chart of language/framework usage from `tech_stack.json`.
-- **Experience as bullets** – Site experience entries show descriptions as bullet lists.
+These metrics are derived automatically from my GitHub activity and give a quick view of where I spend most of my time.
 
-## License
+---
 
-Use and adapt as you like. If you reuse the scripts or templates, attribution is appreciated.
+## Technologies I work with
+
+Heavier percentages indicate where I have the deepest hands-on experience; PHP, Python, and Swift are my most-used languages.
+
+| Technology | Usage |
+|-----------|-------|
+| PHP | 32.54% |
+| Python | 21.32% |
+| Swift | 17.94% |
+| Laravel | 12% |
+| Blade | 9.55% |
+| Vue | 7.15% |
+| MQL5 | 5.52% |
+| Vite | 5% |
+| Java | 2.56% |
+| HTML | 2.55% |
+| Tailwind CSS | 2% |
+| Symfony | 2% |
+| Docker | 2% |
+| React | 1% |
+| Express | 1% |
+| Flask | 1% |
+| FastAPI | 1% |
+| CSS | 0.92% |
+| JavaScript | 0.86% |
+| Hack | 0.73% |
+| TypeScript | 0.63% |
+| PowerShell | 0.38% |
+| SCSS | 0.29% |
+| C++ | 0.29% |
+| Dockerfile | 0.24% |
+| Shell | 0.16% |
+| Less | 0.14% |
+| Roff | 0.1% |
+| CMake | 0.04% |
+| Makefile | 0.04% |
+| Batchfile | 0.03% |
+| Stylus | 0.01% |
+
+---
+
+## Architecture experience
+
+I design and work with architectures that support real-world constraints like latency, throughput, and iterative delivery across ML systems, APIs, and microservices.
+
+Across 49 repositories, recurring architecture patterns include Machine Learning Systems, API Architecture, AI-Native Architecture.
+
+- **Machine Learning Systems**: 36 repos
+- **API Architecture**: 17 repos
+- **AI-Native Architecture**: 16 repos
+- **Event-Driven Architecture**: 8 repos
+- **Microservices**: 3 repos
+- **Multi Tenant SaaS**: 2 repos
+- **Jamstack**: 1 repos
+
+---
+
+## Skill graph
+
+![Skills](graphs/skills_chart.png)
+
+_Skill graph highlighting strongest technologies: PHP, Python, Swift._
+
+---
+
+## How this portfolio is generated
+
+This portfolio is generated from my GitHub repositories using custom Python tooling in the `scripts/` folder, combining language stats, architecture detection, and project summaries.
