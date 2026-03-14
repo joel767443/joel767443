@@ -23,6 +23,7 @@ jobs:
           source_file: 'portfolio/README.md'
           destination_repo: 'joel767443/joel767443'
           destination_folder: '' # Empty string puts it in the root (base)
+          destination_branch: 'master' # Use main if your repo default is main
           user_email: 'yowelikachala@gmail.com'
           user_name: 'joel767443'
           commit_message: 'Sync: Updated file from portfolio folder'
