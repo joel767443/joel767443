@@ -141,13 +141,58 @@ def build_technical_skills_grouped(tech_stack):
 
 
 def build_experience_section(cv_data):
-    """Build Professional experience from CV experience list (flat list of strings)."""
+    """Build Professional experience: title | dates, company | location, description, skill tags (like image)."""
+    entries = cv_data.get("experience_entries")
+    if isinstance(entries, list) and entries and isinstance(entries[0], dict):
+        blocks = []
+        for e in entries:
+            title = (e.get("title") or "").strip()
+            company = (e.get("company") or "").strip()
+            dates = (e.get("dates") or "").strip()
+            location = (e.get("location") or "").strip()
+            description = e.get("description")
+            if isinstance(description, list):
+                bullets = [str(b).strip() for b in description if b and str(b).strip()]
+            elif description:
+                s = str(description).strip()
+                bullets = [p.strip() for p in s.split(". ") if p.strip()]
+                bullets = [b + "." if not b.endswith(".") else b for b in bullets]
+            else:
+                bullets = []
+            skills = e.get("skills") or []
+            if isinstance(skills, str):
+                skills = [s.strip() for s in skills.split(",") if s.strip()]
+            if not title and not company:
+                continue
+            tags_html = "".join(
+                f'<span class="exp-skill-tag">{s}</span>' for s in skills if s
+            )
+            desc_html = ""
+            if bullets:
+                desc_html = '<ul class="exp-bullets">' + "".join(
+                    f"<li>{b}</li>" for b in bullets
+                ) + "</ul>"
+            blocks.append(
+                '<div class="exp-entry">'
+                '<div class="exp-row">'
+                f'<span class="exp-title">{title or "—"}</span>'
+                f'<span class="exp-dates">{dates}</span>'
+                "</div>"
+                '<div class="exp-row">'
+                f'<span class="exp-company">{company or "—"}</span>'
+                f'<span class="exp-location">{location}</span>'
+                "</div>"
+                + (f'<div class="exp-description">{desc_html}</div>' if desc_html else "")
+                + (f'<div class="exp-skills">{tags_html}</div>' if tags_html else "")
+                + "</div>"
+            )
+        if blocks:
+            return '<div class="exp-entries">' + "".join(blocks) + "</div>"
     experience = cv_data.get("experience") or []
     if not experience:
         return "<p>No experience data.</p>"
-    # Render as list of items; pyresparser gives flat list (company, title, dates, location, bullets)
     lines = []
-    for i, item in enumerate(experience):
+    for item in experience:
         s = (item or "").strip()
         if not s or s.startswith("Page "):
             continue
@@ -158,26 +203,47 @@ def build_experience_section(cv_data):
 
 
 def build_education_section(cv_data):
-    """Build Education from CV degree and college_name."""
-    degree = cv_data.get("degree") or []
-    college = cv_data.get("college_name")
-    if isinstance(degree, str):
-        degree = [degree] if degree else []
-    if not degree and not college:
+    """Build Education with two-line layout: degree (bold) | dates (right), institution | location (right)."""
+    education = cv_data.get("education")
+    if isinstance(education, list) and education and isinstance(education[0], dict):
+        entries = education
+    else:
+        degree = cv_data.get("degree") or []
+        college = cv_data.get("college_name") or ""
+        if isinstance(degree, str):
+            degree = [degree] if degree else []
+        entries = [
+            {"degree": (d or "").strip(), "institution": college or "", "dates": "", "location": ""}
+            for d in degree
+            if d and str(d).strip()
+        ]
+        if not entries and college:
+            entries = [{"degree": "", "institution": college, "dates": "", "location": ""}]
+    if not entries:
         return "<p>No education data.</p>"
-    lines = []
-    if college:
-        lines.append(f"<li class=\"cv-item\">{college}</li>")
-    for d in degree:
-        if d and str(d).strip():
-            lines.append(f"<li class=\"cv-item\">{d}</li>")
-    if not lines:
-        return "<p>No education data.</p>"
-    return "<ul class=\"cv-list\">" + "".join(lines) + "</ul>"
+    blocks = []
+    for e in entries:
+        degree_title = (e.get("degree") or "").strip()
+        institution = (e.get("institution") or "").strip()
+        dates = (e.get("dates") or "").strip()
+        location = (e.get("location") or "").strip()
+        blocks.append(
+            '<div class="education-entry">'
+            '<div class="education-row">'
+            f'<span class="education-degree">{degree_title or "—"}</span>'
+            f'<span class="education-meta">{dates}</span>'
+            "</div>"
+            '<div class="education-row">'
+            f'<span class="education-institution">{institution or "—"}</span>'
+            f'<span class="education-meta">{location}</span>'
+            "</div>"
+            "</div>"
+        )
+    return '<div class="education-entries">' + "".join(blocks) + "</div>"
 
 
 def build_certifications_section(cv_data):
-    """Build Certifications from CV certifications key if present."""
+    """Build Certifications: title (bold), issuer, Issued date (muted) per entry, like experience blocks."""
     certs = cv_data.get("certifications")
     if certs is None:
         certs = []
@@ -185,10 +251,38 @@ def build_certifications_section(cv_data):
         certs = [certs]
     if not certs:
         return "<p>None listed.</p>"
-    lines = [f"<li class=\"cv-item\">{c}</li>" for c in certs if c and str(c).strip()]
-    if not lines:
+    blocks = []
+    for c in certs:
+        if isinstance(c, dict):
+            name = (c.get("name") or "").strip()
+            issuer = (c.get("issuer") or "").strip()
+            issued = (c.get("issued") or "").strip()
+            if not name and not issuer:
+                continue
+            issued_text = f"Issued {issued}" if issued else ""
+            blocks.append(
+                '<div class="cert-entry">'
+                '<div class="cert-row">'
+                f'<span class="cert-title">{name or "—"}</span>'
+                f'<span class="cert-meta">{issued_text}</span>'
+                "</div>"
+                '<div class="cert-row">'
+                f'<span class="cert-issuer">{issuer or "—"}</span>'
+                '<span class="cert-meta"></span>'
+                "</div>"
+                "</div>"
+            )
+        elif c and str(c).strip():
+            blocks.append(
+                '<div class="cert-entry">'
+                '<div class="cert-row">'
+                f'<span class="cert-title">{c}</span>'
+                '<span class="cert-meta"></span>'
+                "</div></div>"
+            )
+    if not blocks:
         return "<p>None listed.</p>"
-    return "<ul class=\"cv-list\">" + "".join(lines) + "</ul>"
+    return '<div class="cert-entries">' + "".join(blocks) + "</div>"
 
 
 def generate_skills_chart(tech_stack, arch_data, output_path):
@@ -200,27 +294,32 @@ def generate_skills_chart(tech_stack, arch_data, output_path):
     arch_values = list(arch_counts.values())
     has_arch = bool(arch_counts)
 
+    # Light text on dark background; wider figure to fit page width
+    title_color = "#e5e7eb"
+    label_color = "#9ca3af"
+    fig_w, fig_h = (13, 8) if has_arch else (13, 4)
+
     if has_arch:
-        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 8))
+        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(fig_w, fig_h))
     else:
-        fig, ax1 = plt.subplots(1, 1, figsize=(10, 4))
+        fig, ax1 = plt.subplots(1, 1, figsize=(fig_w, fig_h))
 
     if skill_names:
         ax1.bar(skill_names, skill_values, color=(0.13, 0.77, 0.37, 0.85))
-        ax1.set_title("Developer Skill Distribution")
+        ax1.set_title("Developer Skill Distribution", color=title_color, fontsize=12)
         ax1.set_xticks(range(len(skill_names)))
-        ax1.set_xticklabels(skill_names, rotation=45, ha="right")
+        ax1.set_xticklabels(skill_names, rotation=45, ha="right", color=label_color)
         ax1.set_facecolor((0.06, 0.09, 0.16, 0.98))
-        ax1.tick_params(colors="#9ca3af")
+        ax1.tick_params(axis="y", colors=label_color)
         ax1.spines["bottom"].set_color("#374151")
         ax1.spines["left"].set_color("#374151")
     if has_arch:
         ax2.bar(arch_names, arch_values, color=(0.22, 0.74, 0.97, 0.85))
-        ax2.set_title("Detected Architectures Across Repositories")
+        ax2.set_title("Detected Architectures Across Repositories", color=title_color, fontsize=12)
         ax2.set_xticks(range(len(arch_names)))
-        ax2.set_xticklabels(arch_names, rotation=45, ha="right")
+        ax2.set_xticklabels(arch_names, rotation=45, ha="right", color=label_color)
         ax2.set_facecolor((0.06, 0.09, 0.16, 0.98))
-        ax2.tick_params(colors="#9ca3af")
+        ax2.tick_params(axis="y", colors=label_color)
         ax2.spines["bottom"].set_color("#374151")
         ax2.spines["left"].set_color("#374151")
 
@@ -280,14 +379,14 @@ def generate_html(projects, tech_stack, arch_data, cv_data):
     experience_html = build_experience_section(cv_data)
     education_html = build_education_section(cv_data)
     certifications_html = build_certifications_section(cv_data)
-    hero_name = (cv_data.get("name") or "Yoweli Kachala").strip() or "Yoweli Kachala"
+    hero_name = (cv_data.get("name") or "Contact Durbanville").strip() or "Contact Durbanville"
 
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Developer Portfolio – Yoweli Kachala</title>
+    <title>Developer Portfolio – {hero_name}</title>
     <style>
         :root {{
             --bg: #050816;
@@ -318,7 +417,7 @@ def generate_html(projects, tech_stack, arch_data, cv_data):
         }}
 
         main {{
-            max-width: 1120px;
+            max-width: 1300px;
             margin: 0 auto;
             padding: 40px 20px 64px;
         }}
@@ -483,6 +582,189 @@ def generate_html(projects, tech_stack, arch_data, cv_data):
             border-bottom: none;
         }}
 
+        .education-entries {{
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }}
+
+        .education-entry {{
+            padding-bottom: 14px;
+            border-bottom: 1px solid rgba(55, 65, 81, 0.5);
+        }}
+
+        .education-entry:last-child {{
+            border-bottom: none;
+            padding-bottom: 0;
+        }}
+
+        .education-row {{
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 16px;
+            min-height: 1.4em;
+        }}
+
+        .education-row + .education-row {{
+            margin-top: 2px;
+        }}
+
+        .education-degree {{
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--text);
+        }}
+
+        .education-institution {{
+            font-size: 0.9rem;
+            color: var(--muted);
+        }}
+
+        .education-meta {{
+            font-size: 0.82rem;
+            color: var(--muted);
+            flex-shrink: 0;
+        }}
+
+        .cert-entries {{
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }}
+
+        .cert-entry {{
+            padding-bottom: 14px;
+            margin-bottom: 14px;
+            border-bottom: 1px solid rgba(55, 65, 81, 0.5);
+        }}
+
+        .cert-entry:last-child {{
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }}
+
+        .cert-row {{
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 16px;
+            min-height: 1.4em;
+        }}
+
+        .cert-row + .cert-row {{
+            margin-top: 2px;
+        }}
+
+        .cert-title {{
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--text);
+        }}
+
+        .cert-issuer {{
+            font-size: 0.9rem;
+            color: var(--muted);
+        }}
+
+        .cert-entry .cert-meta {{
+            font-size: 0.82rem;
+            color: var(--muted);
+            flex-shrink: 0;
+        }}
+
+        .exp-entries {{
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }}
+
+        .exp-entry {{
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(55, 65, 81, 0.5);
+        }}
+
+        .exp-entry:last-child {{
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }}
+
+        .exp-row {{
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 16px;
+            min-height: 1.4em;
+        }}
+
+        .exp-row + .exp-row {{
+            margin-top: 2px;
+        }}
+
+        .exp-title {{
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--text);
+        }}
+
+        .exp-dates {{
+            font-size: 0.82rem;
+            color: var(--muted);
+            flex-shrink: 0;
+        }}
+
+        .exp-company {{
+            font-size: 0.9rem;
+            color: var(--muted);
+        }}
+
+        .exp-location {{
+            font-size: 0.82rem;
+            color: var(--muted);
+            flex-shrink: 0;
+        }}
+
+        .exp-description {{
+            margin: 10px 0 0 0;
+        }}
+
+        .exp-bullets {{
+            list-style: disc;
+            padding-left: 20px;
+            margin: 0;
+            font-size: 0.9rem;
+            color: var(--muted);
+            line-height: 1.55;
+        }}
+
+        .exp-bullets li {{
+            margin-bottom: 4px;
+        }}
+
+        .exp-bullets li:last-child {{
+            margin-bottom: 0;
+        }}
+
+        .exp-skills {{
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }}
+
+        .exp-skill-tag {{
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            color: var(--text);
+            background: rgba(55, 65, 81, 0.6);
+            border: 1px solid rgba(75, 85, 99, 0.8);
+        }}
+
         #skills-graph img {{
             max-width: 100%;
             height: auto;
@@ -592,7 +874,7 @@ def generate_html(projects, tech_stack, arch_data, cv_data):
         }}
 
         footer {{
-            max-width: 1120px;
+            max-width: 1280px;
             margin: 0 auto;
             padding: 0 20px 40px;
             font-size: 0.78rem;
@@ -645,6 +927,14 @@ def generate_html(projects, tech_stack, arch_data, cv_data):
             </div>
         </header>
 
+        <section id="architecture">
+            <header class="section-header">
+                <h2>ARCHITECTURE FOOTPRINT</h2>
+                <span class="section-kicker">Inferred patterns detected across repositories</span>
+            </header>
+            {arch_html}
+        </section>
+
         <section id="skills">
             <header class="section-header">
                 <h2>Technical skills</h2>
@@ -690,14 +980,6 @@ def generate_html(projects, tech_stack, arch_data, cv_data):
             <div class="projects-grid">
                 {projects_html}
             </div>
-        </section>
-
-        <section id="architecture">
-            <header class="section-header">
-                <h2>ARCHITECTURE FOOTPRINT</h2>
-                <span class="section-kicker">Inferred patterns detected across repositories</span>
-            </header>
-            {arch_html}
         </section>
     </main>
 
