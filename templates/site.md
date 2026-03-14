@@ -1,7 +1,5 @@
 # Senior Software Engineer Portfolio
 
-<!-- Template: replace placeholders like {{ name }}, {{ title }}, etc. when generating the site. -->
-
 ## Navigation
 
 - [Home](#home)
@@ -83,32 +81,13 @@
 
 {{ experience_entries }}
 
-<!-- Example entry:
-### Senior Software Engineer
-*Tech Solutions Inc.* · 2022 - Present · Remote
-
-Lead full-stack development projects using React, Node.js, and TypeScript. Implemented CI/CD pipelines with Jenkins and managed containerized applications with Docker and Kubernetes.
-
-`React` `Node.js` `TypeScript` `Docker` `Kubernetes` `Jenkins`
--->
-
 ### Education
 
 {{ education_entries }}
 
-<!-- Example:
-### B-Tech in Information Technology
-*Cape Peninsula University of Technology* · 01/2014 - 11/2014 · Cape Town, South Africa
--->
-
 ### Certifications
 
 {{ certification_entries }}
-
-<!-- Example:
-### Cisco Certified Networking Associate (CCNA)
-*Cisco*
--->
 
 ---
 
@@ -117,15 +96,6 @@ Lead full-stack development projects using React, Node.js, and TypeScript. Imple
 *A selection of projects that demonstrate expertise in full-stack development and modern DevOps practices.*
 
 {{ project_entries }}
-
-<!-- Example:
-### E-Commerce Platform
-![E-Commerce Platform](image_url)
-
-Full-stack e-commerce solution built with Next.js and Node.js. Features include user authentication, payment processing, and admin dashboard.
-
-`Next.js` `Node.js` `TypeScript` `PostgreSQL` `Docker`
--->
 
 ---
 
