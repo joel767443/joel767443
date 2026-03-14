@@ -387,6 +387,14 @@ button {
   color: transparent;
 }
 
+.hero-headline {
+  margin: 0 0 0.5rem;
+  color: var(--primary);
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--tracking-tight);
+}
+
 .hero-subtitle {
   margin: 0 0 0.8rem;
   color: var(--muted-foreground);

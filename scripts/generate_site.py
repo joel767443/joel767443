@@ -126,6 +126,7 @@ def format_project_name(raw: str) -> str:
 def build_hero_html(ctx: dict) -> str:
     name = _e(ctx["name"])
     title = _e(ctx["title"])
+    headline = _e(ctx.get("headline") or ctx["title"])
     experience_summary = _e(ctx["experience_summary"])
     tagline = _e(ctx["tagline"])
     resume_url = _e(ctx["resume_url"])
@@ -136,16 +137,12 @@ def build_hero_html(ctx: dict) -> str:
   <div class="hero-bg"></div>
   <div class="hero-inner container">
     <div class="hero-content">
-      <div class="badge badge-available">
-        <span class="badge-icon">★</span>
-        {_e(ctx["badge_label"])}
-      </div>
       <h1 class="hero-title">
         <span></span>
         <span class="hero-name">{name}</span>
       </h1>
+      <p class="hero-headline">{headline}</p>
       <p class="hero-subtitle">
-        {title}
         <span class="highlight">{_e(ctx.get("highlight_years", "5+ years"))}</span>
         of expertise.
       </p>
@@ -479,6 +476,7 @@ def main() -> None:
     ctx = {
         "name": name,
         "title": headline.split("|")[0].strip() if "|" in headline else headline,
+        "headline": headline,
         "badge_label": "Available for Work",
         "experience_summary": experience_summary + " of expertise.",
         "highlight_years": experience_summary if experience_summary else "5+ years",

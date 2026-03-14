@@ -12,8 +12,6 @@
 
 ## Home {#home}
 
-**{{ badge_label }}** (e.g. Available for Work)
-
 # {{ name }}
 
 **{{ title }}** — {{ experience_summary }} (e.g. 5+ years of expertise.)
