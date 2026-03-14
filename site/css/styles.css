@@ -612,6 +612,21 @@ button {
   font-size: 1.05rem;
 }
 
+.exp-bullets {
+  margin: 0 0 1rem;
+  padding-left: 1.25rem;
+  font-size: 0.9rem;
+  color: var(--muted-foreground);
+}
+
+.exp-bullets li {
+  margin-bottom: 0.35rem;
+}
+
+.exp-bullets li:last-child {
+  margin-bottom: 0;
+}
+
 .experience-meta {
   display: flex;
   flex-direction: column;

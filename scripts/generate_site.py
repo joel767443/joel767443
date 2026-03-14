@@ -45,6 +45,25 @@ def _e(s: str) -> str:
     return html_module.escape(s) if s else ""
 
 
+def format_project_name(raw: str) -> str:
+    """Convert repo-style names to display format: eugene-property-management -> Eugene Property Management."""
+    if not raw or not raw.strip():
+        return raw
+    s = raw.strip()
+    for sep in ("-", "_", "."):
+        s = s.replace(sep, " ")
+    parts = s.split()
+    result = []
+    for p in parts:
+        if not p:
+            continue
+        if p.isupper() and len(p) > 1:
+            result.append(p)  # Keep API, README, etc.
+        else:
+            result.append(p[0].upper() + p[1:].lower() if len(p) > 1 else p.upper())
+    return " ".join(result)
+
+
 def build_hero_html(ctx: dict) -> str:
     name = _e(ctx["name"])
     title = _e(ctx["title"])
@@ -164,13 +183,21 @@ def build_experience_html(cv_data: dict) -> str:
             continue
         desc = e.get("description")
         if isinstance(desc, list):
-            desc_text = " ".join(str(b).strip() for b in desc if b and str(b).strip())
+            bullets = [str(b).strip() for b in desc if b and str(b).strip()]
+        elif desc and str(desc).strip():
+            bullets = [s.strip() + "." for s in str(desc).split(". ") if s.strip()]
+            if bullets and not bullets[-1].endswith("."):
+                bullets[-1] = bullets[-1] + "."
         else:
-            desc_text = (desc or "").strip()
+            bullets = []
         skills = e.get("skills") or []
         if isinstance(skills, str):
             skills = [s.strip() for s in skills.split(",") if s.strip()]
         tags = "".join(f'<span class="badge badge-outline">{_e(s)}</span>' for s in skills)
+        if bullets:
+            desc_html = "<ul class=\"muted exp-bullets\">" + "".join(f"<li>{_e(b)}</li>" for b in bullets) + "</ul>"
+        else:
+            desc_html = ""
         blocks.append(f"""      <article class="card">
           <div class="experience-header">
             <div>
@@ -182,7 +209,7 @@ def build_experience_html(cv_data: dict) -> str:
               <span>{_e(loc)}</span>
             </div>
           </div>
-          <p class="muted">{_e(desc_text)}</p>
+          {desc_html}
           <div class="badges">{tags}</div>
         </article>""")
     if not blocks:
@@ -266,7 +293,8 @@ def build_projects_html(projects: list) -> str:
     default_img = "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&h=400&fit=crop"
     blocks = []
     for p in sorted(projects, key=lambda x: (x.get("name") or "").lower())[:12]:
-        name = p.get("name") or "Unnamed"
+        raw_name = p.get("name") or "Unnamed"
+        display_name = format_project_name(raw_name)
         url = p.get("url") or "#"
         desc = (p.get("description") or p.get("summary") or "").strip()
         if desc and desc.startswith("#"):
@@ -278,10 +306,10 @@ def build_projects_html(projects: list) -> str:
         img = p.get("image_url") or default_img
         blocks.append(f"""      <article class="card project-card">
           <div class="project-image">
-            <img src="{_e(img)}" alt="{_e(name)}" />
+            <img src="{_e(img)}" alt="{_e(display_name)}" />
           </div>
           <div class="project-body">
-            <h3><a href="{_e(url)}" target="_blank" rel="noopener noreferrer">{_e(name)}</a></h3>
+            <h3><a href="{_e(url)}" target="_blank" rel="noopener noreferrer">{_e(display_name)}</a></h3>
             <p class="muted">{_e(desc)}</p>
             <div class="badges">{badges}</div>
           </div>
