@@ -154,6 +154,18 @@ _DATE_RANGE = re.compile(
     r"([A-Za-z]+\s+\d{4})\s*[-–—]\s*([A-Za-z]+\s+\d{4})(?:\s*\([^)]+\))?",
     re.IGNORECASE
 )
+# Strip trailing duration like "(3 years 2 months)" or "(6 months)" from date strings
+_DURATION_PAREN = re.compile(
+    r"\s*\(\d+\s*(?:years?|months?)(?:\s+\d+\s*(?:years?|months?))?\)\s*$",
+    re.IGNORECASE
+)
+
+
+def _strip_duration_from_dates(dates_str: str) -> str:
+    """Remove trailing (X years Y months) or (Z months) from a date string."""
+    if not dates_str or not isinstance(dates_str, str):
+        return dates_str or ""
+    return _DURATION_PAREN.sub("", dates_str).strip()
 
 
 def _extract_experience_section_lines(lines: list) -> list:
@@ -426,7 +438,7 @@ def parse_experience_entries(flat_experience: list) -> list:
         line = lines[i]
         if _DATE_RANGE.search(line):
             # This line is dates; title is typically before, company before that, location after
-            dates_str = line
+            dates_str = _strip_duration_from_dates(line)
             title = lines[i - 1] if i >= 1 else ""
             company = lines[i - 2] if i >= 2 else ""
             # Skip "Page N of M" and similar
