@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
-# CV Extractor Script - Saves structured data from any CV PDF to JSON
-# Uses pyresparser (offline NLP parser for resumes/CVs).
+# CV Extractor Script - Saves structured data from any CV PDF to JSON.
+# Uses ez-parse (lightweight parser for LinkedIn profile PDFs) plus raw-text
+# extraction for experience and education when not provided by ez-parse.
 # Extracts: name, email, phone, skills, experience (dates/titles/companies), education, etc.
 #
 # INSTALL ONCE (run in terminal):
-#   pip install -r requirements.txt   # includes pyresparser and spacy 2.x
-#   python -m spacy download en_core_web_sm   # after spacy 2.x: use compatible model
-#   If "en_core_web_sm" is for spaCy 3, install 2.x model instead:
-#     pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.3.1/en_core_web_sm-2.3.1.tar.gz
-#   python -c "import nltk; nltk.download('stopwords')"
+#   pip install -r requirements.txt   # includes ez-parse (and pdfminer)
+#
+# Works best with LinkedIn "Save to PDF" profiles; still attempts to parse
+# experience and education from raw text for other CVs.
 
 import argparse
 import io
@@ -16,43 +16,210 @@ import json
 import re
 from pathlib import Path
 
-from pdfminer.converter import TextConverter
-from pdfminer.layout import LAParams
-from pdfminer.pdfinterp import PDFPageInterpreter, PDFResourceManager
-from pdfminer.pdfpage import PDFPage
+try:
+    from ez_parse import parser as ez_parser
+except ImportError:
+    # PyPI ez-parse may not install the module; use vendored implementation (same API).
+    ez_parser = None
 
-# Ensure NLTK stopwords available (pyresparser dependency)
-def _ensure_nltk_stopwords():
-    try:
-        from nltk.corpus import stopwords
-        stopwords.words("english")
-    except LookupError:
-        import nltk
-        nltk.download("stopwords", quiet=True)
+if ez_parser is None:
+    from pdfminer.converter import TextConverter
+    from pdfminer.layout import LAParams
+    from pdfminer.pdfinterp import PDFPageInterpreter, PDFResourceManager
+    from pdfminer.pdfpage import PDFPage
+
+    _EZ_WEIRD = ["\u00b7", "\xa0", "\uf0da", "\x0c", "• ", "* ", "(LinkedIn)", " (LinkedIn)", "\uf0a7", "(Mobile)", "- ", "●"]
+
+    def _vendored_extract_pdf(fname):
+        """Vendored ez-parse: PDF to list of lines."""
+        laparams = LAParams()
+        retstr = io.StringIO()
+        rsrcmgr = PDFResourceManager(caching=True)
+        device = TextConverter(rsrcmgr, retstr, laparams=laparams)
+        with open(fname, "rb") as fp:
+            interpreter = PDFPageInterpreter(rsrcmgr, device)
+            for page in PDFPage.get_pages(fp, caching=True, check_extractable=True):
+                interpreter.process_page(page)
+        data = retstr.getvalue()
+        for i in _EZ_WEIRD:
+            data = data.replace(i, "")
+        return data.split("\n")
+
+    def _vendored_get_many(result_list):
+        """Vendored ez-parse: list of lines to dict (contact, skills, certifications, honors, summary, languages)."""
+        TAGS = {"Contact", "Top Skills", "Certifications", "Honors-Awards", "Publications", "Summary", "Languages", "Experience", "Education"}
+        contact, skills, certifications, honors, summary, languages = [], [], [], [], [], []
+
+        def collect_until_tag(lines, start, tags):
+            out = []
+            for j in range(start + 1, len(lines)):
+                if not lines[j].strip():
+                    continue
+                if "Page" in lines[j]:
+                    continue
+                if lines[j].strip() in tags:
+                    return out, j + 1
+                out.append(lines[j].strip())
+            return out, len(lines)
+
+        i = 0
+        while i < len(result_list):
+            line = result_list[i]
+            if line.strip() == "Contact":
+                contact, i = collect_until_tag(result_list, i, TAGS)
+            elif line.strip() in ("Top Skills", "Skills"):
+                skills, i = collect_until_tag(result_list, i, TAGS)
+            elif line.strip() == "Certifications":
+                certifications, i = collect_until_tag(result_list, i, TAGS)
+            elif line.strip() == "Honors-Awards":
+                honors, i = collect_until_tag(result_list, i, TAGS)
+            elif line.strip() == "Summary":
+                s, i = collect_until_tag(result_list, i, TAGS)
+                summary = [" ".join(s).strip()] if s else []
+            elif line.strip() == "Languages":
+                languages, i = collect_until_tag(result_list, i, TAGS)
+            else:
+                i += 1
+        return {"contact": contact, "skills": skills, "languages": languages, "certifications": certifications, "honors": honors, "summary": summary}
+
+    class _VendoredParser:
+        extract_pdf = staticmethod(_vendored_extract_pdf)
+        get_many = staticmethod(_vendored_get_many)
+
+    ez_parser = _VendoredParser()
+
+# Regexes for contact parsing from ez-parse "contact" list
+_EMAIL_RE = re.compile(r"[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+")
+_PHONE_RE = re.compile(r"[\d\s\-+.()]{7,}")
 
 
-_ensure_nltk_stopwords()
+def _parse_contact_from_ez(contact_list: list) -> dict:
+    """Map ez-parse contact list to name, email, mobile_number."""
+    out = {"name": "", "email": "", "mobile_number": ""}
+    if not contact_list:
+        return out
+    emails = []
+    phones = []
+    name_candidates = []
+    for s in contact_list:
+        s = (s or "").strip()
+        if not s or "Page " in s:
+            continue
+        if _EMAIL_RE.search(s):
+            emails.append(_EMAIL_RE.search(s).group(0))
+            continue
+        if _PHONE_RE.fullmatch(s.replace(" ", "").replace("-", "").replace("(", "").replace(")", "").replace(".", "")) or (
+            len(s) >= 7 and any(c.isdigit() for c in s) and _PHONE_RE.search(s)
+        ):
+            phones.append(s)
+            continue
+        name_candidates.append(s)
+    out["email"] = emails[0] if emails else ""
+    out["mobile_number"] = phones[0] if phones else ""
+    out["name"] = name_candidates[0] if name_candidates else ""
+    return out
 
-from pyresparser import ResumeParser
+
+def _get_section_lines(lines: list, start_headers: tuple, stop_headers: tuple) -> list:
+    """Find a section by start headers and collect lines until a stop header."""
+    start_idx = None
+    for i, line in enumerate(lines):
+        line_lower = (line or "").strip().lower()
+        if not line_lower:
+            continue
+        for h in start_headers:
+            if line_lower == h.lower() or line_lower.startswith(h.lower() + ":") or line_lower.startswith(h.lower() + " "):
+                start_idx = i + 1
+                break
+        if start_idx is not None:
+            break
+    if start_idx is None:
+        return []
+    result = []
+    for i in range(start_idx, len(lines)):
+        line = (lines[i] or "").strip()
+        line_lower = line.lower()
+        if re.match(r"^Page \d+ of \d+$", line, re.IGNORECASE):
+            continue
+        for h in stop_headers:
+            if line_lower == h.lower() or line_lower.startswith(h.lower() + ":") or line_lower.startswith(h.lower() + " "):
+                return result
+        if line:
+            result.append(line)
+    return result
 
 
-def extract_raw_text_from_pdf(pdf_path) -> str:
-    """Extract raw text from PDF (preserves paragraph breaks)."""
-    pdf_path = Path(pdf_path)
-    text_parts = []
-    with open(pdf_path, "rb") as fh:
-        for page in PDFPage.get_pages(fh, caching=True, check_extractable=True):
-            resource_manager = PDFResourceManager()
-            out = io.StringIO()
-            converter = TextConverter(
-                resource_manager, out, codec="utf-8", laparams=LAParams()
-            )
-            interpreter = PDFPageInterpreter(resource_manager, converter)
-            interpreter.process_page(page)
-            text_parts.append(out.getvalue())
-            converter.close()
-            out.close()
-    return "\n".join(text_parts)
+# Date range pattern for experience/education parsing
+_DATE_RANGE = re.compile(
+    r"([A-Za-z]+\s+\d{4})\s*[-–—]\s*([A-Za-z]+\s+\d{4})(?:\s*\([^)]+\))?",
+    re.IGNORECASE
+)
+
+
+def _extract_experience_section_lines(lines: list) -> list:
+    """Extract lines under Experience / Work Experience / Employment for parse_experience_entries."""
+    start = ("experience", "work experience", "employment", "professional experience")
+    stop = (
+        "education", "qualifications", "skills", "certifications", "summary",
+        "contact", "references", "honors", "languages", "publications",
+        "page 1 of", "page 2 of",
+    )
+    return _get_section_lines(lines, start, stop)
+
+
+def extract_education_from_text(full_text: str) -> list:
+    """Extract Education/Qualifications section from CV raw text; return list of {degree, institution, dates, location}."""
+    if not full_text or not full_text.strip():
+        return []
+    text = re.sub(r"\n{3,}", "\n\n", full_text.strip())
+    lines = [ln.strip() for ln in text.split("\n") if ln.strip()]
+    start = ("education", "qualifications", "academic")
+    stop = (
+        "experience", "work experience", "skills", "certifications",
+        "summary", "contact", "references", "page 1 of",
+    )
+    section = _get_section_lines(lines, start, stop)
+    if not section:
+        return []
+    result = []
+    i = 0
+    while i < len(section):
+        line = section[i]
+        if re.match(r"^Page \d+ of \d+$", line, re.IGNORECASE):
+            i += 1
+            continue
+        degree = line or ""
+        institution = ""
+        dates = ""
+        location = ""
+        if i + 1 < len(section):
+            second = section[i + 1]
+            if _DATE_RANGE.search(second):
+                dates = second
+                i += 2
+            else:
+                institution = second
+                if i + 2 < len(section):
+                    third = section[i + 2]
+                    if _DATE_RANGE.search(third):
+                        dates = third
+                        i += 3
+                    elif len(third) < 60 and not third.startswith("- "):
+                        location = third
+                        i += 3
+                    else:
+                        i += 2
+                else:
+                    i += 2
+        else:
+            i += 1
+        result.append({
+            "degree": degree,
+            "institution": institution,
+            "dates": dates,
+            "location": location,
+        })
+    return result
 
 
 def _is_continuation_line(line: str, prev_line: str) -> bool:
@@ -160,38 +327,6 @@ def extract_summary_from_text(full_text: str) -> str:
         result.append(p)
 
     return "\n\n".join(result) if result else ""
-
-
-def build_education_from_parser(extracted_data: dict) -> list:
-    """Build structured education list from parser's degree and college_name."""
-    degree = extracted_data.get("degree") or []
-    college = extracted_data.get("college_name")
-    if isinstance(degree, str):
-        degree = [degree] if degree else []
-    result = []
-    for d in degree:
-        if d and str(d).strip():
-            result.append({
-                "degree": str(d).strip(),
-                "institution": (college or "").strip() if college else "",
-                "dates": "",
-                "location": "",
-            })
-    if not result and college and str(college).strip():
-        result.append({
-            "degree": "",
-            "institution": str(college).strip(),
-            "dates": "",
-            "location": "",
-        })
-    return result
-
-
-# Date range pattern: "May 2020 - July 2021" or "December 2019 - May 2020 (6 months)" or "January 2016 - February 2019"
-_DATE_RANGE = re.compile(
-    r"([A-Za-z]+\s+\d{4})\s*[-–—]\s*([A-Za-z]+\s+\d{4})(?:\s*\([^)]+\))?",
-    re.IGNORECASE
-)
 
 
 def parse_experience_entries(flat_experience: list) -> list:
@@ -322,7 +457,8 @@ def get_default_paths():
 def extract_cv_to_json(pdf_path: str, output_json: str = None) -> dict:
     """
     Extracts data from the CV PDF and saves it as clean JSON.
-    Works with standard CVs (name, email, skills, experience, education, etc.).
+    Uses ez-parse for contact, skills, summary, certifications; raw-text extraction
+    for experience and education. Works best with LinkedIn "Save to PDF" profiles.
     """
     pdf_path = Path(pdf_path)
     if not pdf_path.is_file():
@@ -334,28 +470,60 @@ def extract_cv_to_json(pdf_path: str, output_json: str = None) -> dict:
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     print(f"Extracting data from: {pdf_path}")
-    extracted_data = ResumeParser(str(pdf_path)).get_extracted_data()
+    lines = ez_parser.extract_pdf(str(pdf_path))
+    ez_data = ez_parser.get_many(lines)
+    raw_text = "\n".join(lines)
 
-    # Extract summary from raw PDF text (Summary/Objective/Profile section or first paragraphs)
-    raw_text = extract_raw_text_from_pdf(pdf_path)
-    summary = extract_summary_from_text(raw_text)
-    if summary:
-        extracted_data["summary"] = summary
+    # Build extracted_data from ez-parse output
+    contact = _parse_contact_from_ez(ez_data.get("contact") or [])
+    extracted_data = {
+        "name": contact["name"],
+        "email": contact["email"],
+        "mobile_number": contact["mobile_number"],
+        "skills": list(ez_data.get("skills") or []),
+        "summary": "\n\n".join(s for s in (ez_data.get("summary") or []) if s).strip() or "",
+        "experience": [],
+        "experience_entries": [],
+        "education": [],
+        "degree": None,
+        "college_name": None,
+        "certifications": [],
+        "designation": None,
+        "company_names": None,
+        "no_of_pages": None,
+        "total_experience": None,
+    }
+    # Certifications from ez-parse: list of strings -> list of {name, issuer, issued}
+    for s in ez_data.get("certifications") or []:
+        if (s or "").strip():
+            extracted_data["certifications"].append({"name": s.strip(), "issuer": "", "issued": ""})
+    # Fallback: use raw-text parser for structured certs (issuer/issued) when ez-parse gave none
+    if not extracted_data["certifications"]:
+        certs_from_text = extract_certifications_from_text(raw_text)
+        if certs_from_text:
+            extracted_data["certifications"] = certs_from_text
 
-    # Always build structured data from CV (parser + raw text)
-    education = build_education_from_parser(extracted_data)
-    if education:
-        extracted_data["education"] = education
+    # Summary fallback from raw text if ez-parse summary empty
+    if not extracted_data["summary"]:
+        extracted_data["summary"] = extract_summary_from_text(raw_text)
 
-    experience_entries = parse_experience_entries(extracted_data.get("experience") or [])
+    # Experience from raw text (ez-parse does not extract Experience/Education)
+    flat_experience = _extract_experience_section_lines(lines)
+    experience_entries = parse_experience_entries(flat_experience)
+    if flat_experience:
+        extracted_data["experience"] = flat_experience
     if experience_entries:
         extracted_data["experience_entries"] = experience_entries
 
-    certifications = extract_certifications_from_text(raw_text)
-    if certifications:
-        extracted_data["certifications"] = certifications
+    # Education from raw text
+    education = extract_education_from_text(raw_text)
+    if education:
+        extracted_data["education"] = education
+        first = education[0]
+        extracted_data["degree"] = [first.get("degree")] if first.get("degree") else []
+        extracted_data["college_name"] = first.get("institution") or None
 
-    # Only fill from existing file when the built/extracted value for that key is empty
+    # Fill from existing file when extracted value for that key is empty
     if output_path.exists():
         try:
             with open(output_path, encoding="utf-8") as f:
