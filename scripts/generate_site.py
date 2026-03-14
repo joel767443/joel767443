@@ -445,7 +445,7 @@ def main() -> None:
     if first_name or last_name:
         name = f"{first_name} {last_name}".strip()
     else:
-        name = (cv_data.get("name") or "Your Name").strip()
+        name = (cv_data.get("name") or "Yoweli Kachala").strip()
     headline = (cv_data.get("headline") or "Senior Software Engineer").strip()
     summary = (cv_data.get("summary") or "").strip()
     tagline = summary.split(". ")[0].strip() + "." if summary else "Specializing in full-stack development, DevOps practices, and scalable solutions that drive business growth."

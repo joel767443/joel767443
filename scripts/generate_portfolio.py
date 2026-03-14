@@ -426,7 +426,7 @@ def generate_markdown(projects, tech_stack, arch_data, cv_data, skill_categories
     if first_name or last_name:
         hero_name = f"{first_name} {last_name}".strip()
     else:
-        hero_name = (cv_data.get("name") or "Contact Durbanville").strip() or "Contact Durbanville"
+        hero_name = (cv_data.get("name") or "Yoweli Kachala").strip() or "Yoweli Kachala"
     hero_pill = (cv_data.get("headline") or "AI-Augmented Software Engineer").strip() or "AI-Augmented Software Engineer"
     raw_summary = (cv_data.get("summary") or "").strip() or "Building AI-native systems, microservices, Laravel applications, and data-driven trading tools. This portfolio is generated directly from my GitHub activity to reflect how I actually ship software."
     summary_paragraphs = [p.strip() for p in raw_summary.split("\n\n") if p.strip()]
@@ -600,7 +600,7 @@ def generate_html(projects, tech_stack, arch_data, cv_data, skill_categories):
     if first_name or last_name:
         hero_name = f"{first_name} {last_name}".strip()
     else:
-        hero_name = (cv_data.get("name") or "Contact Durbanville").strip() or "Contact Durbanville"
+        hero_name = (cv_data.get("name") or "Yoweli Kachala").strip() or "Yoweli Kachala"
     hero_pill = (cv_data.get("headline") or "AI-Augmented Software Engineer").strip() or "AI-Augmented Software Engineer"
     raw_summary = (cv_data.get("summary") or "").strip() or "Building AI-native systems, microservices, Laravel applications, and data-driven trading tools. This portfolio is generated directly from my GitHub activity to reflect how I actually ship software."
     # Support multiple paragraphs: split on double newline and wrap each in <p>
