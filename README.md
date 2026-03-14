@@ -59,7 +59,7 @@ Heavier percentages indicate where I have the deepest hands-on experience; PHP, 
 | Vue | 7.15% |
 | MQL5 | 5.52% |
 | Vite | 5% |
-| HTML | 2.82% |
+| HTML | 2.83% |
 | Java | 2.56% |
 | Tailwind CSS | 2% |
 | Symfony | 2% |
