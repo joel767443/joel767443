@@ -12,29 +12,29 @@ DATA_DIR = ROOT / "data"
 PORTFOLIO_DIR = ROOT / "portfolio"
 PORTFOLIO_FILE = PORTFOLIO_DIR / "index.html"
 
-# Map tech_stack keys to CV skill categories (Languages, Tools, Frontend, Backend, Backend as a service)
-SKILL_CATEGORIES = {
+# Fallback when data/skill_categories.json is missing (same shape as JSON)
+DEFAULT_SKILL_CATEGORIES = {
     "languages": {
-        "PHP", "Python", "Swift", "Java", "JavaScript", "TypeScript", "HTML", "CSS",
-        "MQL5", "Hack", "C++", "Shell", "PowerShell", "SCSS", "Less", "Roff", "Blade",
+        "label": "Languages",
+        "items": ["PHP", "Python", "Swift", "Java", "JavaScript", "TypeScript", "HTML", "CSS", "MQL5", "Hack", "C++", "Shell", "PowerShell", "SCSS", "Less", "Roff", "Blade"],
     },
     "tools": {
-        "Docker", "Dockerfile", "Vite", "Makefile", "Terraform", "Ansible", "CMake",
-        "Batchfile", "Git", "Github",
+        "label": "Tools",
+        "items": ["Docker", "Dockerfile", "Vite", "Makefile", "Terraform", "Ansible", "CMake", "Batchfile", "Git", "Github"],
     },
     "frontend": {
-        "Vue", "React", "Tailwind CSS", "Svelte", "SvelteKit", "Astro", "Solid.js",
-        "Qwik", "Remix", "Next.js", "Nuxt.js", "Angular",
+        "label": "Frontend libraries and frameworks",
+        "items": ["Vue", "React", "Tailwind CSS", "Svelte", "SvelteKit", "Astro", "Solid.js", "Qwik", "Remix", "Next.js", "Nuxt.js", "Angular"],
     },
     "backend": {
-        "Laravel", "Symfony", "Django", "Flask", "FastAPI", "Express", "NestJS",
-        "Rails", "Sinatra", "Spring Boot", "Quarkus", "ASP.NET Core", "Gin", "Hono",
-        "Tornado", "Pyramid", "Yii", "CodeIgniter", "CakePHP", "Zend", "Phalcon",
-        "Prisma", "Bun",
+        "label": "Backend libraries and frameworks",
+        "items": ["Laravel", "Symfony", "Django", "Flask", "FastAPI", "Express", "NestJS", "Rails", "Sinatra", "Spring Boot", "Quarkus", "ASP.NET Core", "Gin", "Hono", "Tornado", "Pyramid", "Yii", "CodeIgniter", "CakePHP", "Zend", "Phalcon", "Prisma", "Bun"],
     },
     "backend_services": {
-        "Supabase", "PostgreSQL", "MySQL", "Redis", "Kubernetes", "AWS",
+        "label": "Backend as a service / Services",
+        "items": ["Supabase", "PostgreSQL", "MySQL", "Redis", "Kubernetes", "AWS"],
     },
+    "other": {"label": "Other", "items": []},
 }
 
 
@@ -42,7 +42,7 @@ def load_json(path, default=None):
     try:
         with open(path, encoding="utf-8") as f:
             return json.load(f)
-    except FileNotFoundError:
+    except (FileNotFoundError, json.JSONDecodeError):
         return default if default is not None else {}
 
 
@@ -68,11 +68,11 @@ def format_languages(languages):
     return ", ".join(f"{lang} ({pct}%)" for lang, pct in top)
 
 
-def _skill_category(name):
+def _skill_category(name, skill_categories):
     """Return category key for a tech name, or 'other'."""
-    for cat, keys in SKILL_CATEGORIES.items():
-        if name in keys:
-            return cat
+    for cat_key, data in skill_categories.items():
+        if isinstance(data, dict) and name in data.get("items", []):
+            return cat_key
     return "other"
 
 
@@ -103,28 +103,23 @@ def build_projects_section(projects):
     return "\n".join(items_html)
 
 
-def build_technical_skills_grouped(tech_stack):
-    """Build Technical skills section with subsections: Languages, Tools, Frontend, Backend, Backend as a service, Other."""
+def build_technical_skills_grouped(tech_stack, skill_categories):
+    """Build Technical skills section with subsections from skill_categories (label + items)."""
     if not tech_stack:
+        return "<p>No tech stack data available yet.</p>"
+    if not skill_categories:
         return "<p>No tech stack data available yet.</p>"
 
     sorted_stack = sorted(tech_stack.items(), key=lambda x: x[1], reverse=True)
-    category_labels = {
-        "languages": "Languages",
-        "tools": "Tools",
-        "frontend": "Frontend libraries and frameworks",
-        "backend": "Backend libraries and frameworks",
-        "backend_services": "Backend as a service / Services",
-        "other": "Other",
-    }
-    grouped = {cat: [] for cat in category_labels}
+    grouped = {cat_key: [] for cat_key in skill_categories}
     for name, pct in sorted_stack:
-        cat = _skill_category(name)
+        cat = _skill_category(name, skill_categories)
         level = "primary" if pct >= 10 else "secondary" if pct >= 3 else "tertiary"
-        grouped[cat].append((name, pct, level))
+        grouped.setdefault(cat, []).append((name, pct, level))
 
     parts = []
-    for cat_key, label in category_labels.items():
+    for cat_key in skill_categories:
+        label = skill_categories[cat_key].get("label", cat_key) if isinstance(skill_categories[cat_key], dict) else cat_key
         items = grouped.get(cat_key) or []
         if not items:
             continue
@@ -373,9 +368,9 @@ def build_architecture_section(arch_data):
     """
 
 
-def generate_html(projects, tech_stack, arch_data, cv_data):
+def generate_html(projects, tech_stack, arch_data, cv_data, skill_categories):
     projects_html = build_projects_section(projects)
-    skills_grouped_html = build_technical_skills_grouped(tech_stack)
+    skills_grouped_html = build_technical_skills_grouped(tech_stack, skill_categories)
     arch_html = build_architecture_section(arch_data)
     experience_html = build_experience_section(cv_data)
     education_html = build_education_section(cv_data)
@@ -934,11 +929,6 @@ def generate_html(projects, tech_stack, arch_data, cv_data):
             <div class="hero-subtitle">
                 {hero_summary}
             </div>
-            <div class="hero-meta">
-                <span class="meta-pill">Architectures: AI-Native · ML Systems · APIs · Event-Driven</span>
-                <span class="meta-pill">Back end: PHP · Laravel · Microservices</span>
-                <span class="meta-pill">AI/Quant: Python · MQL5 · Automation</span>
-            </div>
         </header>
 
         <section id="architecture">
@@ -1012,10 +1002,16 @@ def main():
     tech_stack = load_json(DATA_DIR / "tech_stack.json", default={})
     architecture = load_json(DATA_DIR / "architecture.json", default={})
     cv_data = load_json(DATA_DIR / "cv_extracted.json", default={})
+    skill_categories_path = DATA_DIR / "skill_categories.json"
+    skill_categories = load_json(skill_categories_path, default=DEFAULT_SKILL_CATEGORIES)
+    if not skill_categories_path.exists():
+        DATA_DIR.mkdir(parents=True, exist_ok=True)
+        with open(skill_categories_path, "w", encoding="utf-8") as f:
+            json.dump(DEFAULT_SKILL_CATEGORIES, f, indent=4, ensure_ascii=False)
 
     PORTFOLIO_DIR.mkdir(parents=True, exist_ok=True)
     generate_skills_chart(tech_stack, architecture, PORTFOLIO_DIR / "skills_chart.png")
-    html = generate_html(projects, tech_stack, architecture, cv_data)
+    html = generate_html(projects, tech_stack, architecture, cv_data, skill_categories)
     PORTFOLIO_FILE.write_text(html, encoding="utf-8")
 
     print(f"Portfolio written to {PORTFOLIO_FILE}")
