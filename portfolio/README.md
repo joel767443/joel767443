@@ -4,6 +4,9 @@
 
 Building AI-native systems, microservices, Laravel applications, and data-driven trading tools. This portfolio is generated directly from my GitHub activity to reflect how I actually ship software.
 
+
+[View styled portfolio (HTML)](index.html)
+
 ---
 
 ## Architecture footprint
