@@ -81,7 +81,7 @@ Building AI-native systems, microservices, Laravel applications, and data-driven
 - **[eugene-property-management](https://github.com/joel767443/eugene-property-management)** — Laravel 8 platform for managing properties, service providers, scheduling, messaging, and payments  
   *Tech:* PHP (50.03%), Blade (40.86%), HTML (9.11%)
 - **[github-developer-intelligence](https://github.com/joel767443/github-developer-intelligence)** — Python toolkit that analyzes GitHub repos and generates developer portfolios with profile READMEs, skill graphs, and capability reports  
-  *Tech:* Python (77.7%), CSS (11.71%), HTML (10.59%)
+  *Tech:* Python (77.68%), CSS (11.7%), HTML (10.61%)
 - **[joel767443](https://github.com/joel767443/joel767443)** — No README summary available.  
   *Tech:* Unknown
 - **[raccoon-php-vue-crud](https://github.com/joel767443/raccoon-php-vue-crud)** — Full-stack CRUD app with custom PHP MVC backend and Vue 3 single-page frontend  
