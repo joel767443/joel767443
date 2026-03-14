@@ -1,1 +1,0 @@
-[".gitignore", "readme.md", "composer.json", "composer.lock", "controllers/controller.php", "controllers/sitecontroller.php", "core/application.php", "core/request.php", "core/response.php", "core/router.php", "public/index.php", "runtime/.gitignore", "views/_404.php", "views/contact.php", "views/home.php", "views/layouts/main.php"]

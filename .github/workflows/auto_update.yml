@@ -30,6 +30,10 @@ jobs:
       - run: python scripts/initial_scan.py
       - run: python scripts/tech_stack_detector.py
       - run: python scripts/architecture_detector.py
+      - name: Extract CV data (if PDF present)
+        run: |
+          if [ -f templates/cv.pdf ]; then python scripts/extract_cv.py templates/cv.pdf; fi
+          if [ -f site/cv.pdf ] && [ ! -f data/cv_extracted.json ]; then python scripts/extract_cv.py site/cv.pdf; fi
       - run: python scripts/generate_portfolio.py
       - run: python scripts/generate_site.py
       - run: python scripts/generate_readme.py
@@ -39,5 +43,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add README.md
-          git add -f site/site.html portfolio/README.md portfolio/index.html
+          git add -f site/site.html portfolio/README.md portfolio/index.html portfolio/skills_chart.png
+          if [ -f data/cv_extracted.json ]; then git add data/cv_extracted.json; fi
           git diff --staged --quiet || (git commit -m "CI: regenerate site and README" && git push)

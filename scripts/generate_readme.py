@@ -126,6 +126,39 @@ def languages_summary(languages: Dict[str, float], limit: int = 3) -> str:
     return "Languages: " + ", ".join(f"{name} ({pct}%)" for name, pct in items)
 
 
+def build_cv_summary_section(cv_data: Dict[str, Any]) -> str:
+    """Build a 'From my CV' section from cv_extracted.json: summary, then experience and education bullets."""
+    if not cv_data:
+        return "_CV summary will appear here once you run `extract_cv.py` and add `data/cv_extracted.json`._"
+    parts: List[str] = []
+    summary = (cv_data.get("summary") or "").strip()
+    if summary:
+        parts.append(summary)
+    experience_entries = cv_data.get("experience_entries") or []
+    if isinstance(experience_entries, list) and experience_entries and isinstance(experience_entries[0], dict):
+        parts.append("\n**Experience**")
+        for e in experience_entries[:10]:
+            title = (e.get("title") or "").strip()
+            company = (e.get("company") or "").strip()
+            dates = (e.get("dates") or "").strip()
+            if title or company:
+                line = f"- **{title or '—'}** at {company or '—'}"
+                if dates:
+                    line += f" ({dates})"
+                parts.append(line)
+    education = cv_data.get("education")
+    if isinstance(education, list) and education and isinstance(education[0], dict):
+        parts.append("\n**Education**")
+        for e in education[:5]:
+            degree = (e.get("degree") or "").strip()
+            institution = (e.get("institution") or "").strip()
+            if degree or institution:
+                parts.append(f"- {degree or '—'} — {institution or '—'}")
+    if not parts:
+        return "_No CV summary available. Run `extract_cv.py` to populate from your CV PDF._"
+    return "\n\n".join(parts)
+
+
 def build_featured_projects_section(projects: List[Dict[str, Any]]) -> str:
     if not projects:
         return "_No projects available yet._"
@@ -157,6 +190,7 @@ def main() -> None:
     projects = load_json(projects_path, default=None) or []
     tech_stack = load_json(tech_stack_path, default=None) or {}
     architecture = load_json(arch_path, default=None) or {}
+    cv_data = load_json(DATA_DIR / "cv_extracted.json", default=None) or {}
     total_projects_report, complexity_score = load_capability_report(capability_report_path)
 
     # Fallback for total projects if capability report is missing
@@ -238,6 +272,7 @@ def main() -> None:
         "in the `scripts/` folder, combining language stats, architecture detection, and project summaries."
     )
 
+    cv_summary_section = build_cv_summary_section(cv_data)
     context = {
         "name": "Yoweli Kachala",
         "title_line": "Senior Systems Architect • Full Stack Engineer",
@@ -245,6 +280,7 @@ def main() -> None:
         "hero_value_bullets": hero_value_bullets,
         "what_im_looking_for_section": what_im_looking_for_section,
         "impact_highlights_section": impact_highlights_section,
+        "cv_summary_section": cv_summary_section,
         "total_projects": str(total_projects_report),
         "primary_architectures_line": primary_arch_line or "Not enough architecture data yet.",
         "top_languages_line": top_langs_line,

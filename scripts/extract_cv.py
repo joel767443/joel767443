@@ -642,12 +642,20 @@ def extract_certifications_from_text(full_text: str) -> list:
 
 
 def get_default_paths():
-    """Resolve default PDF and output paths from project root."""
+    """Resolve default PDF and output paths from project root.
+    Uses first existing CV PDF in templates/, site/, or scripts/; otherwise defaults to templates/cv.pdf.
+    """
     project_root = Path(__file__).resolve().parent.parent
-    return (
+    output_json = project_root / "data" / "cv_extracted.json"
+    candidates = [
+        project_root / "templates" / "cv.pdf",
+        project_root / "site" / "cv.pdf",
         project_root / "scripts" / "cv.pdf",
-        project_root / "data" / "cv_extracted.json",
-    )
+    ]
+    for p in candidates:
+        if p.is_file():
+            return (p, output_json)
+    return (candidates[0], output_json)
 
 
 def extract_cv_to_json(pdf_path: str, output_json: str = None) -> dict:
