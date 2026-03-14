@@ -1,0 +1,28 @@
+name: Auto-Sync File to joel767443
+on:
+  push:
+    # Trigger only when changes occur in the portfolio folder
+    paths:
+      - 'portfolio/README.md'
+    branches:
+      - main
+
+jobs:
+  copy-file:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Repo
+        uses: actions/checkout@v4
+
+      - name: Push File to Target Repo
+        uses: dmnemec/copy_file_to_another_repo_action@main
+        env:
+          # This must be a Personal Access Token (PAT) stored in your Secrets
+          API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+        with:
+          source_file: 'portfolio/README.md'
+          destination_repo: 'joel767443/joel767443'
+          destination_folder: '' # Empty string puts it in the root (base)
+          user_email: 'yowelikachala@gmail.com'
+          user_name: 'joel767443'
+          commit_message: 'Sync: Updated file from portfolio folder'
