@@ -6,7 +6,7 @@ from typing import List, Dict, Any, Tuple
 _script_dir = Path(__file__).resolve().parent
 if str(_script_dir) not in sys.path:
     sys.path.insert(0, str(_script_dir))
-from common import ROOT, DATA_DIR, TEMPLATES_DIR, REPORTS_DIR, load_json, render_template, get_display_name
+from common import ROOT, DATA_DIR, TEMPLATES_DIR, REPORTS_DIR, PORTFOLIO_DIR, load_json, render_template, get_display_name
 
 
 def load_capability_report(path: Path) -> Tuple[int, int]:
@@ -185,7 +185,8 @@ def main() -> None:
     arch_path = DATA_DIR / "architecture.json"
     capability_report_path = REPORTS_DIR / "capability_report.txt"
     template_path = TEMPLATES_DIR / "README.template.md"
-    output_readme_path = ROOT / "README.md"
+    output_readme_path = PORTFOLIO_DIR / "README.md"
+    PORTFOLIO_DIR.mkdir(parents=True, exist_ok=True)
 
     projects = load_json(projects_path, default=None) or []
     tech_stack = load_json(tech_stack_path, default=None) or {}

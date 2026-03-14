@@ -58,7 +58,7 @@
 
 ## Skill graph
 
-![Skills](graphs/skills_chart.png)
+![Skills](../graphs/skills_chart.png)
 
 {{ skills_caption }}
 

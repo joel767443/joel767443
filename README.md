@@ -1,115 +1,118 @@
-## Yoweli Kachala
+# GitHub Developer Intelligence
 
-**Senior Systems Architect • Full Stack Engineer**
+Python tooling that analyzes your GitHub repositories and generates a data-driven portfolio (README, static site, skill graphs) from language stats, architecture detection, and optional CV data.
 
-Senior systems architect and full stack engineer focused on AI-native products, trading and quantitative tools, and scalable SaaS platforms.
+## Features
 
-### Where I add the most value
+- **Repository scan**: Fetches all user repos via GitHub API; aggregates language bytes and README summaries.
+- **Tech stack detection**: Languages plus optional framework detection from repo root files (via `scripts/frameworks.json` if present).
+- **Architecture detection**: Keyword-based detection (ML, API, microservices, Jamstack, etc.) over repo names, descriptions, topics, and file trees.
+- **CV extraction**: Parse LinkedIn-style CV PDF to JSON (`extract_cv.py`) for name, skills, experience, and education.
+- **Outputs**: `data/*.json`, `graphs/skills_chart.png`, generated portfolio README (from template), `portfolio/README.md` and `portfolio/index.html`, `site/site.html` (portfolio site using `site/css/styles.css`).
+- **Optional**: `scripts/test_post.py` for LinkedIn API test post (requires `ACCESS_TOKEN`, `PERSON_ID`).
 
-- **AI & trading systems**: Python/MQL5 engines, backtesting, and automation.
-- **Scalable APIs & backends**: PHP/Laravel, microservices, Docker-based deployments.
-- **End-to-end product delivery**: from prototype to production across web, mobile, and cloud.
+## Prerequisites
 
----
+- Python 3.x
+- [GitHub Personal Access Token](https://github.com/settings/tokens) (for higher rate limits and private repos)
 
-## What I’m looking for
+## Installation
 
-- Senior backend or full stack roles building AI-powered products or data-heavy systems.
-- Early engineering hire or founding engineer roles at product-focused startups.
-- Positions where I own architecture decisions and help teams ship reliably to production.
+```bash
+git clone <repo-url>
+cd github-developer-intelligence
+python -m venv .venv
+source .venv/bin/activate   # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+```
 
----
+**Dependencies** (from `requirements.txt`): `requests`, `python-dotenv`, `matplotlib`, `jinja2`, `ez-parse`, `pdfminer.six`, `markdown`.
 
-## Impact highlights
+## Configuration
 
-- Designed and maintained AI/ML and quantitative trading projects across **36** repositories.
-- Built and integrated REST-style APIs and backend services in **17**+ codebases using PHP/Laravel, Python, and JavaScript.
-- Applied service-oriented and microservice patterns in **3** projects with Dockerized deployments.
-- Curated and actively maintain a portfolio of **49** repositories that showcase production-grade code, automation, and CI/CD.
+1. **Environment**: Copy `example.env` to `.env` and set:
+   - `GITHUB_TOKEN` — required for scan and framework/architecture steps.
+   - `ACCESS_TOKEN`, `PERSON_ID` — only for LinkedIn test post (`scripts/test_post.py`).
 
----
+2. **Script-specific**: In `scripts/architecture_detector.py`, set `YOUR_GITHUB_USERNAME` (line 14) if `data/projects.json` does not contain `full_name` for each repo (e.g. if you run an older scan).
 
-## From my CV
+3. **Optional files**:
+   - `scripts/frameworks.json` — not in repo; if present, `tech_stack_detector.py` uses it for framework/tool detection from repo root file names.
+   - `data/skill_categories.json` — created by `generate_portfolio.py` if missing; edit to group skills.
+   - `reports/capability_report.txt` — optional; if present, `generate_readme.py` uses "Total Projects:" and "Estimated Complexity Score:" in the generated portfolio README.
 
-{{ cv_summary_section }}
+## Project structure
 
----
+| Path | Description |
+|------|-------------|
+| `scripts/` | Python entry points and `common.py` (paths, `load_json`, `render_template`, `get_display_name`, `get_github_user_name`) |
+| `data/` | Generated: `projects.json`, `tech_stack.json`, `architecture.json`, `cv_extracted.json`, optional `skill_categories.json`; `data/cache/files/` for architecture file-tree cache |
+| `templates/` | `README.template.md`, `site.md`, optional CV PDF |
+| `site/` | Generated `site/site.html`; static `site/css/styles.css`, `site/img/` |
+| `portfolio/` | Generated `README.md` and `index.html` (plus skills chart) |
+| `reports/` | Optional `capability_report.txt` |
+| `graphs/` | Generated `skills_chart.png` |
 
-## Technical profile at a glance
+## Workflow
 
-- **Repositories analyzed**: 49
-- **Architectures used in production projects**: Machine Learning Systems (36), API Architecture (17), AI-Native Architecture (16)
-- **Top languages by usage**: PHP (32.54%), Python (21.09%), Swift (17.94%), Laravel (12%), Blade (9.55%)
+Run scripts in this order. Later steps depend on outputs from earlier ones.
 
-These metrics are derived automatically from my GitHub activity and give a quick view of where I spend most of my time.
+```mermaid
+flowchart LR
+  A[initial_scan] --> B[tech_stack_detector]
+  B --> C[architecture_detector]
+  C --> D[skill_graph]
+  D --> E[extract_cv optional]
+  E --> F[generate_readme]
+  F --> G[generate_portfolio]
+  G --> H[generate_site]
+```
 
----
+1. **initial_scan.py** — Fetches user repos, languages, README summaries; writes `data/projects.json`. Requires `GITHUB_TOKEN`.
+2. **tech_stack_detector.py** — Reads `data/projects.json`; aggregates languages, optionally detects frameworks; writes `data/tech_stack.json`.
+3. **architecture_detector.py** — Reads `data/projects.json`; fetches file trees (cached in `data/cache/files/`); keyword detection; writes `data/architecture.json`. Set `YOUR_GITHUB_USERNAME` if projects lack `full_name`.
+4. **skill_graph.py** — Reads `data/tech_stack.json` and `data/architecture.json`; writes `graphs/skills_chart.png`.
+5. **extract_cv.py** (optional) — PDF to `data/cv_extracted.json`; improves name/headline/experience in generated README and site.
+6. **generate_readme.py** — Uses `templates/README.template.md`, `data/*.json`, `reports/`; writes **portfolio/README.md** (template-based profile).
+7. **generate_portfolio.py** — Writes `portfolio/README.md`, `portfolio/index.html`, `portfolio/skills_chart.png`; uses `data/skill_categories.json` (creates default if missing).
+8. **generate_site.py** — Writes `site/site.html` from `templates/site.md` and data (CV, projects, tech stack, skill categories).
 
-## Technologies I work with
+**Example (from repo root):**
 
-Heavier percentages indicate where I have the deepest hands-on experience; PHP, Python, and Swift are my most-used languages.
+```bash
+python scripts/initial_scan.py
+python scripts/tech_stack_detector.py
+python scripts/architecture_detector.py
+python scripts/skill_graph.py
+python scripts/extract_cv.py templates/cv.pdf    # optional
+python scripts/generate_readme.py
+python scripts/generate_portfolio.py
+python scripts/generate_site.py
+```
 
-| Technology | Usage |
-|-----------|-------|
-| PHP | 32.54% |
-| Python | 21.09% |
-| Swift | 17.94% |
-| Laravel | 12% |
-| Blade | 9.55% |
-| Vue | 7.15% |
-| MQL5 | 5.52% |
-| Vite | 5% |
-| HTML | 2.83% |
-| Java | 2.56% |
-| Tailwind CSS | 2% |
-| Symfony | 2% |
-| Docker | 2% |
-| React | 1% |
-| Express | 1% |
-| Flask | 1% |
-| FastAPI | 1% |
-| CSS | 0.89% |
-| JavaScript | 0.86% |
-| Hack | 0.73% |
-| TypeScript | 0.63% |
-| PowerShell | 0.38% |
-| SCSS | 0.29% |
-| C++ | 0.29% |
-| Dockerfile | 0.24% |
-| Shell | 0.16% |
-| Less | 0.14% |
-| Roff | 0.1% |
-| CMake | 0.04% |
-| Makefile | 0.04% |
-| Batchfile | 0.03% |
-| Stylus | 0.01% |
+## Scripts reference
 
----
+| Script | Purpose | Main inputs | Main outputs |
+|--------|---------|-------------|--------------|
+| initial_scan | Fetch repos + languages + README summaries | GITHUB_TOKEN | data/projects.json |
+| tech_stack_detector | Aggregate languages + detect frameworks | data/projects.json, optional frameworks.json | data/tech_stack.json |
+| architecture_detector | Detect architecture patterns | data/projects.json | data/architecture.json |
+| skill_graph | Plot skills + architectures | data/tech_stack.json, data/architecture.json | graphs/skills_chart.png |
+| extract_cv | Parse CV PDF to JSON | templates/cv.pdf (or path) | data/cv_extracted.json |
+| generate_readme | Render portfolio README | templates/README.template.md, data/*, reports/ | portfolio/README.md |
+| generate_portfolio | Build portfolio Markdown + HTML | data/*, skill_categories | portfolio/README.md, portfolio/index.html |
+| generate_site | Build portfolio site HTML | templates/site.md, data/* | site/site.html |
+| test_post | LinkedIn API test post | ACCESS_TOKEN, PERSON_ID | (API call only) |
 
-## Architecture experience
+## Outputs
 
-I design and work with architectures that support real-world constraints like latency, throughput, and iterative delivery across ML systems, APIs, and microservices.
+- **Data**: `data/projects.json`, `data/tech_stack.json`, `data/architecture.json`, `data/cv_extracted.json`, `data/skill_categories.json`.
+- **Generated content**: `portfolio/README.md` (template-based and/or from generate_portfolio), `portfolio/index.html`, `site/site.html`, `graphs/skills_chart.png`.
 
-Across 49 repositories, recurring architecture patterns include Machine Learning Systems, API Architecture, AI-Native Architecture.
+`.env`, `data/`, `reports/`, `site/`, `portfolio/`, and `graphs/` are in `.gitignore`; generated outputs are local unless you force-add them.
 
-- **Machine Learning Systems**: 36 repos
-- **API Architecture**: 17 repos
-- **AI-Native Architecture**: 16 repos
-- **Event-Driven Architecture**: 8 repos
-- **Microservices**: 3 repos
-- **Multi Tenant SaaS**: 2 repos
-- **Jamstack**: 1 repos
+## Customization
 
----
-
-## Skill graph
-
-![Skills](graphs/skills_chart.png)
-
-_Skill graph highlighting strongest technologies: PHP, Python, Swift._
-
----
-
-## How this portfolio is generated
-
-This portfolio is generated from my GitHub repositories using custom Python tooling in the `scripts/` folder, combining language stats, architecture detection, and project summaries.
+- Edit `templates/README.template.md` and `templates/site.md` for narrative and structure.
+- Edit `data/skill_categories.json` to group technologies for the portfolio.
+- Add `scripts/frameworks.json` (object mapping framework names to list of file patterns) to enable framework detection in `tech_stack_detector.py`.
