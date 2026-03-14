@@ -167,6 +167,25 @@ def _extract_experience_section_lines(lines: list) -> list:
     return _get_section_lines(lines, start, stop)
 
 
+def _looks_like_institution(s: str) -> bool:
+    """True if the line looks like a school/university name."""
+    if not s or len(s) > 120:
+        return False
+    lower = s.lower()
+    return any(kw in lower for kw in ("university", "college", "institute", "school", "polytechnic", "academy"))
+
+
+def _looks_like_degree(s: str) -> bool:
+    """True if the line looks like a degree/qualification name."""
+    if not s or len(s) > 150:
+        return False
+    lower = s.lower()
+    return any(kw in lower for kw in (
+        "degree", "bachelor", "b-tech", "btech", "msc", "m.sc", "ma ", "m.a", "phd", "diploma", "certificate", "qualification",
+        "information technology", "computer science", "information systems", "management information",
+    ))
+
+
 def extract_education_from_text(full_text: str) -> list:
     """Extract Education/Qualifications section from CV raw text; return list of {degree, institution, dates, location}."""
     if not full_text or not full_text.strip():
@@ -181,30 +200,90 @@ def extract_education_from_text(full_text: str) -> list:
     section = _get_section_lines(lines, start, stop)
     if not section:
         return []
+    # Merge continuation lines, but don't merge when next line starts a new entry (institution, or degree after institution)
+    merged = []
+    for line in section:
+        if re.match(r"^Page \d+ of \d+$", line, re.IGNORECASE):
+            continue
+        if not merged:
+            merged.append(line)
+            continue
+        if _looks_like_institution(line):
+            merged.append(line)
+            continue
+        if _looks_like_institution(merged[-1]) and _looks_like_degree(line):
+            merged.append(line)
+            continue
+        if _is_continuation_line(line, merged[-1]):
+            merged[-1] = (merged[-1] + " " + line).strip()
+        else:
+            merged.append(line)
     result = []
     i = 0
-    while i < len(section):
-        line = section[i]
-        if re.match(r"^Page \d+ of \d+$", line, re.IGNORECASE):
-            i += 1
-            continue
-        degree = line or ""
+    while i < len(merged):
+        line = merged[i]
+        degree = ""
         institution = ""
         dates = ""
         location = ""
-        if i + 1 < len(section):
-            second = section[i + 1]
-            if _DATE_RANGE.search(second):
+        if _DATE_RANGE.search(line):
+            dates = line
+            i += 1
+            result.append({"degree": degree, "institution": institution, "dates": dates, "location": location})
+            continue
+        first_is_inst = _looks_like_institution(line)
+        first_is_deg = _looks_like_degree(line)
+        if i + 1 < len(merged):
+            second = merged[i + 1]
+            second_is_date = bool(_DATE_RANGE.search(second))
+            second_is_inst = _looks_like_institution(second)
+            second_is_deg = _looks_like_degree(second)
+            if second_is_date:
+                if first_is_inst and not first_is_deg:
+                    institution = line
+                else:
+                    degree = line
                 dates = second
                 i += 2
-            else:
-                institution = second
-                if i + 2 < len(section):
-                    third = section[i + 2]
+            elif first_is_inst and second_is_deg:
+                institution = line
+                degree = second
+                if i + 2 < len(merged):
+                    third = merged[i + 2]
                     if _DATE_RANGE.search(third):
                         dates = third
                         i += 3
-                    elif len(third) < 60 and not third.startswith("- "):
+                    elif not _looks_like_institution(third) and len(third) < 80:
+                        location = third
+                        i += 3
+                    else:
+                        i += 2
+                else:
+                    i += 2
+            elif first_is_deg and second_is_inst:
+                degree = line
+                institution = second
+                if i + 2 < len(merged):
+                    third = merged[i + 2]
+                    if _DATE_RANGE.search(third):
+                        dates = third
+                        i += 3
+                    elif not _looks_like_institution(third) and len(third) < 80:
+                        location = third
+                        i += 3
+                    else:
+                        i += 2
+                else:
+                    i += 2
+            else:
+                degree = line
+                institution = second
+                if i + 2 < len(merged):
+                    third = merged[i + 2]
+                    if _DATE_RANGE.search(third):
+                        dates = third
+                        i += 3
+                    elif not _looks_like_institution(third) and len(third) < 80:
                         location = third
                         i += 3
                     else:
@@ -212,13 +291,20 @@ def extract_education_from_text(full_text: str) -> list:
                 else:
                     i += 2
         else:
+            degree = line
+            institution = ""
+            if _looks_like_institution(line) and _looks_like_degree(line):
+                for sep in (") ", ")"):
+                    if sep in line:
+                        idx = line.rfind(sep)
+                        before = line[: idx + 1].strip()
+                        after = line[idx + len(sep) :].strip() if sep == ") " else line[idx + 1 :].strip()
+                        if before and after and _looks_like_institution(before) and _looks_like_degree(after):
+                            institution = before
+                            degree = after
+                            break
             i += 1
-        result.append({
-            "degree": degree,
-            "institution": institution,
-            "dates": dates,
-            "location": location,
-        })
+        result.append({"degree": degree, "institution": institution, "dates": dates, "location": location})
     return result
 
 
@@ -382,15 +468,40 @@ def parse_experience_entries(flat_experience: list) -> list:
     return entries
 
 
+def _looks_like_certification(s: str) -> bool:
+    """True if the line looks like a certification (and not a section header, job title, or name)."""
+    if not s or len(s) < 3:
+        return False
+    lower = s.lower()
+    if lower in ("publications", "honors", "honors-awards", "languages", "experience", "education", "skills", "summary", "contact", "references"):
+        return False
+    if " | " in s:
+        return False
+    if re.match(r"^Page \d+ of \d+$", s, re.IGNORECASE):
+        return False
+    cert_keywords = ("certified", "certificate", "certification", "license", "licence", "ccna", "aws", "cissp", "comptia", "professional", "credential")
+    if any(kw in lower for kw in cert_keywords):
+        return True
+    words = s.split()
+    if lower in ("specialist", "action", "the"):
+        return False
+    if len(words) == 2 and all(len(w) > 0 and w[0].isupper() for w in words) and not any(kw in lower for kw in cert_keywords):
+        return False
+    return True
+
+
 def extract_certifications_from_text(full_text: str) -> list:
-    """Extract Certifications section from CV raw text; return list of dicts {name, issuer, issued} or strings."""
+    """Extract Certifications section from CV raw text; return list of dicts {name, issuer, issued}."""
     if not full_text or not full_text.strip():
         return []
     text = re.sub(r"\n{3,}", "\n\n", full_text.strip())
     lines = [ln.strip() for ln in text.split("\n") if ln.strip()]
 
     cert_headers = ("certifications", "certification", "licenses", "licences", "professional certifications")
-    stop_headers = ("experience", "work experience", "education", "skills", "projects", "references", "contact", "summary", "page 1 of")
+    stop_headers = (
+        "experience", "work experience", "education", "skills", "projects", "references",
+        "contact", "summary", "page 1 of", "publications", "honors", "honors-awards", "languages",
+    )
 
     def is_header(line: str, header_set) -> bool:
         line_lower = line.lower().strip()
@@ -409,7 +520,7 @@ def extract_certifications_from_text(full_text: str) -> list:
     if start_idx is None:
         return []
 
-    result = []
+    raw_lines = []
     for i in range(start_idx, len(lines)):
         line = lines[i]
         if is_header(line, stop_headers):
@@ -418,12 +529,24 @@ def extract_certifications_from_text(full_text: str) -> list:
             continue
         if re.match(r"^Page \d+ of \d+$", line, re.IGNORECASE):
             continue
-        result.append(line)
+        raw_lines.append(line)
+
+    merged = []
+    for line in raw_lines:
+        if not merged:
+            merged.append(line)
+            continue
+        if _is_continuation_line(line, merged[-1]):
+            merged[-1] = (merged[-1] + " " + line).strip()
+        else:
+            merged.append(line)
 
     out = []
-    for line in result:
+    for line in merged:
         line = line.strip()
         if not line:
+            continue
+        if not _looks_like_certification(line):
             continue
         if "–" in line or " - " in line or "," in line:
             parts = re.split(r"\s*[–\-]\s*|\s*,\s*", line, maxsplit=2)
