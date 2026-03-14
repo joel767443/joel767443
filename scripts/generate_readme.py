@@ -6,7 +6,7 @@ from typing import List, Dict, Any, Tuple
 _script_dir = Path(__file__).resolve().parent
 if str(_script_dir) not in sys.path:
     sys.path.insert(0, str(_script_dir))
-from common import ROOT, DATA_DIR, TEMPLATES_DIR, REPORTS_DIR, load_json, render_template
+from common import ROOT, DATA_DIR, TEMPLATES_DIR, REPORTS_DIR, load_json, render_template, get_display_name
 
 
 def load_capability_report(path: Path) -> Tuple[int, int]:
@@ -274,7 +274,7 @@ def main() -> None:
 
     cv_summary_section = build_cv_summary_section(cv_data)
     context = {
-        "name": "Yoweli Kachala",
+        "name": get_display_name(cv_data),
         "title_line": "Senior Systems Architect • Full Stack Engineer",
         "hero_paragraph": hero_paragraph,
         "hero_value_bullets": hero_value_bullets,

@@ -15,7 +15,7 @@ from textwrap import shorten
 _script_dir = Path(__file__).resolve().parent
 if str(_script_dir) not in sys.path:
     sys.path.insert(0, str(_script_dir))
-from common import ROOT, DATA_DIR, TEMPLATES_DIR, SITE_DIR, load_json, render_template
+from common import ROOT, DATA_DIR, TEMPLATES_DIR, SITE_DIR, load_json, render_template, get_display_name
 
 SITE_TEMPLATE = TEMPLATES_DIR / "site.md"
 OUTPUT_HTML = SITE_DIR / "site.html"
@@ -439,13 +439,7 @@ def main() -> None:
     projects = load_json(DATA_DIR / "projects.json", default=[]) or []
     projects = [p for p in projects if not p.get("private", True)]
 
-    # Prefer first + last name so {{ name }} is not an address/place (e.g. Durbanville)
-    first_name = (cv_data.get("first_name") or "").strip()
-    last_name = (cv_data.get("last_name") or "").strip()
-    if first_name or last_name:
-        name = f"{first_name} {last_name}".strip()
-    else:
-        name = (cv_data.get("name") or "Yoweli Kachala").strip()
+    name = get_display_name(cv_data)
     headline = (cv_data.get("headline") or "Senior Software Engineer").strip()
     summary = (cv_data.get("summary") or "").strip()
     tagline = summary.split(". ")[0].strip() + "." if summary else "Specializing in full-stack development, DevOps practices, and scalable solutions that drive business growth."

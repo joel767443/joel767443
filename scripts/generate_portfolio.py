@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 _script_dir = Path(__file__).resolve().parent
 if str(_script_dir) not in sys.path:
     sys.path.insert(0, str(_script_dir))
-from common import ROOT, DATA_DIR, PORTFOLIO_DIR, load_json
+from common import ROOT, DATA_DIR, PORTFOLIO_DIR, load_json, get_display_name
 
 PORTFOLIO_README = PORTFOLIO_DIR / "README.md"
 
@@ -421,12 +421,7 @@ def generate_markdown(projects, tech_stack, arch_data, cv_data, skill_categories
     education_md = build_education_section_md(cv_data)
     certifications_md = build_certifications_section_md(cv_data)
 
-    first_name = (cv_data.get("first_name") or "").strip()
-    last_name = (cv_data.get("last_name") or "").strip()
-    if first_name or last_name:
-        hero_name = f"{first_name} {last_name}".strip()
-    else:
-        hero_name = (cv_data.get("name") or "Yoweli Kachala").strip() or "Yoweli Kachala"
+    hero_name = get_display_name(cv_data)
     hero_pill = (cv_data.get("headline") or "AI-Augmented Software Engineer").strip() or "AI-Augmented Software Engineer"
     raw_summary = (cv_data.get("summary") or "").strip() or "Building AI-native systems, microservices, Laravel applications, and data-driven trading tools. This portfolio is generated directly from my GitHub activity to reflect how I actually ship software."
     summary_paragraphs = [p.strip() for p in raw_summary.split("\n\n") if p.strip()]
@@ -595,13 +590,7 @@ def generate_html(projects, tech_stack, arch_data, cv_data, skill_categories):
     experience_html = build_experience_section(cv_data)
     education_html = build_education_section(cv_data)
     certifications_html = build_certifications_section(cv_data)
-    # Prefer first + last name so hero name is not an address/place (e.g. Durbanville)
-    first_name = (cv_data.get("first_name") or "").strip()
-    last_name = (cv_data.get("last_name") or "").strip()
-    if first_name or last_name:
-        hero_name = f"{first_name} {last_name}".strip()
-    else:
-        hero_name = (cv_data.get("name") or "Yoweli Kachala").strip() or "Yoweli Kachala"
+    hero_name = get_display_name(cv_data)
     hero_pill = (cv_data.get("headline") or "AI-Augmented Software Engineer").strip() or "AI-Augmented Software Engineer"
     raw_summary = (cv_data.get("summary") or "").strip() or "Building AI-native systems, microservices, Laravel applications, and data-driven trading tools. This portfolio is generated directly from my GitHub activity to reflect how I actually ship software."
     # Support multiple paragraphs: split on double newline and wrap each in <p>
