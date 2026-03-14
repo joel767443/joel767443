@@ -1,3 +1,5 @@
 requests
 matplotlib
 jinja2
+pyresparser
+spacy>=2.1.4,<3
