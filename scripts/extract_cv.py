@@ -154,6 +154,23 @@ _DATE_RANGE = re.compile(
     r"([A-Za-z]+\s+\d{4})\s*[-–—]\s*([A-Za-z]+\s+\d{4})(?:\s*\([^)]+\))?",
     re.IGNORECASE
 )
+def _looks_like_next_job_header(line: str, content_lines: list) -> bool:
+    """True if this line looks like the next job's company/title (stop description here)."""
+    if not line or not content_lines:
+        return False
+    s = line.strip()
+    if len(s) > 55 or ":" in s:
+        return False
+    if s[0].islower():
+        return False
+    words = s.split()
+    if len(words) > 5:
+        return False
+    if s.endswith(","):
+        return False
+    return True
+
+
 # Strip trailing duration like "(3 years 2 months)" or "(6 months)" from date strings
 _DURATION_PAREN = re.compile(
     r"\s*\(\d+\s*(?:years?|months?)(?:\s+\d+\s*(?:years?|months?))?\)\s*$",
@@ -448,24 +465,41 @@ def parse_experience_entries(flat_experience: list) -> list:
             location = lines[i + 1] if i + 1 < len(lines) else ""
             if location and (location.startswith("- ") or _DATE_RANGE.search(location) or len(location) > 80):
                 location = ""
-            # Collect bullets (lines starting with "- ") until next date or short non-bullet
-            bullets = []
+            # Collect all content lines until next date or next job header (company/title)
+            content_lines = []
             j = i + 2 if location else i + 1
             while j < len(lines):
                 next_line = lines[j]
                 if _DATE_RANGE.search(next_line):
                     break
-                if next_line.startswith("- "):
-                    bullets.append(next_line[2:].strip())
-                    j += 1
-                    continue
                 if re.match(r"^Page \d+ of \d+$", next_line, re.IGNORECASE):
                     j += 1
                     continue
-                if len(next_line) < 50 and not next_line.startswith("-"):
+                if content_lines and _looks_like_next_job_header(next_line, content_lines):
                     break
+                if next_line.startswith("- "):
+                    content_lines.append(next_line[2:].strip())
+                else:
+                    content_lines.append(next_line)
                 j += 1
-            description = bullets
+            # Merge line wraps into point-form bullets (each bullet one full sentence/point)
+            bullets = []
+            incomplete_end = re.compile(r".*\s(the|a|and|for|with|to|or|,)\s*$", re.IGNORECASE)
+            for line in content_lines:
+                line = line.strip()
+                if not line:
+                    continue
+                if not bullets:
+                    bullets.append(line)
+                    continue
+                if _is_continuation_line(line, bullets[-1]):
+                    bullets[-1] = (bullets[-1] + " " + line).strip()
+                elif incomplete_end.match(bullets[-1]) and len(line) < 100 and not re.match(r"^[A-Za-z][^:]*:\s", line):
+                    bullets[-1] = (bullets[-1] + " " + line).strip()
+                else:
+                    bullets.append(line)
+            # Keep only substantive points (min length, skip stray fragments)
+            description = [b for b in bullets if len(b) >= 20]
             entries.append({
                 "title": title or "",
                 "company": company or "",
@@ -611,10 +645,40 @@ def extract_cv_to_json(pdf_path: str, output_json: str = None) -> dict:
 
     # Build extracted_data from ez-parse output
     contact = _parse_contact_from_ez(ez_data.get("contact") or [])
+    contact_list = ez_data.get("contact") or []
+    headline = ""
+    for s in contact_list:
+        if s and (" | " in (s or "") or "|" in (s or "")):
+            cand = (s or "").strip()
+            if len(cand) >= 15 and len(cand) < 150 and not _EMAIL_RE.search(cand):
+                headline = cand
+                break
+    if not headline:
+        for idx, line in enumerate(lines[:60]):
+            line = (line or "").strip()
+            if not line or _EMAIL_RE.search(line):
+                continue
+            if (" | " in line or "|" in line) and 15 <= len(line) <= 150:
+                headline = line
+                next_idx = idx + 1
+                if next_idx < len(lines):
+                    next_line = (lines[next_idx] or "").strip()
+                    if next_line and len(next_line) <= 25 and not _EMAIL_RE.search(next_line) and not _PHONE_RE.search(next_line):
+                        headline = (headline + " " + next_line).strip()
+                break
+        if not headline:
+            for line in lines[:25]:
+                line = (line or "").strip()
+                if not line or len(line) < 20 or len(line) > 100 or "(" in line:
+                    continue
+                if any(kw in line.lower() for kw in ("engineer", "architect", "specialist", "developer")) and not _EMAIL_RE.search(line) and not _PHONE_RE.search(line):
+                    headline = line
+                    break
     extracted_data = {
         "name": contact["name"],
         "email": contact["email"],
         "mobile_number": contact["mobile_number"],
+        "headline": headline,
         "skills": list(ez_data.get("skills") or []),
         "summary": "\n\n".join(s for s in (ez_data.get("summary") or []) if s).strip() or "",
         "experience": [],

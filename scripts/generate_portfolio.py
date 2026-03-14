@@ -376,6 +376,7 @@ def generate_html(projects, tech_stack, arch_data, cv_data, skill_categories):
     education_html = build_education_section(cv_data)
     certifications_html = build_certifications_section(cv_data)
     hero_name = (cv_data.get("name") or "Contact Durbanville").strip() or "Contact Durbanville"
+    hero_pill = (cv_data.get("headline") or "AI-Augmented Software Engineer").strip() or "AI-Augmented Software Engineer"
     raw_summary = (cv_data.get("summary") or "").strip() or "Building AI-native systems, microservices, Laravel applications, and data-driven trading tools. This portfolio is generated directly from my GitHub activity to reflect how I actually ship software."
     # Support multiple paragraphs: split on double newline and wrap each in <p>
     summary_paragraphs = [p.strip() for p in raw_summary.split("\n\n") if p.strip()]
@@ -922,7 +923,7 @@ def generate_html(projects, tech_stack, arch_data, cv_data, skill_categories):
         <header class="hero">
             <div class="hero-title-row">
                 <div>
-                    <div class="hero-pill">AI-Augmented Software Engineer</div>
+                    <div class="hero-pill">{html.escape(hero_pill)}</div>
                     <h1>{hero_name}</h1>
                 </div>
             </div>
