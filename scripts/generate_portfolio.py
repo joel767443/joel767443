@@ -375,7 +375,13 @@ def generate_html(projects, tech_stack, arch_data, cv_data, skill_categories):
     experience_html = build_experience_section(cv_data)
     education_html = build_education_section(cv_data)
     certifications_html = build_certifications_section(cv_data)
-    hero_name = (cv_data.get("name") or "Contact Durbanville").strip() or "Contact Durbanville"
+    # Prefer first + last name so hero name is not an address/place (e.g. Durbanville)
+    first_name = (cv_data.get("first_name") or "").strip()
+    last_name = (cv_data.get("last_name") or "").strip()
+    if first_name or last_name:
+        hero_name = f"{first_name} {last_name}".strip()
+    else:
+        hero_name = (cv_data.get("name") or "Contact Durbanville").strip() or "Contact Durbanville"
     hero_pill = (cv_data.get("headline") or "AI-Augmented Software Engineer").strip() or "AI-Augmented Software Engineer"
     raw_summary = (cv_data.get("summary") or "").strip() or "Building AI-native systems, microservices, Laravel applications, and data-driven trading tools. This portfolio is generated directly from my GitHub activity to reflect how I actually ship software."
     # Support multiple paragraphs: split on double newline and wrap each in <p>

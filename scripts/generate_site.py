@@ -177,6 +177,33 @@ def build_hero_html(ctx: dict) -> str:
 """
 
 
+def build_skill_distribution_html(tech_stack: dict) -> str:
+    """Build a horizontal bar chart of skill usage (from tech_stack percentages)."""
+    if not tech_stack:
+        return ""
+    sorted_stack = sorted(tech_stack.items(), key=lambda x: x[1], reverse=True)[:16]
+    max_pct = max((pct for _, pct in sorted_stack), default=100)
+    bars = []
+    for skill_name, pct in sorted_stack:
+        width = (pct / max_pct * 100) if max_pct else 0
+        bars.append(f"""    <div class="skill-distribution-row">
+      <span class="skill-distribution-label">{_e(skill_name)}</span>
+      <div class="skill-distribution-bar-wrap">
+        <div class="skill-distribution-bar" style="width: {width:.0f}%"></div>
+      </div>
+      <span class="skill-distribution-pct">{pct:.1f}%</span>
+    </div>""")
+    return """
+    <header class="section-header" style="margin-top: 3rem;">
+      <h2>Skill Distribution</h2>
+      <p>Language and framework usage across public repositories (by code percentage).</p>
+    </header>
+    <div class="skill-distribution">
+""" + "\n".join(bars) + """
+    </div>
+"""
+
+
 def _skills_for_category(skill_categories: dict, tech_stack: dict, key: str) -> list:
     cat = skill_categories.get(key)
     if not cat:
@@ -211,6 +238,10 @@ def build_skills_html(skill_categories: dict, tech_stack: dict) -> str:
           <h3 class="card-title">Testing</h3>
           <div class="badges"><span class="badge">Jest</span></div>
         </article>""")
+
+    # Skill distribution (bar chart from tech_stack)
+    distribution_html = build_skill_distribution_html(tech_stack)
+
     return f"""  <section id="skills" class="section section-alt">
   <div class="container">
     <header class="section-header">
@@ -223,6 +254,7 @@ def build_skills_html(skill_categories: dict, tech_stack: dict) -> str:
     <div class="grid skills-grid">
 {chr(10).join(cards)}
     </div>
+{distribution_html}
   </div>
 </section>
 """
@@ -427,7 +459,13 @@ def main() -> None:
     projects = load_json(DATA_DIR / "projects.json") or []
     projects = [p for p in projects if not p.get("private", True)]
 
-    name = (cv_data.get("name") or "Your Name").strip()
+    # Prefer first + last name so {{ name }} is not an address/place (e.g. Durbanville)
+    first_name = (cv_data.get("first_name") or "").strip()
+    last_name = (cv_data.get("last_name") or "").strip()
+    if first_name or last_name:
+        name = f"{first_name} {last_name}".strip()
+    else:
+        name = (cv_data.get("name") or "Your Name").strip()
     headline = (cv_data.get("headline") or "Senior Software Engineer").strip()
     summary = (cv_data.get("summary") or "").strip()
     tagline = summary.split(". ")[0].strip() + "." if summary else "Specializing in full-stack development, DevOps practices, and scalable solutions that drive business growth."

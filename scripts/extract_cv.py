@@ -93,9 +93,24 @@ _EMAIL_RE = re.compile(r"[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+")
 _PHONE_RE = re.compile(r"[\d\s\-+.()]{7,}")
 
 
+def _looks_like_person_name(s: str) -> bool:
+    """True if the string looks like a first/last name (e.g. 'Yoweli Kachala'), not an address or place."""
+    if not s or len(s) < 3:
+        return False
+    # Reject if it looks like an address/place
+    lower = s.lower()
+    if any(kw in lower for kw in ("street", "road", "avenue", "city", "town", "cape", "western", "south africa", ",")):
+        return False
+    if any(c.isdigit() for c in s):
+        return False
+    parts = s.split()
+    # Prefer 2–4 words, each starting with a letter
+    return 2 <= len(parts) <= 4 and all(p and p[0].isalpha() for p in parts)
+
+
 def _parse_contact_from_ez(contact_list: list) -> dict:
-    """Map ez-parse contact list to name, email, mobile_number."""
-    out = {"name": "", "email": "", "mobile_number": ""}
+    """Map ez-parse contact list to name, email, mobile_number, first_name, last_name."""
+    out = {"name": "", "email": "", "mobile_number": "", "first_name": "", "last_name": ""}
     if not contact_list:
         return out
     emails = []
@@ -116,7 +131,19 @@ def _parse_contact_from_ez(contact_list: list) -> dict:
         name_candidates.append(s)
     out["email"] = emails[0] if emails else ""
     out["mobile_number"] = phones[0] if phones else ""
-    out["name"] = name_candidates[0] if name_candidates else ""
+    # Prefer a candidate that looks like "First Last" over a single word (e.g. place name)
+    chosen = ""
+    for c in name_candidates:
+        if _looks_like_person_name(c):
+            chosen = c
+            break
+    if not chosen and name_candidates:
+        chosen = name_candidates[0]
+    out["name"] = chosen
+    if chosen:
+        parts = chosen.split(None, 1)  # max 2 parts: first word, rest
+        out["first_name"] = parts[0] if parts else ""
+        out["last_name"] = (parts[1] if len(parts) > 1 else "").strip()
     return out
 
 
@@ -674,8 +701,19 @@ def extract_cv_to_json(pdf_path: str, output_json: str = None) -> dict:
                 if any(kw in line.lower() for kw in ("engineer", "architect", "specialist", "developer")) and not _EMAIL_RE.search(line) and not _PHONE_RE.search(line):
                     headline = line
                     break
+    # Derive first_name, last_name from name (in case contact dict didn't have them)
+    name_str = (contact.get("name") or "").strip()
+    first_name = (contact.get("first_name") or "").strip()
+    last_name = (contact.get("last_name") or "").strip()
+    if name_str and not (first_name or last_name):
+        parts = name_str.split(None, 1)
+        first_name = parts[0] if parts else ""
+        last_name = (parts[1] if len(parts) > 1 else "").strip()
+
     extracted_data = {
         "name": contact["name"],
+        "first_name": first_name,
+        "last_name": last_name,
         "email": contact["email"],
         "mobile_number": contact["mobile_number"],
         "headline": headline,
