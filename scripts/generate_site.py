@@ -153,7 +153,7 @@ def build_hero_html(ctx: dict) -> str:
         {tagline}
       </p>
       <div class="hero-actions">
-        <a href="{resume_url}" class="btn btn-primary">Download Resume</a>
+        <a href="{resume_url}" target="_blank" class="btn btn-primary">Download Resume</a>
         <a href="#projects" class="btn btn-outline">View My Work</a>
       </div>
       <div class="hero-social">
