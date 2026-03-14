@@ -1,0 +1,99 @@
+{
+    "languages": {
+        "label": "Languages",
+        "items": [
+            "PHP",
+            "Python",
+            "Swift",
+            "Java",
+            "JavaScript",
+            "TypeScript",
+            "HTML",
+            "CSS",
+            "MQL5",
+            "Hack",
+            "C++",
+            "Shell",
+            "PowerShell",
+            "SCSS",
+            "Less",
+            "Roff",
+            "Blade"
+        ]
+    },
+    "tools": {
+        "label": "Tools",
+        "items": [
+            "Docker",
+            "Dockerfile",
+            "Vite",
+            "Makefile",
+            "Terraform",
+            "Ansible",
+            "CMake",
+            "Batchfile",
+            "Git",
+            "Github"
+        ]
+    },
+    "frontend": {
+        "label": "Frontend libraries and frameworks",
+        "items": [
+            "Vue",
+            "React",
+            "Tailwind CSS",
+            "Svelte",
+            "SvelteKit",
+            "Astro",
+            "Solid.js",
+            "Qwik",
+            "Remix",
+            "Next.js",
+            "Nuxt.js",
+            "Angular"
+        ]
+    },
+    "backend": {
+        "label": "Backend libraries and frameworks",
+        "items": [
+            "Laravel",
+            "Symfony",
+            "Django",
+            "Flask",
+            "FastAPI",
+            "Express",
+            "NestJS",
+            "Rails",
+            "Sinatra",
+            "Spring Boot",
+            "Quarkus",
+            "ASP.NET Core",
+            "Gin",
+            "Hono",
+            "Tornado",
+            "Pyramid",
+            "Yii",
+            "CodeIgniter",
+            "CakePHP",
+            "Zend",
+            "Phalcon",
+            "Prisma",
+            "Bun"
+        ]
+    },
+    "backend_services": {
+        "label": "Backend as a service / Services",
+        "items": [
+            "Supabase",
+            "PostgreSQL",
+            "MySQL",
+            "Redis",
+            "Kubernetes",
+            "AWS"
+        ]
+    },
+    "other": {
+        "label": "Other",
+        "items": []
+    }
+}

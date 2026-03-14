@@ -1,0 +1,1 @@
+[".gitignore", "eurusd_m10.csv", "joai_ml_complete.mq5", "readme.md", "data_preprocessor.py", "lstm_gru_attention_model.py", "main_training_pipeline.py", "model_evaluator.py", "onnx_exporter.py", "requirements.txt", "train_trading_model.py"]
