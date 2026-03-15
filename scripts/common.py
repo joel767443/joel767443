@@ -8,6 +8,11 @@ import os
 from pathlib import Path
 from typing import Any, Optional
 
+from dotenv import load_dotenv
+
+# Ensure environment variables from .env are available (e.g. GITHUB_TOKEN)
+load_dotenv()
+
 # Repo root (parent of scripts/)
 _ROOT = Path(__file__).resolve().parent.parent
 
