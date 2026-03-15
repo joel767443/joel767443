@@ -24,3 +24,16 @@ git push site site:main --force
 # 7. Back to main and delete local site branch
 git checkout main
 git branch -D site
+
+git checkout -b readme
+rm -f README.md example.env requirements.txt .gitignore
+rm -rf templates/ scripts/ site/
+cp -r portfolio/README.md .
+rm -rf portfolio/
+echo ".env" > .gitignore
+git add .
+git rm --cached .env 2>/dev/null || true
+git commit -m "Update readme for GitHub Profile"
+git push readme readme:main --force
+git checkout main
+git branch -D readme
