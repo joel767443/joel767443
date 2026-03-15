@@ -18,7 +18,7 @@ if str(_script_dir) not in sys.path:
 from common import ROOT, DATA_DIR, TEMPLATES_DIR, SITE_DIR, load_json, render_template, get_display_name
 
 SITE_TEMPLATE = TEMPLATES_DIR / "site.md"
-OUTPUT_HTML = SITE_DIR / "site.html"
+OUTPUT_HTML = SITE_DIR / "index.html"
 SITE_README_TEMPLATE = TEMPLATES_DIR / "site_readme.template.md"
 OUTPUT_README = SITE_DIR / "README.md"
 
