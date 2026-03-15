@@ -3,14 +3,15 @@ git checkout -b site
 
 # 2. Remove what you don’t want on the site
 rm -f README.md example.env requirements.txt .gitignore
-rm -rf templates/ graphs/ data/ portfolio/ scripts/
+rm -rf templates/ graphs/ data/ scripts/
 
 # 3. Replace with site contents and remove site dir
 cp -r site/. .
 rm -rf site/
 
-# 4. Ensure .env is never committed: minimal .gitignore
+# 4. Ensure .env and portfolio are never committed: minimal .gitignore
 echo ".env" > .gitignore
+echo "/portfolio" >> .gitignore
 
 # 5. Stage everything, then drop .env from the index if it was ever tracked
 git add .
