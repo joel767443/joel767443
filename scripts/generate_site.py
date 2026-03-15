@@ -19,6 +19,8 @@ from common import ROOT, DATA_DIR, TEMPLATES_DIR, SITE_DIR, load_json, render_te
 
 SITE_TEMPLATE = TEMPLATES_DIR / "site.md"
 OUTPUT_HTML = SITE_DIR / "site.html"
+SITE_README_TEMPLATE = TEMPLATES_DIR / "site_readme.template.md"
+OUTPUT_README = SITE_DIR / "README.md"
 
 
 # --- HTML builders (match site/index.html structure and classes) ---
@@ -608,6 +610,11 @@ def main() -> None:
         f.write(html_doc)
 
     print(f"Wrote {OUTPUT_HTML}")
+
+    site_readme_template = SITE_README_TEMPLATE.read_text(encoding="utf-8")
+    site_readme_md = render_template(site_readme_template, {})
+    OUTPUT_README.write_text(site_readme_md, encoding="utf-8")
+    print(f"Wrote {OUTPUT_README}")
 
 
 if __name__ == "__main__":
