@@ -18,7 +18,7 @@ git rm --cached .env 2>/dev/null || true
 
 # 6. Commit and push (fix: use --force with two hyphens)
 git commit -m "Update site"
-git push origin site:main --force
+git push origin site site:main --force
 
 # 7. Back to main and delete local site branch
 git checkout main
