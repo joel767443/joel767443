@@ -41,12 +41,33 @@ pip install -r requirements.txt
    - `data/skill_categories.json` — created by `generate_portfolio.py` if missing; edit to group skills.
    - `reports/capability_report.txt` — optional; if present, `generate_readme.py` uses "Total Projects:" and "Estimated Complexity Score:" in the generated portfolio README.
 
+## Dashboard (PHP + SQLite)
+
+A local dashboard to view portfolio, tech breakdown, and pipeline run times. Requires PHP 7.4+ with SQLite.
+
+From the repo root:
+
+```bash
+php -S localhost:8000 -t public public/index.php
+```
+
+Then open [http://localhost:8000](http://localhost:8000). The dashboard provides:
+
+- **Dashboard** — Repo count, top languages, last pipeline run, quick links
+- **Portfolio** — Generated portfolio page (iframe + link)
+- **Tech breakdown** — Languages, skill categories, detected architectures from `data/*.json`
+- **Process runs** — Last run time per pipeline step (from file mtimes or optional `data/run_log.json`)
+- **Generated site** — Redirects to the generated profile site
+
+Run times are inferred from output file modification times. Use “Refresh run times” in the nav to re-sync. Optional: add `data/run_log.json` with `{"runs":[{"step":"initial_scan","ran_at":"YYYY-MM-DD HH:MM:SS"},...]}` for explicit run times. SQLite DB: `data/intelligence.db` (created automatically; `data/` is in `.gitignore`).
+
 ## Project structure
 
 | Path | Description |
 |------|-------------|
+| `public/` | PHP dashboard: `index.php` (router), `config.php`, `sync.php`, `layout.php`, `pages/*.php`; run with `php -S localhost:8000 -t public public/index.php` |
 | `scripts/` | Python entry points and `common.py` (paths, `load_json`, `render_template`, `get_display_name`, `get_github_user_name`) |
-| `data/` | Generated: `projects.json`, `tech_stack.json`, `architecture.json`, `cv_extracted.json`, optional `skill_categories.json`; `data/cache/files/` for architecture file-tree cache |
+| `data/` | Generated: `projects.json`, `tech_stack.json`, `architecture.json`, `cv_extracted.json`, optional `skill_categories.json`, `intelligence.db`; `data/cache/files/` for architecture file-tree cache |
 | `templates/` | `README.template.md`, `site.md`, `site_readme.template.md`, optional CV PDF |
 | `site/` | Generated `site/index.html`, `site/README.md`; static `site/css/styles.css`, `site/img/` |
 | `portfolio/` | Generated `README.md` and `index.html` (plus skills chart) |
