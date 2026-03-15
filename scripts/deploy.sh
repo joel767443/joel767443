@@ -12,6 +12,7 @@ rm -rf site/
 # 4. Ensure .env and portfolio are never committed: minimal .gitignore
 echo ".env" > .gitignore
 echo "/portfolio" >> .gitignore
+echo "/public" >> .gitignore
 
 # 5. Stage everything, then drop .env from the index if it was ever tracked
 git add .
@@ -31,6 +32,7 @@ rm -rf templates/ scripts/ site/
 cp -r portfolio/README.md .
 rm -rf portfolio/
 echo ".env" > .gitignore
+echo "/public" >> .gitignore
 git add .
 git rm --cached .env 2>/dev/null || true
 git commit -m "Update readme for GitHub Profile"
