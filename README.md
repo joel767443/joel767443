@@ -8,8 +8,8 @@ Python tooling that analyzes your GitHub repositories and generates a data-drive
 - **Tech stack detection**: Languages plus optional framework detection from repo root files (via `scripts/frameworks.json` if present).
 - **Architecture detection**: Keyword-based detection (ML, API, microservices, Jamstack, etc.) over repo names, descriptions, topics, and file trees.
 - **CV extraction**: Parse LinkedIn-style CV PDF to JSON (`extract_cv.py`) for name, skills, experience, and education.
-- **Outputs**: `data/*.json`, `graphs/skills_chart.png`, generated portfolio README (from template), `portfolio/README.md` and `portfolio/index.html`, `site/site.html` and `site/README.md` (portfolio site using `site/css/styles.css`).
-- **Optional**: `scripts/test_post.py` for LinkedIn API test post (requires `ACCESS_TOKEN`, `PERSON_ID`).
+- **Outputs**: `data/*.json`, `graphs/skills_chart.png`, generated portfolio README (from template), `portfolio/README.md` and `portfolio/index.html`, `site/index.html` and `site/README.md` (portfolio site using `site/css/styles.css`).
+- **Optional**: `scripts/deploy.sh` to push generated site and portfolio README to separate remotes; `scripts/test_post.py` for LinkedIn API test post (requires `ACCESS_TOKEN`, `PERSON_ID`).
 
 ## Prerequisites
 
@@ -48,7 +48,7 @@ pip install -r requirements.txt
 | `scripts/` | Python entry points and `common.py` (paths, `load_json`, `render_template`, `get_display_name`, `get_github_user_name`) |
 | `data/` | Generated: `projects.json`, `tech_stack.json`, `architecture.json`, `cv_extracted.json`, optional `skill_categories.json`; `data/cache/files/` for architecture file-tree cache |
 | `templates/` | `README.template.md`, `site.md`, `site_readme.template.md`, optional CV PDF |
-| `site/` | Generated `site/site.html`, `site/README.md`; static `site/css/styles.css`, `site/img/` |
+| `site/` | Generated `site/index.html`, `site/README.md`; static `site/css/styles.css`, `site/img/` |
 | `portfolio/` | Generated `README.md` and `index.html` (plus skills chart) |
 | `reports/` | Optional `capability_report.txt` |
 | `graphs/` | Generated `skills_chart.png` |
@@ -66,6 +66,7 @@ flowchart LR
   E --> F[generate_readme]
   F --> G[generate_portfolio]
   G --> H[generate_site]
+  H --> I[deploy optional]
 ```
 
 1. **initial_scan.py** — Fetches user repos, languages, README summaries; writes `data/projects.json`. Requires `GITHUB_TOKEN`.
@@ -75,7 +76,8 @@ flowchart LR
 5. **extract_cv.py** (optional) — PDF to `data/cv_extracted.json`; improves name/headline/experience in generated README and site.
 6. **generate_readme.py** — Uses `templates/README.template.md`, `data/*.json`, `reports/`; writes **portfolio/README.md** (template-based profile).
 7. **generate_portfolio.py** — Writes `portfolio/README.md`, `portfolio/index.html`, `portfolio/skills_chart.png`; uses `data/skill_categories.json` (creates default if missing).
-8. **generate_site.py** — Writes `site/site.html` and `site/README.md` from `templates/site.md` and `templates/site_readme.template.md` and data (CV, projects, tech stack, skill categories).
+8. **generate_site.py** — Writes `site/index.html` and `site/README.md` from `templates/site.md` and `templates/site_readme.template.md` and data (CV, projects, tech stack, skill categories).
+9. **deploy.sh** (optional) — Pushes generated content to separate remotes: creates a `site` branch with site contents and pushes to `site` remote (`main`), then creates a `readme` branch with portfolio README and pushes to `readme` remote (`main`). Requires remotes `site` and `readme` to be configured.
 
 **Example (from repo root):**
 
@@ -88,6 +90,7 @@ python scripts/extract_cv.py templates/cv.pdf    # optional
 python scripts/generate_readme.py
 python scripts/generate_portfolio.py
 python scripts/generate_site.py
+./scripts/deploy.sh    # optional: push site and readme to their remotes
 ```
 
 ## Scripts reference
@@ -101,13 +104,26 @@ python scripts/generate_site.py
 | extract_cv | Parse CV PDF to JSON | templates/cv.pdf (or path) | data/cv_extracted.json |
 | generate_readme | Render portfolio README | templates/README.template.md, data/*, reports/ | portfolio/README.md |
 | generate_portfolio | Build portfolio Markdown + HTML | data/*, skill_categories | portfolio/README.md, portfolio/index.html |
-| generate_site | Build portfolio site HTML | templates/site.md, templates/site_readme.template.md, data/* | site/site.html, site/README.md |
+| generate_site | Build portfolio site HTML | templates/site.md, templates/site_readme.template.md, data/* | site/index.html, site/README.md |
+| deploy | Push site and readme to remotes | site/, portfolio/README.md | (git push to site + readme remotes) |
 | test_post | LinkedIn API test post | ACCESS_TOKEN, PERSON_ID | (API call only) |
+
+## Deployment
+
+After generating the site and portfolio, you can push them to separate GitHub repos (e.g. GitHub Pages for the site, profile README repo) using `scripts/deploy.sh`:
+
+1. Add remotes (once):  
+   `git remote add site <url-to-site-repo>`  
+   `git remote add readme <url-to-readme-repo>`
+2. Run the full pipeline (initial_scan → … → generate_site), then:  
+   `./scripts/deploy.sh`
+
+The script creates a **site** branch (copies `site/` to repo root, pushes to `site` remote `main`) and a **readme** branch (copies `portfolio/README.md` to repo root, pushes to `readme` remote `main`), then returns to `main` and deletes the temporary branches.
 
 ## Outputs
 
 - **Data**: `data/projects.json`, `data/tech_stack.json`, `data/architecture.json`, `data/cv_extracted.json`, `data/skill_categories.json`.
-- **Generated content**: `portfolio/README.md` (template-based and/or from generate_portfolio), `portfolio/index.html`, `site/site.html`, `site/README.md`, `graphs/skills_chart.png`.
+- **Generated content**: `portfolio/README.md` (template-based and/or from generate_portfolio), `portfolio/index.html`, `site/index.html`, `site/README.md`, `graphs/skills_chart.png`.
 
 `.env`, `data/`, `reports/`, `site/`, `portfolio/`, and `graphs/` are in `.gitignore`; generated outputs are local unless you force-add them.
 
