@@ -45,16 +45,15 @@ def get_github_user_name(token: Optional[str] = None) -> Optional[str]:
 
 
 def get_display_name(cv_data: Optional[dict] = None, fallback: str = "Yoweli Kachala") -> str:
-    """Resolve display name: CV first_name + last_name > GitHub profile name > CV name > fallback."""
+    """Resolve display name: GitHub profile name > CV first_name + last_name > CV name > fallback."""
+    name = get_github_user_name()
+    if name:
+        return name
     if cv_data:
         first = (cv_data.get("first_name") or "").strip()
         last = (cv_data.get("last_name") or "").strip()
         if first or last:
             return f"{first} {last}".strip()
-    name = get_github_user_name()
-    if name:
-        return name
-    if cv_data:
         name = (cv_data.get("name") or "").strip()
         if name:
             return name
