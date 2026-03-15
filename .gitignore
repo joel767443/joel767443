@@ -1,7 +1,2 @@
 .env
-/data
-/reports
-/site
-/portfolio
-/graphs
-/site
+/public

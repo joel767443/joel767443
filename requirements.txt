@@ -1,7 +1,0 @@
-requests
-python-dotenv
-matplotlib
-jinja2
-ez-parse
-pdfminer.six
-markdown

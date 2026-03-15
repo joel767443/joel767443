@@ -1,155 +1,203 @@
-# GitHub Developer Intelligence
+# Yoweli Kachala
 
-Python tooling that analyzes your GitHub repositories and generates a data-driven portfolio (README, static site, skill graphs) from language stats, architecture detection, and optional CV data.
+*Senior Software Engineer | Backend Architect | Laravel & Cloud Specialist*
 
-## Features
+Senior Systems Architect Backend Engineer Senior Systems Architect & Backend Engineer with 15+ years of experience building secure, high-availability systems across Fintech, Health Tech, Government, and Global Enterprise environments (LG, Samsung, MTN). Specialised in transactional systems, payroll platforms, subscription billing logic, and scalable API design. Proven track record in architectural recovery, having fast-tracked a 5-year stalled national system to delivery within 12 months. Expert in high-volume performance, recently reducing processing latency by 88% and doubling operational capacity through strategic automation. Deeply proficient in Laravel/PHP 8+, AWS infrastructure, and CI/CD, with advanced expertise in Financial ML (LSTM/GRU) and ONNX-based production pipelines.
 
-- **Repository scan**: Fetches all user repos via GitHub API; aggregates language bytes and README summaries.
-- **Tech stack detection**: Languages plus optional framework detection from repo root files (via `scripts/frameworks.json` if present).
-- **Architecture detection**: Keyword-based detection (ML, API, microservices, Jamstack, etc.) over repo names, descriptions, topics, and file trees.
-- **CV extraction**: Parse LinkedIn-style CV PDF to JSON (`extract_cv.py`) for name, skills, experience, and education.
-- **Outputs**: `data/*.json`, `graphs/skills_chart.png`, generated portfolio README (from template), `portfolio/README.md` and `portfolio/index.html`, `site/index.html` and `site/README.md` (portfolio site using `site/css/styles.css`).
-- **Optional**: `scripts/deploy.sh` to push generated site and portfolio README to separate remotes; `scripts/test_post.py` for LinkedIn API test post (requires `ACCESS_TOKEN`, `PERSON_ID`).
 
-## Prerequisites
+[View styled portfolio (HTML)](index.html)
 
-- Python 3.x
-- [GitHub Personal Access Token](https://github.com/settings/tokens) (for higher rate limits and private repos)
+---
 
-## Installation
+## Architecture footprint
 
-```bash
-git clone <repo-url>
-cd github-developer-intelligence
-python -m venv .venv
-source .venv/bin/activate   # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-```
+*Inferred patterns detected across repositories*
 
-**Dependencies** (from `requirements.txt`): `requests`, `python-dotenv`, `matplotlib`, `jinja2`, `ez-parse`, `pdfminer.six`, `markdown`.
+*Detected across 50 repositories.*
 
-## Configuration
+| Architecture | Repos | Share |
+|-------------|-------|-------|
+| Machine Learning Systems | 36 | 72.0% |
+| API Architecture | 17 | 34.0% |
+| AI-Native Architecture | 16 | 32.0% |
+| Event-Driven Architecture | 8 | 16.0% |
+| Microservices | 3 | 6.0% |
+| Multi Tenant SaaS | 2 | 4.0% |
+| Jamstack | 1 | 2.0% |
 
-1. **Environment**: Copy `example.env` to `.env` and set:
-   - `GITHUB_TOKEN` — required for scan and framework/architecture steps.
-   - `ACCESS_TOKEN`, `PERSON_ID` — only for LinkedIn test post (`scripts/test_post.py`).
+---
 
-2. **Script-specific**: In `scripts/architecture_detector.py`, set `YOUR_GITHUB_USERNAME` (line 14) if `data/projects.json` does not contain `full_name` for each repo (e.g. if you run an older scan).
+## Technical skills
 
-3. **Optional files**:
-   - `scripts/frameworks.json` — not in repo; if present, `tech_stack_detector.py` uses it for framework/tool detection from repo root file names.
-   - `data/skill_categories.json` — created by `generate_portfolio.py` if missing; edit to group skills.
-   - `reports/capability_report.txt` — optional; if present, `generate_readme.py` uses "Total Projects:" and "Estimated Complexity Score:" in the generated portfolio README.
+*Weighted by code volume across GitHub*
 
-## Dashboard (PHP + SQLite)
+**Languages**  
+**PHP** · **Python** · **Swift** · *Blade* · *MQL5* · *HTML* · *Java* · *CSS* · *JavaScript* · *Hack* · *TypeScript* · *PowerShell* · *C++* · *SCSS* · *Shell* · *Less* · *Roff*
 
-A local dashboard to view portfolio, tech breakdown, and pipeline run times. Requires PHP 7.4+ with SQLite.
+**Tools**  
+*Dockerfile* · *CMake* · *Batchfile* · *Makefile*
 
-From the repo root:
+**Frontend libraries and frameworks**  
+*Vue*
 
-```bash
-php -S localhost:8000 -t public public/index.php
-```
+**Other**  
+*Stylus*
 
-Then open [http://localhost:8000](http://localhost:8000). The dashboard provides:
 
-- **Dashboard** — Repo count, top languages, last pipeline run, quick links
-- **Portfolio** — Generated portfolio page (iframe + link)
-- **Tech breakdown** — Languages, skill categories, detected architectures from `data/*.json`
-- **Process runs** — Last run time per pipeline step (from file mtimes or optional `data/run_log.json`)
-- **Generated site** — Redirects to the generated profile site
+---
 
-Run times are inferred from output file modification times. Use “Refresh run times” in the nav to re-sync. Optional: add `data/run_log.json` with `{"runs":[{"step":"initial_scan","ran_at":"YYYY-MM-DD HH:MM:SS"},...]}` for explicit run times. SQLite DB: `data/intelligence.db` (created automatically; `data/` is in `.gitignore`).
+## Skill distribution
 
-## Project structure
+*Languages and architectures*
 
-| Path | Description |
-|------|-------------|
-| `public/` | PHP dashboard: `index.php` (router), `config.php`, `sync.php`, `layout.php`, `pages/*.php`; run with `php -S localhost:8000 -t public public/index.php` |
-| `scripts/` | Python entry points and `common.py` (paths, `load_json`, `render_template`, `get_display_name`, `get_github_user_name`) |
-| `data/` | Generated: `projects.json`, `tech_stack.json`, `architecture.json`, `cv_extracted.json`, optional `skill_categories.json`, `intelligence.db`; `data/cache/files/` for architecture file-tree cache |
-| `templates/` | `README.template.md`, `site.md`, `site_readme.template.md`, optional CV PDF |
-| `site/` | Generated `site/index.html`, `site/README.md`; static `site/css/styles.css`, `site/img/` |
-| `portfolio/` | Generated `README.md` and `index.html` (plus skills chart) |
-| `reports/` | Optional `capability_report.txt` |
-| `graphs/` | Generated `skills_chart.png` |
+![Skills and architectures](skills_chart.png)
 
-## Workflow
+---
 
-Run scripts in this order. Later steps depend on outputs from earlier ones.
+## Professional experience
 
-```mermaid
-flowchart LR
-  A[initial_scan] --> B[tech_stack_detector]
-  B --> C[architecture_detector]
-  C --> D[skill_graph]
-  D --> E[extract_cv optional]
-  E --> F[generate_readme]
-  F --> G[generate_portfolio]
-  G --> H[generate_site]
-  H --> I[deploy optional]
-```
+**Senior Software Engineer (Native PHP)** | *April 2024-September 2025*  
+RoomRaccoon Hotel Tech · City of Cape Town, Western Cape, South Africa
 
-1. **initial_scan.py** — Fetches user repos, languages, README summaries; writes `data/projects.json`. Requires `GITHUB_TOKEN`.
-2. **tech_stack_detector.py** — Reads `data/projects.json`; aggregates languages, optionally detects frameworks; writes `data/tech_stack.json`.
-3. **architecture_detector.py** — Reads `data/projects.json`; fetches file trees (cached in `data/cache/files/`); keyword detection; writes `data/architecture.json`. Set `YOUR_GITHUB_USERNAME` if projects lack `full_name`.
-4. **skill_graph.py** — Reads `data/tech_stack.json` and `data/architecture.json`; writes `graphs/skills_chart.png`.
-5. **extract_cv.py** (optional) — PDF to `data/cv_extracted.json`; improves name/headline/experience in generated README and site.
-6. **generate_readme.py** — Uses `templates/README.template.md`, `data/*.json`, `reports/`; writes **portfolio/README.md** (template-based profile).
-7. **generate_portfolio.py** — Writes `portfolio/README.md`, `portfolio/index.html`, `portfolio/skills_chart.png`; uses `data/skill_categories.json` (creates default if missing).
-8. **generate_site.py** — Writes `site/index.html` and `site/README.md` from `templates/site.md` and `templates/site_readme.template.md` and data (CV, projects, tech stack, skill categories).
-9. **deploy.sh** (optional) — Pushes generated content to separate remotes: creates a `site` branch with site contents and pushes to `site` remote (`main`), then creates a `readme` branch with portfolio README and pushes to `readme` remote (`main`). Requires remotes `site` and `readme` to be configured.
+- Multi-Tenant SaaS Architecture: Created and optimised scalable backend services for a global SaaS platform, ensuring secure data isolation and performance across a diverse international client base
+- Database & Transactional Performance: Lead the optimisation of complex transactional workflows and database operations, significantly reducing query latency and improving system throughput
+- International API Development: Created robust, scalable APIs to support market expansion, focusing on high availability and seamless integration for third-party partners
+- Agile & Distributed Leadership: Collaborated within a cross-functional, distributed engineering team, driving high standards for code quality and sprint delivery in a fast-paced Agile environment
 
-**Example (from repo root):**
+---
 
-```bash
-python scripts/initial_scan.py
-python scripts/tech_stack_detector.py
-python scripts/architecture_detector.py
-python scripts/skill_graph.py
-python scripts/extract_cv.py templates/cv.pdf    # optional
-python scripts/generate_readme.py
-python scripts/generate_portfolio.py
-python scripts/generate_site.py
-./scripts/deploy.sh    # optional: push site and readme to their remotes
-```
+**Founder & Senior iOS Architect (SwiftUI & Firebase) – CapeRidaz** | *September 2023-April 2024*  
+CapeEuc · Cape Town, Western Cape, South Africa
 
-## Scripts reference
+- Lead engineer for CapeRidaz, a social ride-tracking app enabling EUC, bike, and micromobility riders to record, analyse, and share rides with a community
+- Launched end-to-end ride recording & analytics: Designed and shipped GPS ride tracking with background location, media capture, and advanced analytics, supporting 10k+ recorded rides with real-time stats
+- Scaled real-time features on Firebase: Optimised Firestore data models and indexing for feed, chat, and live location, cutting read costs by ~30% while keeping core screens loading in <200ms
+- Introduced advanced insights & challenges: Built a challenge engine, leaderboards, and analytics/insight layer that increased weekly active riders by 25% and session length by 18%
+- Improved engagement via social & sharing: Implemented social feed, comments, and ride/video sharing to external platforms, driving a 40% uplift in shared rides month-over-month
+- Delivered HealthKit integration: Integrated Apple Health/HealthKit sync
+- (import/export of workouts) with robust privacy and permissions, helping >60% of active users centralise their ride data
+- Architecture & System Design: Defined MVVM architecture with dedicated
+- Models, ViewModels, Services, and reusable Components, ensuring a modular, testable codebase
+- Feature Ownership: Owned core product verticals, including ride recording, analytics, challenges, route planning/sharing, and social feed, from design through release and iteration
+- Quality & Reliability: Established coding standards, logging, and error handling patterns; profiled performance (maps, charts, video generation) and removed bottlenecks affecting scroll and load times
 
-| Script | Purpose | Main inputs | Main outputs |
-|--------|---------|-------------|--------------|
-| initial_scan | Fetch repos + languages + README summaries | GITHUB_TOKEN | data/projects.json |
-| tech_stack_detector | Aggregate languages + detect frameworks | data/projects.json, optional frameworks.json | data/tech_stack.json |
-| architecture_detector | Detect architecture patterns | data/projects.json | data/architecture.json |
-| skill_graph | Plot skills + architectures | data/tech_stack.json, data/architecture.json | graphs/skills_chart.png |
-| extract_cv | Parse CV PDF to JSON | templates/cv.pdf (or path) | data/cv_extracted.json |
-| generate_readme | Render portfolio README | templates/README.template.md, data/*, reports/ | portfolio/README.md |
-| generate_portfolio | Build portfolio Markdown + HTML | data/*, skill_categories | portfolio/README.md, portfolio/index.html |
-| generate_site | Build portfolio site HTML | templates/site.md, templates/site_readme.template.md, data/* | site/index.html, site/README.md |
-| deploy | Push site and readme to remotes | site/, portfolio/README.md | (git push to site + readme remotes) |
-| test_post | LinkedIn API test post | ACCESS_TOKEN, PERSON_ID | (API call only) |
+---
 
-## Deployment
+**Senior Backend Engineer** | *September 2022-August 2023*  
+Emedis SA · Cape Town, Western Cape, South Africa
 
-After generating the site and portfolio, you can push them to separate GitHub repos (e.g. GitHub Pages for the site, profile README repo) using `scripts/deploy.sh`:
+- Engineered high-performance backend services for LG operations, managing complex logistics, inventory, and financial workflows
+- Designed and implemented reusable architectural blueprints, establishing a standardised framework that accelerated future system development across the organisation
+- Successfully blended diverse ERP-style modules, maintaining high data fidelity between inventory management and financial reporting systems
 
-1. Add remotes (once):  
-   `git remote add site <url-to-site-repo>`  
-   `git remote add readme <url-to-readme-repo>`
-2. Run the full pipeline (initial_scan → … → generate_site), then:  
-   `./scripts/deploy.sh`
+---
 
-The script creates a **site** branch (copies `site/` to repo root, pushes to `site` remote `main`) and a **readme** branch (copies `portfolio/README.md` to repo root, pushes to `readme` remote `main`), then returns to `main` and deletes the temporary branches.
+**Senior Back End Developer** | *September 2021-August 2022*  
+FlexClub · Cape Town, Western Cape, South Africa
 
-## Outputs
+- Subscription Ecosystem: Architectured mission-critical backend services managing the full subscription lifecycle, including complex recurring billing logic and automated renewal workflows
+- System Resiliency: Engineered enhancements to transactional reliability, ensuring 100% data consistency for high-volume financial operations
+- DevOps Maturity: Standardised deployment pipelines and documentation, significantly increasing production stability and reducing "time-to-market" for new marketplace features
+- Workflow Standardisation: Audited and refined marketplace architectures to ensure cross-platform consistency and a seamless user experience across the service suite
 
-- **Data**: `data/projects.json`, `data/tech_stack.json`, `data/architecture.json`, `data/cv_extracted.json`, `data/skill_categories.json`.
-- **Generated content**: `portfolio/README.md` (template-based and/or from generate_portfolio), `portfolio/index.html`, `site/index.html`, `site/README.md`, `graphs/skills_chart.png`.
+---
 
-`.env`, `data/`, `reports/`, `site/`, `portfolio/`, and `graphs/` are in `.gitignore`; generated outputs are local unless you force-add them.
+**Senior Open Source Backend Engineer** | *May 2020-July 2021*  
+City of Cape Town · Cape Town, Western Cape, South Africa
 
-## Customization
+- Healthcare Interoperability: Designed and implemented the backend architecture for a large-scale pharmacy system, ensuring seamless integration with diverse clinical platforms
+- Data Integrity & Compliance: Engineered robust data synchronisation protocols to maintain strict data integrity and clinical accuracy across interconnected healthcare modules
+- System Synergy: Facilitated complex API integrations between pharmaceutical inventory and patient clinical records to streamline the dispensing workflow
+- Regulatory Alignment: Architecture backend services with a focus on security and auditability, critical for handling sensitive medical and pharmaceutical data
 
-- Edit `templates/README.template.md` and `templates/site.md` for narrative and structure.
-- Edit `data/skill_categories.json` to group technologies for the portfolio.
-- Add `scripts/frameworks.json` (object mapping framework names to list of file patterns) to enable framework detection in `tech_stack_detector.py`.
+---
+
+**Senior Software Development Engineer** | *December 2019-May 2020*  
+1-grid · Cape Town Area, South Africa
+
+- Fintech & Billing Integration: Architecture custom modules to extend the WHMCS billing platform, automating complex financial workflows for enterprise clients
+- Secure Payment Processing: Successfully integrated the PayFast Payment
+- Gateway, ensuring secure, encrypted transaction processing and PCI-DSS compliance
+- Automated Domain Workflows: Engineered API-based domain verification and provisioning workflows, reducing manual intervention and accelerating service delivery
+- Financial Accuracy: Audited and refined automated billing logic, significantly improving billing accuracy and operational reliability for recurring revenue streams
+
+---
+
+**Senior Backend & Frontend Engineer** | *February 2019-November 2019*  
+GoMetro · Cape Town Area, South Africa
+
+- Architectured robust backend services for a comprehensive fleet management platform, focusing on scalability and data consistency
+- Architected and built a real-time vehicle tracking module using ReactJS, enabling live monitoring of fleet assets with high precision using a PHP/Laravel backend
+- Significantly improved CI/CD pipelines, leading to higher production deployment stability across staging, QA, and production environments, decreasing deployment failures by 70%
+
+---
+
+**Senior Enterprise Systems Developer** | *January 2016-February 2019*  
+Double Eye · Cape Town, Western Cape, South Africa
+
+- Successfully guided and delivered 7 enterprise-scale projects across the telecommunications and public sectors, serving as the Technical Lead for 2 high-priority initiatives. Standardised the QA workflow and environment parity, reducing 'it works on my machine' bugs and accelerating the release cycle
+- Led the development of a critical UK National Health Service (NHS) health system initiative, ensuring backend solutions met stringent compliance and data integrity standards Engineered and supported robust backend systems for tier-1 telecommunications providers, including Samsung, Cell C, Glocel, and MTN
+- Streamlined development cycles by implementing CI/CD integration and automated QA workflows, reducing manual testing overhead and improving release stability
+
+---
+
+**Lead Developer (Systems Architect & Backend Engineer)** | *March 2012-December 2015*  
+SchoolAlert · Cape Town Area, South Africa
+
+- Managed platform re-architecture of a high-volume messaging platform, integrating SendGrid (bulk mail), Infobip (SMS), and USSD services
+- Re-engineered processing logic to reduce message delivery latency by 88% (from 3 hours to under 20 minutes)
+- Automated SMS failure handling and support workflows, reducing operational costs by 25% and enabling the successful merger of two regional offices
+- Scaled backend automation to the point that manual call centre functions were consolidated, resulting in significant overhead reduction and streamlined operations
+- Architectured a customer support module that doubled staff capacity, increasing daily client visits from 2 to 4 per person Intu2Ko Complete IT Services & Globe Computer Systems LTD Early Career – Systems & Backend Engineering
+
+---
+
+**Early Career – Systems & Backend Engineering** | *January 2006-February 2012*  
+Intu2Ko Complete IT Services & Globe Computer Systems LTD · Cape Town, Western Cape, South Africa
+
+- Project Recovery: Rescued a stalled tender processing system that had been delayed for 5 years; fast-tracked development to deliver functional demos within the first 12 months
+- Platform Recovery: Rescued a stalled tender processing system delayed for 5 years, fast-tracking development to deliver functional demos within 12 months
+- Operational Efficiency: Engineered a customer support system that doubled field productivity, increasing client visit capacity from 2 to 4 per person daily
+- Public Sector Infrastructure: Developed and deployed national-scale payroll and HR systems for the Government of Malawi
+- Platform Engineering: Built backend components for B2B trading and insurance platforms, managing end-to-end hosting and infrastructure
+- Leadership: Took full ownership of deployments and user training within the first year of tenure
+
+---
+
+## Education
+
+**B-Tech Degree In Information Technology,Information Technology**  
+Cape Peninsula University of Technology
+
+**Management Information Systems,Information Tech**  
+University of Malawi (Polytechnic)
+
+---
+
+## Certifications
+
+**Cisco Certified Networking Associate**  
+—
+
+---
+
+## Featured projects
+
+*Public repositories, summarized from GitHub*
+
+- **[emendis-php-assessment](https://github.com/joel767443/emendis-php-assessment)** — PHP OOP solution for calculating transport container requirements with clean object-oriented design  
+  *Tech:* PHP (100.0%)
+- **[eugene-property-management](https://github.com/joel767443/eugene-property-management)** — Laravel 8 platform for managing properties, service providers, scheduling, messaging, and payments  
+  *Tech:* PHP (50.03%), Blade (40.86%), HTML (9.11%)
+- **[github-developer-intelligence](https://github.com/joel767443/github-developer-intelligence)** — Python toolkit that analyzes GitHub repos and generates developer portfolios with profile READMEs, skill graphs, and capability reports  
+  *Tech:* Python (78.09%), CSS (11.46%), PHP (9.81%), Shell (0.64%)
+- **[joel767443](https://github.com/joel767443/joel767443)** — *Senior Software Engineer | Backend Architect | Laravel & Cloud Specialist* Senior Systems Architect Backend Engineer Senior Systems Architect & Backend Engineer with 15+ years of…  
+  *Tech:* PHP (100.0%)
+- **[raccoon-php-vue-crud](https://github.com/joel767443/raccoon-php-vue-crud)** — Full-stack CRUD app with custom PHP MVC backend and Vue 3 single-page frontend  
+  *Tech:* Vue (49.04%), PHP (43.0%), CSS (3.99%), JavaScript (3.14%)
+- **[yow-php-mini-framework](https://github.com/joel767443/yow-php-mini-framework)** — Lightweight PHP MVC framework built from scratch with custom routing, layout-based view rendering, and controller architecture  
+  *Tech:* PHP (71.99%), Hack (28.01%)
+
+---
+
+*Generated automatically by [github-developer-intelligence](https://github.com/joel767443/github-developer-intelligence).*
