@@ -20,14 +20,14 @@ Senior Systems Architect Backend Engineer Senior Systems Architect & Backend Eng
 | AI-Native Architecture | 16 | 24.2% |
 | Event-Driven Architecture | 8 | 12.1% |
 | Pipeline Architecture | 6 | 9.1% |
-| Microservices | 3 | 4.5% |
 | Data Architecture | 3 | 4.5% |
+| Microservices | 3 | 4.5% |
+| Domain-Driven Design | 2 | 3.0% |
 | Multi Tenant SaaS | 2 | 3.0% |
 | Actor Model | 2 | 3.0% |
-| Domain-Driven Design | 2 | 3.0% |
-| API Gateway | 1 | 1.5% |
-| Blockchain Architecture | 1 | 1.5% |
 | Jamstack | 1 | 1.5% |
+| Blockchain Architecture | 1 | 1.5% |
+| API Gateway | 1 | 1.5% |
 
 ---
 ## Technical skills
@@ -44,7 +44,7 @@ Senior Systems Architect Backend Engineer Senior Systems Architect & Backend Eng
 *Vue* · *React*
 
 **Other**  
-*DockerCompose* · *Express* · *Flask* · *Stylus*
+*DockerCompose* · *Flask* · *Express* · *Stylus*
 
 ---
 ## Skill distribution
