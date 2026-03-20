@@ -44,7 +44,7 @@ Senior Systems Architect Backend Engineer Senior Systems Architect & Backend Eng
 *Vue* · *React*
 
 **Other**  
-*DockerCompose* · *Express* · *Prisma* · *Flask* · *EJS* · *Stylus*
+*Express* · *DockerCompose* · *Prisma* · *Flask* · *EJS* · *Stylus*
 
 ---
 ## Skill distribution
@@ -139,7 +139,7 @@ TestDome · *Issued Jan 2019*
 *Public repositories, summarized from GitHub*
 
 - **[github-personal-branding](https://github.com/joel767443/github-personal-branding)** — No README summary available.  
-  *Tech:* JavaScript (69.22%), CSS (13.53%), HTML (10.22%), EJS (6.20%)
+  *Tech:* JavaScript (69.29%), CSS (13.50%), HTML (10.19%), EJS (6.18%)
 - **[view-bridge](https://github.com/joel767443/view-bridge)** — No README summary available.  
   *Tech:* PHP (100.0%)
 - **[router-symfony](https://github.com/joel767443/router-symfony)** — No README summary available.  
