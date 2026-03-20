@@ -1,0 +1,1491 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Senior Software Engineer Portfolio</title>
+    <style>
+:root {
+  -webkit-locale: "en";
+  --banner-height: 48px;
+  --full-height-with-banner: calc(100dvh - var(--banner-height));
+  --100dvw: 100dvw;
+  --100dvh: 100dvh;
+  --font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --color-green-500: oklch(.723 .219 149.579);
+  --color-gray-100: oklch(.967 .003 264.542);
+  --color-black: #000;
+  --color-white: #fff;
+  --spacing: .25rem;
+  --container-sm: 24rem;
+  --container-md: 28rem;
+  --container-lg: 32rem;
+  --container-2xl: 42rem;
+  --container-4xl: 56rem;
+  --container-6xl: 72rem;
+  --container-7xl: 80rem;
+  --text-xs: .75rem;
+  --text-xs--line-height: calc(1 / .75);
+  --text-sm: .875rem;
+  --text-sm--line-height: calc(1.25 / .875);
+  --text-base: 1rem;
+  --text-base--line-height: calc(1.5 / 1);
+  --text-lg: 1.125rem;
+  --text-lg--line-height: calc(1.75 / 1.125);
+  --text-xl: 1.25rem;
+  --text-xl--line-height: calc(1.75 / 1.25);
+  --text-2xl: 1.5rem;
+  --text-2xl--line-height: calc(2 / 1.5);
+  --text-3xl: 1.875rem;
+  --text-3xl--line-height: calc(2.25 / 1.875);
+  --text-4xl: 2.25rem;
+  --text-4xl--line-height: calc(2.5 / 2.25);
+  --text-5xl: 3rem;
+  --text-5xl--line-height: 1;
+  --text-6xl: 3.75rem;
+  --text-6xl--line-height: 1;
+  --text-7xl: 4.5rem;
+  --text-7xl--line-height: 1;
+  --font-weight-semibold: 600;
+  --tracking-tight: -.025em;
+  --tracking-widest: .1em;
+  --leading-relaxed: 1.625;
+  --radius-xs: .125rem;
+  --radius-2xl: 1rem;
+  --ease-in-out: cubic-bezier(.4, 0, .2, 1);
+  --animate-pulse: pulse 2s cubic-bezier(.4, 0, .6, 1) infinite;
+  --animate-bounce: bounce 1s infinite;
+  --blur-sm: 8px;
+  --blur-3xl: 64px;
+  --aspect-video: 16 / 9;
+  --default-transition-duration: .15s;
+  --default-transition-timing-function: cubic-bezier(.4, 0, .2, 1);
+  --default-font-family: var(--font-sans);
+  --default-font-feature-settings: var(--font-sans--font-feature-settings);
+  --default-font-variation-settings: var(--font-sans--font-variation-settings);
+  --default-mono-font-family: var(--font-mono);
+  --default-mono-font-feature-settings: var(--font-mono--font-feature-settings);
+  --default-mono-font-variation-settings: var(--font-mono--font-variation-settings);
+  --color-border: var(--border);
+  --font-size: 14px;
+  --background: #fff;
+  --foreground: oklch(.145 0 0);
+  --card: #fff;
+  --card-foreground: oklch(.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(.145 0 0);
+  --primary: #030213;
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(.95 .0058 264.53);
+  --secondary-foreground: #030213;
+  --muted: #ececf0;
+  --muted-foreground: #717182;
+  --accent: #e9ebef;
+  --accent-foreground: #030213;
+  --destructive: #d4183d;
+  --destructive-foreground: #fff;
+  --border: #0000001a;
+  --input: transparent;
+  --input-background: #f3f3f5;
+  --switch-background: #cbced4;
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --ring: oklch(.708 0 0);
+  --chart-1: oklch(.646 .222 41.116);
+  --chart-2: oklch(.6 .118 184.704);
+  --chart-3: oklch(.398 .07 227.392);
+  --chart-4: oklch(.828 .189 84.429);
+  --chart-5: oklch(.769 .188 70.08);
+  --radius: .625rem;
+  --sidebar: oklch(.985 0 0);
+  --sidebar-foreground: oklch(.145 0 0);
+  --sidebar-primary: #030213;
+  --sidebar-primary-foreground: oklch(.985 0 0);
+  --sidebar-accent: oklch(.97 0 0);
+  --sidebar-accent-foreground: oklch(.205 0 0);
+  --sidebar-border: oklch(.922 0 0);
+  --sidebar-ring: oklch(.708 0 0);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  border: 0 solid;
+  margin: 0;
+  padding: 0;
+  border-color: var(--border);
+  outline-color: color-mix(in oklab, var(--ring) 50%, transparent);
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  tab-size: 4;
+  line-height: 1.5;
+}
+
+body {
+  font-synthesis: none;
+  line-height: inherit;
+  font-family: var(--default-font-family, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji");
+  font-feature-settings: var(--default-font-feature-settings, normal);
+  font-variation-settings: var(--default-font-variation-settings, normal);
+  -webkit-tap-highlight-color: transparent;
+  font-size: var(--font-size);
+  background-color: var(--background);
+  color: var(--foreground);
+  transition: background-color .3s, color .3s, color-scheme .3s;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+}
+
+.page {
+  background: linear-gradient(
+    to bottom right,
+    var(--background) 0%,
+    var(--background) 50%,
+    color-mix(in oklab, var(--accent) 10%, transparent) 100%
+  );
+}
+
+.container {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.section {
+  padding: 6rem 0;
+}
+
+.section-alt {
+  background: oklch(.985 0 0);
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 3.5rem;
+}
+
+.section-header h2 {
+  font-size: clamp(2rem, 3vw, 2.5rem);
+  letter-spacing: var(--tracking-tight);
+  margin: 0 0 0.75rem;
+}
+
+.section-header p {
+  margin: 0 auto;
+  max-width: 38rem;
+  color: var(--muted-foreground);
+  font-size: 0.975rem;
+}
+
+.grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.skills-grid {
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.skill-distribution {
+  margin-top: 1rem;
+  max-width: 42rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.skill-distribution-row {
+  display: grid;
+  grid-template-columns: minmax(0, 8rem) 1fr minmax(0, 3.5rem);
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.6rem;
+  font-size: 0.9rem;
+}
+
+.skill-distribution-label {
+  font-weight: var(--font-weight-medium);
+  color: var(--foreground);
+}
+
+.skill-distribution-bar-wrap {
+  height: 1.25rem;
+  border-radius: 999px;
+  background: var(--muted);
+  overflow: hidden;
+}
+
+.skill-distribution-bar {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--primary) 0%, color-mix(in oklab, var(--primary) 70%, var(--chart-1)) 100%);
+  min-width: 2px;
+  transition: width 0.4s ease;
+}
+
+.skill-distribution-pct {
+  text-align: right;
+  color: var(--muted-foreground);
+  font-size: 0.85rem;
+}
+
+.skill-distribution-chart {
+  width: 100%;
+  max-width: 42rem;
+  margin: 2rem auto 0;
+}
+
+.skill-distribution-chart img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.625rem;
+  border: 1px solid var(--border);
+  display: block;
+}
+
+.projects-grid {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.contact-grid {
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.2fr);
+  gap: 2.5rem;
+  align-items: start;
+}
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  backdrop-filter: blur(12px);
+  background: color-mix(in oklab, var(--background) 95%, transparent);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 4rem;
+}
+
+.nav-brand {
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--tracking-tight);
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  font-size: var(--text-sm);
+}
+
+.nav-links a {
+  color: var(--muted-foreground);
+  position: relative;
+  padding-bottom: 0.1rem;
+  transition: color var(--default-transition-duration) var(--default-transition-timing-function);
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -0.25rem;
+  width: 0;
+  height: 2px;
+  background: var(--primary);
+  transition: width 0.2s ease-out;
+}
+
+.nav-links a:hover {
+  color: var(--foreground);
+}
+
+.nav-links a:hover::after {
+  width: 100%;
+}
+
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  background: transparent;
+  border: none;
+  padding: 0.25rem;
+  cursor: pointer;
+}
+
+.nav-toggle span {
+  width: 20px;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--foreground);
+}
+
+.hero {
+  position: relative;
+  padding-top: 6.5rem;
+  padding-bottom: 6.5rem;
+  overflow: hidden;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 15% 15%, color-mix(in oklab, var(--accent) 20%, transparent) 0, transparent 50%),
+    radial-gradient(circle at 85% 20%, rgba(148, 163, 184, 0.15), transparent 50%),
+    radial-gradient(circle at 20% 80%, rgba(34, 197, 94, 0.08), transparent 50%);
+}
+
+.hero-inner {
+  position: relative;
+  display: grid;
+  gap: 3.5rem;
+  align-items: center;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  z-index: 1;
+}
+
+.hero-content {
+  max-width: 32rem;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  font-size: var(--text-xs);
+  border: 1px solid color-mix(in oklab, var(--primary) 25%, transparent);
+  background: color-mix(in oklab, var(--accent) 15%, transparent);
+  color: var(--primary);
+  margin-bottom: 1.4rem;
+}
+
+.badge-icon {
+  font-size: 0.8rem;
+}
+
+.hero-title {
+  font-size: clamp(2.3rem, 4vw, 3.4rem);
+  letter-spacing: -0.06em;
+  line-height: 1.03;
+  margin: 0 0 1.25rem;
+}
+
+.hero-title span:first-child {
+  display: block;
+  font-size: 0.95rem;
+  color: var(--muted-foreground);
+  margin-bottom: 0.4rem;
+}
+
+.hero-name {
+  display: inline-block;
+  background: linear-gradient(to right, #1d4ed8, #2563eb);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero-headline {
+  margin: 0 0 0.5rem;
+  color: var(--primary);
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--tracking-tight);
+}
+
+.hero-subtitle {
+  margin: 0 0 0.8rem;
+  color: var(--muted-foreground);
+  font-size: var(--text-base);
+}
+
+.hero-description {
+  margin: 0 0 1.75rem;
+  color: var(--muted-foreground);
+  font-size: 0.95rem;
+}
+
+.highlight {
+  color: var(--primary);
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.75rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition:
+    background var(--default-transition-duration) var(--default-transition-timing-function),
+    color var(--default-transition-duration) var(--default-transition-timing-function),
+    border-color var(--default-transition-duration) var(--default-transition-timing-function),
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  box-shadow: 0 1px 3px rgba(37, 99, 235, 0.3);
+}
+
+.btn-primary:hover {
+  background: color-mix(in oklab, var(--primary) 90%, black);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+}
+
+.btn-outline {
+  border-color: color-mix(in oklab, var(--primary) 30%, transparent);
+  color: var(--foreground);
+  background: color-mix(in oklab, var(--background) 80%, transparent);
+  backdrop-filter: blur(8px);
+}
+
+.btn-outline:hover {
+  border-color: color-mix(in oklab, var(--primary) 50%, transparent);
+  background: color-mix(in oklab, var(--accent) 20%, transparent);
+}
+
+.btn-ghost {
+  border-color: var(--border);
+  background: transparent;
+  font-size: 0.8rem;
+  padding-inline: 0.9rem;
+}
+
+.btn-ghost:hover {
+  background: oklch(.985 0 0);
+}
+
+.btn-small {
+  font-size: 0.8rem;
+  padding: 0.5rem 1rem;
+}
+
+.btn-full {
+  width: 100%;
+}
+
+.hero-social {
+  display: flex;
+  gap: 0.6rem;
+  margin-bottom: 2rem;
+}
+
+.icon-button {
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: color-mix(in oklab, var(--background) 80%, transparent);
+  backdrop-filter: blur(8px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  color: var(--foreground);
+  transition:
+    background var(--default-transition-duration) var(--default-transition-timing-function),
+    border-color var(--default-transition-duration) var(--default-transition-timing-function),
+    transform 0.15s ease;
+}
+
+.icon-button:hover {
+  border-color: color-mix(in oklab, var(--primary) 50%, transparent);
+  background: color-mix(in oklab, var(--accent) 20%, transparent);
+  transform: translateY(-1px);
+}
+
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+.stat-number {
+  font-size: 1.35rem;
+  font-weight: var(--font-weight-semibold);
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: var(--muted-foreground);
+}
+
+.hero-image-wrapper {
+  position: relative;
+  justify-self: center;
+}
+
+.hero-image-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 20% 0, color-mix(in oklab, var(--accent) 20%, transparent) 0, transparent 60%),
+    radial-gradient(circle at 80% 100%, rgba(148, 163, 184, 0.2), transparent 70%);
+  filter: blur(24px);
+  opacity: 0.8;
+}
+
+.hero-image-card {
+  position: relative;
+  width: min(18rem, 70vw);
+  aspect-ratio: 1 / 1;
+  border-radius: 999px;
+  overflow: hidden;
+  border: 4px solid color-mix(in oklab, var(--background) 80%, transparent);
+  box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.15), 0 2px 4px -2px rgba(15, 23, 42, 0.15);
+  background: oklch(.985 0 0);
+}
+
+.hero-image-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform-origin: center;
+  transition: transform 4s ease-out;
+}
+
+.hero-image-card:hover img {
+  transform: scale(1.05);
+}
+
+.hero-availability {
+  position: absolute;
+  bottom: 1.6rem;
+  right: 1rem;
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid rgba(34, 197, 94, 0.4);
+  background: color-mix(in oklab, var(--background) 95%, transparent);
+  backdrop-filter: blur(8px);
+  font-size: var(--text-xs);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.15), 0 2px 4px -2px rgba(15, 23, 42, 0.15);
+}
+
+.hero-availability .dot {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 999px;
+  background: var(--color-green-500);
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--color-green-500) 20%, transparent);
+}
+
+.hero-scroll {
+  position: relative;
+  z-index: 1;
+  margin-top: 3rem;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--muted-foreground);
+}
+
+.card {
+  background: var(--card);
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--border);
+  padding: 1.5rem 1.4rem;
+  box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.06);
+}
+
+.card-title {
+  font-size: 1.05rem;
+  margin: 0 0 1rem;
+}
+
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.badge:not(.badge-available) {
+  border-radius: 999px;
+  padding: 0.25rem 0.65rem;
+  border-width: 0;
+  background: oklch(.985 0 0);
+  color: var(--foreground);
+  font-size: var(--text-xs);
+}
+
+.badge-outline {
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--foreground);
+}
+
+.muted {
+  color: var(--muted-foreground);
+  font-size: 0.9rem;
+}
+
+.accent {
+  color: var(--primary);
+  font-size: 0.9rem;
+  margin-top: 0.3rem;
+}
+
+.stacked-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.experience-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.25rem;
+  margin-bottom: 0.85rem;
+}
+
+.experience-header h3 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.exp-bullets {
+  margin: 0 0 1rem;
+  padding-left: 1.25rem;
+  font-size: 0.9rem;
+  color: var(--muted-foreground);
+}
+
+.exp-bullets li {
+  margin-bottom: 0.35rem;
+}
+
+.exp-bullets li:last-child {
+  margin-bottom: 0;
+}
+
+.experience-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  font-size: 0.8rem;
+  color: var(--muted-foreground);
+  text-align: right;
+}
+
+.project-card {
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.project-image img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  transform-origin: center;
+  transition: transform 0.5s ease;
+}
+
+.project-card:hover .project-image img {
+  transform: scale(1.05);
+}
+
+.project-body {
+  padding: 1.4rem 1.4rem 1.6rem;
+}
+
+.project-body h3 {
+  margin: 0 0 0.7rem;
+  font-size: 1.05rem;
+}
+
+.project-actions {
+  display: flex;
+  gap: 0.7rem;
+  margin-top: 1.2rem;
+}
+
+.contact-details {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.contact-item h3 {
+  margin: 0 0 0.4rem;
+  font-size: 0.95rem;
+}
+
+.contact-form-card h3 {
+  margin: 0 0 1.1rem;
+  font-size: 1.05rem;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  border-radius: 0.7rem;
+  border: 1px solid var(--border);
+  background: oklch(.985 0 0);
+  padding: 0.55rem 0.8rem;
+  color: var(--foreground);
+  font-size: 0.9rem;
+  outline: none;
+  transition:
+    border-color var(--default-transition-duration) var(--default-transition-timing-function),
+    box-shadow var(--default-transition-duration) var(--default-transition-timing-function);
+  resize: vertical;
+}
+
+.contact-form input::placeholder,
+.contact-form textarea::placeholder {
+  color: var(--muted-foreground);
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px color-mix(in oklab, var(--primary) 20%, transparent);
+}
+
+.footer {
+  border-top: 1px solid var(--border);
+  padding: 2.5rem 0 3rem;
+  background: oklch(.985 0 0);
+}
+
+.footer .container {
+  text-align: center;
+}
+
+.footer h3 {
+  margin: 0 0 0.4rem;
+  letter-spacing: var(--tracking-tight);
+}
+
+.footer .small {
+  font-size: 0.78rem;
+}
+
+@media (max-width: 900px) {
+  .hero-inner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .hero-image-wrapper {
+    order: -1;
+  }
+
+  .hero {
+    padding-top: 5.5rem;
+  }
+
+  .hero-stats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .contact-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 720px) {
+  .nav-inner {
+    height: auto;
+    padding-top: 0.6rem;
+    padding-bottom: 0.6rem;
+  }
+
+  .nav-links {
+    position: absolute;
+    inset-inline: 0;
+    top: 100%;
+    padding: 0.75rem 1.5rem 1rem;
+    background: color-mix(in oklab, var(--background) 98%, transparent);
+    border-bottom: 1px solid var(--border);
+    flex-direction: column;
+    align-items: flex-start;
+    transform-origin: top;
+    transform: scaleY(0.8);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition:
+      opacity 0.16s ease,
+      transform 0.16s ease,
+      visibility 0.16s;
+    font-size: 0.9rem;
+    gap: 0.75rem;
+  }
+
+  .nav-links-open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: scaleY(1);
+  }
+
+  .nav-toggle {
+    display: flex;
+  }
+
+  .hero-content {
+    max-width: none;
+  }
+
+  .hero-stats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .form-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .section {
+    padding: 4.5rem 0;
+  }
+
+  .hero {
+    padding-top: 5rem;
+  }
+
+  .hero-title {
+    font-size: 2.15rem;
+  }
+
+  .hero-stats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  .card {
+    border-radius: 0.75rem;
+  }
+}
+
+
+</style>
+  </head>
+  <body>
+    <div class="page">
+      <nav class="nav">
+  <div class="nav-inner container">
+    <div class="nav-brand">Yoweli Kachala</div>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <div class="nav-links" id="navLinks">
+      <a href="#home">Home</a>
+      <a href="#skills">Skills</a>
+      <a href="#experience">Experience</a>
+      <a href="#projects">Projects</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </div>
+</nav>
+
+      <main>
+  <section id="home" class="section hero">
+  <div class="hero-bg"></div>
+  <div class="hero-inner container">
+    <div class="hero-content">
+      <h1 class="hero-title">
+        <span></span>
+        <span class="hero-name">Yoweli Kachala</span>
+      </h1>
+      <p class="hero-headline">Senior Systems Architect &amp; Backend Engineer with 15+ years of experience building secure, high-availability systems.</p>
+      <p class="hero-subtitle">
+        <span class="highlight">5+ years</span>
+        of expertise.
+      </p>
+      <p class="hero-description">Senior Systems Architect Backend Engineer Senior Systems Architect &amp; Backend Engineer with 15+ years of experience building secure, high-availability systems across Fintech, Health Tech, Government, and Global Enterprise environments (LG, Samsung, MTN). Specialised in transactional systems, payroll platforms, subscription billing logic, and scalable API design. Proven track record in architectural recovery, having fast-tracked a 5-year stalled national system to delivery within 12 months. Expert in high-volume performance, recently reducing processing latency by 88% and doubling operational capacity through strategic automation. Deeply proficient in Laravel/PHP 8+, AWS infrastructure, and CI/CD, with advanced expertise in Financial ML (LSTM/GRU) and ONNX-based production pipelines.</p>
+      <div class="hero-actions">
+        <a href="cv.pdf" target="_blank" class="btn btn-primary">Download Resume</a>
+        <a href="#projects" class="btn btn-outline">View My Work</a>
+      </div>
+      <div class="hero-social">
+        <a href="#" aria-label="GitHub" class="icon-button">GH</a>
+        <a href="#" aria-label="LinkedIn" class="icon-button">in</a>
+        <a href="#contact" aria-label="Email" class="icon-button">@</a>
+      </div>
+    </div>
+    <div class="hero-image-wrapper">
+      <div class="hero-image-glow"></div>
+      <div class="hero-image-card">
+        <img src="img/985991.jpg" alt="Yoweli Kachala - Senior Systems Architect &amp; Backend Engineer with 15+ years of experience building secure, high-availability systems." />
+        <div class="hero-availability">
+          <span class="dot"></span>
+          Available for hire
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <section id="skills" class="section section-alt">
+  <div class="container">
+    <header class="section-header">
+      <h2>Technical Skills</h2>
+      <p>
+        Comprehensive expertise across modern development stack with focus on scalable web applications and DevOps practices.
+      </p>
+    </header>
+
+    <div class="grid skills-grid">
+      <article class="card">
+          <h3 class="card-title">Programming Languages</h3>
+          <div class="badges"><span class="badge">PHP</span><span class="badge">Python</span><span class="badge">Swift</span><span class="badge">Blade</span><span class="badge">MQL5</span><span class="badge">HTML</span><span class="badge">Java</span><span class="badge">CSS</span><span class="badge">JavaScript</span><span class="badge">Hack</span></div>
+        </article>
+      <article class="card">
+          <h3 class="card-title">DevOps &amp; Tools</h3>
+          <div class="badges"><span class="badge">Vite</span><span class="badge">Docker</span><span class="badge">Dockerfile</span><span class="badge">CMake</span><span class="badge">Makefile</span><span class="badge">Batchfile</span></div>
+        </article>
+      <article class="card">
+          <h3 class="card-title">JavaScript Libraries &amp; Frameworks</h3>
+          <div class="badges"><span class="badge">Vue</span><span class="badge">React</span></div>
+        </article>
+      <article class="card">
+          <h3 class="card-title">Web Frameworks</h3>
+          <div class="badges"><span class="badge">DockerCompose</span><span class="badge">Flask</span><span class="badge">Express</span><span class="badge">Stylus</span></div>
+        </article>
+      <article class="card">
+          <h3 class="card-title">Backend as a Service</h3>
+          <div class="badges"><span class="badge">—</span></div>
+        </article>
+      <article class="card">
+          <h3 class="card-title">Testing</h3>
+          <div class="badges"><span class="badge">—</span></div>
+        </article>
+    </div>
+
+    <header class="section-header" style="margin-top: 3rem;">
+      <h2>Skill Distribution</h2>
+      <p>Language and framework usage across public repositories (by code percentage).</p>
+    </header>
+    <div class="skill-distribution">
+<div class="skill-distribution-row">
+      <span class="skill-distribution-label">PHP</span>
+      <div class="skill-distribution-bar-wrap">
+        <div class="skill-distribution-bar" style="width: 100%"></div>
+      </div>
+      <span class="skill-distribution-pct">53.6%</span>
+    </div>
+<div class="skill-distribution-row">
+      <span class="skill-distribution-label">Python</span>
+      <div class="skill-distribution-bar-wrap">
+        <div class="skill-distribution-bar" style="width: 27%"></div>
+      </div>
+      <span class="skill-distribution-pct">14.4%</span>
+    </div>
+<div class="skill-distribution-row">
+      <span class="skill-distribution-label">Swift</span>
+      <div class="skill-distribution-bar-wrap">
+        <div class="skill-distribution-bar" style="width: 23%"></div>
+      </div>
+      <span class="skill-distribution-pct">12.3%</span>
+    </div>
+<div class="skill-distribution-row">
+      <span class="skill-distribution-label">Vue</span>
+      <div class="skill-distribution-bar-wrap">
+        <div class="skill-distribution-bar" style="width: 11%"></div>
+      </div>
+      <span class="skill-distribution-pct">6.2%</span>
+    </div>
+<div class="skill-distribution-row">
+      <span class="skill-distribution-label">Blade</span>
+      <div class="skill-distribution-bar-wrap">
+        <div class="skill-distribution-bar" style="width: 11%"></div>
+      </div>
+      <span class="skill-distribution-pct">5.8%</span>
+    </div>
+<div class="skill-distribution-row">
+      <span class="skill-distribution-label">Vite</span>
+      <div class="skill-distribution-bar-wrap">
+        <div class="skill-distribution-bar" style="width: 7%"></div>
+      </div>
+      <span class="skill-distribution-pct">4.0%</span>
+    </div>
+<div class="skill-distribution-row">
+      <span class="skill-distribution-label">MQL5</span>
+      <div class="skill-distribution-bar-wrap">
+        <div class="skill-distribution-bar" style="width: 7%"></div>
+      </div>
+      <span class="skill-distribution-pct">3.8%</span>
+    </div>
+<div class="skill-distribution-row">
+      <span class="skill-distribution-label">HTML</span>
+      <div class="skill-distribution-bar-wrap">
+        <div class="skill-distribution-bar" style="width: 5%"></div>
+      </div>
+      <span class="skill-distribution-pct">2.6%</span>
+    </div>
+<div class="skill-distribution-row">
+      <span class="skill-distribution-label">DockerCompose</span>
+      <div class="skill-distribution-bar-wrap">
+        <div class="skill-distribution-bar" style="width: 4%"></div>
+      </div>
+      <span class="skill-distribution-pct">2.0%</span>
+    </div>
+<div class="skill-distribution-row">
+      <span class="skill-distribution-label">Docker</span>
+      <div class="skill-distribution-bar-wrap">
+        <div class="skill-distribution-bar" style="width: 4%"></div>
+      </div>
+      <span class="skill-distribution-pct">2.0%</span>
+    </div>
+<div class="skill-distribution-row">
+      <span class="skill-distribution-label">Java</span>
+      <div class="skill-distribution-bar-wrap">
+        <div class="skill-distribution-bar" style="width: 3%"></div>
+      </div>
+      <span class="skill-distribution-pct">1.8%</span>
+    </div>
+<div class="skill-distribution-row">
+      <span class="skill-distribution-label">CSS</span>
+      <div class="skill-distribution-bar-wrap">
+        <div class="skill-distribution-bar" style="width: 2%"></div>
+      </div>
+      <span class="skill-distribution-pct">1.1%</span>
+    </div>
+<div class="skill-distribution-row">
+      <span class="skill-distribution-label">React</span>
+      <div class="skill-distribution-bar-wrap">
+        <div class="skill-distribution-bar" style="width: 2%"></div>
+      </div>
+      <span class="skill-distribution-pct">1.0%</span>
+    </div>
+<div class="skill-distribution-row">
+      <span class="skill-distribution-label">Flask</span>
+      <div class="skill-distribution-bar-wrap">
+        <div class="skill-distribution-bar" style="width: 2%"></div>
+      </div>
+      <span class="skill-distribution-pct">1.0%</span>
+    </div>
+    </div>
+
+    <figure class="skill-distribution-chart" aria-label="Skills and architectures">
+      <img src="skills_chart.png" alt="Skills and architectures across languages and repositories" loading="lazy" decoding="async" />
+    </figure>
+
+  </div>
+</section>
+
+  <section id="experience" class="section">
+  <div class="container">
+    <header class="section-header">
+      <h2>Professional Experience</h2>
+      <p>
+        Over 5 years of experience building scalable web applications and leading development teams in fast-paced environments.
+      </p>
+    </header>
+
+    <div class="stacked-cards">
+<article class="card">
+      <div class="experience-header">
+        <h3>Founder &amp; Senior iOS Architect (SwiftUI &amp; Firebase)</h3>
+        <div class="experience-meta">
+          <span>Nov 2025</span>
+        </div>
+      </div>
+      <p class="muted">CapeRidaz · City of Cape Town, Western Cape, South Africa</p>
+      <ul class="exp-bullets"><li>Implemented secure account deletion flow with clear UI confirmation in AccountTabView, aligning user data handling with emerging privacy expectations and app‑store guidelines</li><li>Added password reset functionality and improved login UX in LoginView, reducing friction for returning users and supporting better account recovery</li><li>Introduced role‑based access control for group management, adding a canEditGroups capability to user roles and updating GroupDetailView so only authorised users can manage groups</li><li>Maintained robust release discipline by incrementally updating the marketing version (3.0.4 → 3.0.5) and keeping project configuration aligned with shipped builds.</li></ul>
+    </article>
+<article class="card">
+      <div class="experience-header">
+        <h3>Senior Software Engineer (Native PHP)</h3>
+        <div class="experience-meta">
+          <span>Apr 2024 – Sep 2025</span>
+        </div>
+      </div>
+      <p class="muted">RoomRaccoon Hotel Tech · City of Cape Town, Western Cape, South Africa</p>
+      <ul class="exp-bullets"><li>Multi-Tenant SaaS Architecture: Created and optimised scalable backend services for a global SaaS platform, ensuring secure data isolation and performance across a diverse international client base - Database &amp; Transactional Performance: Lead the optimisation of complex transactional workflows and database operations, significantly reducing query latency and improving system throughput - International API Development: Created robust, scalable APIs to support market expansion, focusing on high availability and seamless integration for third-party partners - Agile &amp; Distributed Leadership: Collaborated within a cross-functional, distributed engineering team, driving high standards for code quality and sprint delivery in a fast-paced Agile environment</li></ul>
+    </article>
+<article class="card">
+      <div class="experience-header">
+        <h3>Founder &amp; Senior iOS Architect (SwiftUI &amp; Firebase) – CapeRidaz</h3>
+        <div class="experience-meta">
+          <span>Sep 2023 – Apr 2024</span>
+        </div>
+      </div>
+      <p class="muted">CapeEuc · Cape Town, Western Cape, South Africa</p>
+      <ul class="exp-bullets"><li>Lead engineer for CapeRidaz, a social ride-tracking app enabling EUC, bike, and micromobility riders to record, analyse, and share rides with a community - Launched end-to-end ride recording &amp; analytics: Designed and shipped GPS ride tracking with background location, media capture, and advanced analytics, supporting 10k+ recorded rides with real-time stats - Scaled real-time features on Firebase: Optimised Firestore data models and indexing for feed, chat, and live location, cutting read costs by ~30% while keeping core screens loading in &lt;200ms - Introduced advanced insights &amp; challenges: Built a challenge engine, leaderboards, and analytics/insight layer that increased weekly active riders by 25% and session length by 18% - Improved engagement via social &amp; sharing: Implemented social feed, comments, and ride/video sharing to external platforms, driving a 40% uplift in shared rides month-over-month - Delivered HealthKit integration: Integrated Apple Health/HealthKit sync (import/export of workouts) with robust privacy and permissions, helping &gt;60% of active users centralise their ride data - Architecture &amp; System Design: Defined MVVM architecture with dedicated Models, ViewModels, Services, and reusable Components, ensuring a modular, testable codebase - Feature Ownership: Owned core product verticals, including ride recording, analytics, challenges, route planning/sharing, and social feed, from design through release and iteration - Quality &amp; Reliability: Established coding standards, logging, and error handling patterns; profiled performance (maps, charts, video generation) and removed bottlenecks affecting scroll and load times</li></ul>
+    </article>
+<article class="card">
+      <div class="experience-header">
+        <h3>Senior Backend Engineer</h3>
+        <div class="experience-meta">
+          <span>Sep 2022 – Aug 2023</span>
+        </div>
+      </div>
+      <p class="muted">Emedis SA · Cape Town, Western Cape, South Africa</p>
+      <ul class="exp-bullets"><li>Engineered high-performance backend services for LG operations, managing complex logistics, inventory, and financial workflows - Designed and implemented reusable architectural blueprints, establishing a standardised framework that accelerated future system development across the organisation - Successfully blended diverse ERP-style modules, maintaining high data fidelity between inventory management and financial reporting systems</li></ul>
+    </article>
+<article class="card">
+      <div class="experience-header">
+        <h3>Senior Back End Developer</h3>
+        <div class="experience-meta">
+          <span>Sep 2021 – Aug 2022</span>
+        </div>
+      </div>
+      <p class="muted">FlexClub · Cape Town, Western Cape, South Africa</p>
+      <ul class="exp-bullets"><li>Subscription Ecosystem: Architectured mission-critical backend services managing the full subscription lifecycle, including complex recurring billing logic and automated renewal workflows - System Resiliency: Engineered enhancements to transactional reliability, ensuring 100% data consistency for high-volume financial operations - DevOps Maturity: Standardised deployment pipelines and documentation, significantly increasing production stability and reducing &quot;time-to-market&quot; for new marketplace features - Workflow Standardisation: Audited and refined marketplace architectures to ensure cross-platform consistency and a seamless user experience across the service suite</li></ul>
+    </article>
+<article class="card">
+      <div class="experience-header">
+        <h3>Senior Open Source Backend Engineer</h3>
+        <div class="experience-meta">
+          <span>May 2020 – Jul 2021</span>
+        </div>
+      </div>
+      <p class="muted">City of Cape Town · Cape Town, Western Cape, South Africa</p>
+      <ul class="exp-bullets"><li>Healthcare Interoperability: Designed and implemented the backend architecture for a large-scale pharmacy system, ensuring seamless integration with diverse clinical platforms - Data Integrity &amp; Compliance: Engineered robust data synchronisation protocols to maintain strict data integrity and clinical accuracy across interconnected healthcare modules - System Synergy: Facilitated complex API integrations between pharmaceutical inventory and patient clinical records to streamline the dispensing workflow - Regulatory Alignment: Architecture backend services with a focus on security and auditability, critical for handling sensitive medical and pharmaceutical data</li></ul>
+    </article>
+<article class="card">
+      <div class="experience-header">
+        <h3>Senior Software Development Engineer</h3>
+        <div class="experience-meta">
+          <span>Dec 2019 – May 2020</span>
+        </div>
+      </div>
+      <p class="muted">1-grid · Cape Town Area, South Africa</p>
+      <ul class="exp-bullets"><li>Fintech &amp; Billing Integration: Architecture custom modules to extend the WHMCS billing platform, automating complex financial workflows for enterprise clients - Secure Payment Processing: Successfully integrated the PayFast Payment Gateway, ensuring secure, encrypted transaction processing and PCI-DSS compliance - Automated Domain Workflows: Engineered API-based domain verification and provisioning workflows, reducing manual intervention and accelerating service delivery - Financial Accuracy: Audited and refined automated billing logic, significantly improving billing accuracy and operational reliability for recurring revenue streams</li></ul>
+    </article>
+<article class="card">
+      <div class="experience-header">
+        <h3>Senior Backend &amp; Frontend Engineer</h3>
+        <div class="experience-meta">
+          <span>Feb 2019 – Nov 2019</span>
+        </div>
+      </div>
+      <p class="muted">GoMetro · Cape Town Area, South Africa</p>
+      <ul class="exp-bullets"><li>Architectured robust backend services for a comprehensive fleet management platform, focusing on scalability and data consistency - Architected and built a real-time vehicle tracking module using ReactJS, enabling live monitoring of fleet assets with high precision using a PHP/Laravel backend - Significantly improved CI/CD pipelines, leading to higher production deployment stability across staging, QA, and production environments, decreasing deployment failures by 70%</li></ul>
+    </article>
+<article class="card">
+      <div class="experience-header">
+        <h3>Senior Enterprise Systems Developer</h3>
+        <div class="experience-meta">
+          <span>Jan 2016 – Feb 2019</span>
+        </div>
+      </div>
+      <p class="muted">Double Eye · Cape Town, Western Cape, South Africa</p>
+      <ul class="exp-bullets"><li>Successfully guided and delivered 7 enterprise-scale projects across the telecommunications and public sectors, serving as the Technical Lead for 2 high-priority initiatives</li><li>Standardised the QA workflow and environment parity, reducing &#039;it works on my machine&#039; bugs and accelerating the release cycle - Led the development of a critical UK National Health Service (NHS) health system initiative, ensuring backend solutions met stringent compliance and data integrity standards - Engineered and supported robust backend systems for tier-1 telecommunications providers, including Samsung, Cell C, Glocel, and MTN - Streamlined development cycles by implementing CI/CD integration and automated QA workflows, reducing manual testing overhead and improving release stability</li></ul>
+    </article>
+<article class="card">
+      <div class="experience-header">
+        <h3>Lead Developer (Systems Architect &amp; Backend Engineer)</h3>
+        <div class="experience-meta">
+          <span>Mar 2012 – Dec 2015</span>
+        </div>
+      </div>
+      <p class="muted">SchoolAlert · Cape Town Area, South Africa</p>
+      <ul class="exp-bullets"><li>Managed platform re-architecture of a high-volume messaging platform, integrating SendGrid (bulk mail), Infobip (SMS), and USSD services - Re-engineered processing logic to reduce message delivery latency by 88% (from 3 hours to under 20 minutes) - Automated SMS failure handling and support workflows, reducing operational costs by 25% and enabling the successful merger of two regional offices - Scaled backend automation to the point that manual call centre functions were consolidated, resulting in significant overhead reduction and streamlined operations - Architectured a customer support module that doubled staff capacity, increasing daily client visits from 2 to 4 per person</li></ul>
+    </article>
+<article class="card">
+      <div class="experience-header">
+        <h3>Early Career – Systems &amp; Backend Engineering</h3>
+        <div class="experience-meta">
+          <span>Jan 2006 – Feb 2012</span>
+        </div>
+      </div>
+      <p class="muted">Intu2Ko Complete IT Services &amp; Globe Computer Systems LTD · Cape Town, Western Cape, South Africa</p>
+      <ul class="exp-bullets"><li>Project Recovery: Rescued a stalled tender processing system that had been delayed for 5 years; fast-tracked development to deliver functional demos within the first 12 months - Platform Recovery: Rescued a stalled tender processing system delayed for 5 years, fast-tracking development to deliver functional demos within 12 months - Operational Efficiency: Engineered a customer support system that doubled field productivity, increasing client visit capacity from 2 to 4 per person daily - Public Sector Infrastructure: Developed and deployed national-scale payroll and HR systems for the Government of Malawi - Platform Engineering: Built backend components for B2B trading and insurance platforms, managing end-to-end hosting and infrastructure - Leadership: Took full ownership of deployments and user training within the first year of tenure</li></ul>
+    </article>
+    </div>
+
+    <header class="section-header" style="margin-top: 3rem;">
+      <h2>Education</h2>
+      <p>
+        Formal education and professional certifications underpinning my experience in networking, information systems, and software development.
+      </p>
+    </header>
+
+    <div class="stacked-cards">
+<article class="card">
+      <h3 class="card-title">B-Tech Degree In Information Technology</h3>
+      <p class="muted">Cape Peninsula University of Technology</p>
+    </article>
+<article class="card">
+      <h3 class="card-title">Management Information Systems</h3>
+      <p class="muted">University of Malawi (Polytechnic)</p>
+    </article>
+    </div>
+
+    <header class="section-header" style="margin-top: 3rem;">
+      <h2>Certifications</h2>
+    </header>
+
+    <div class="stacked-cards">
+<article class="card">
+      <h3 class="card-title">Cisco Certified Networking Associate</h3>
+      <p class="muted">Cisco · Cisco<br/>Issued: Nov 2005</p>
+    </article>
+<article class="card">
+      <h3 class="card-title">PHP</h3>
+      <p class="muted">TestDome · TestDome<br/>Issued: Jan 2019</p>
+    </article>
+    </div>
+  </div>
+</section>
+
+  <section id="projects" class="section section-alt">
+  <div class="container">
+    <header class="section-header">
+      <h2>Featured Projects</h2>
+      <p>
+        A selection of projects that demonstrate expertise in full-stack development and modern DevOps practices.
+      </p>
+    </header>
+
+    <div class="grid projects-grid">
+<article class="card project-card">
+      <div class="project-image">
+        <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&h=400&fit=crop" alt="view-bridge" />
+      </div>
+      <div class="project-body">
+        <h3><a href="https://github.com/joel767443/view-bridge" target="_blank" rel="noopener noreferrer">view-bridge</a></h3>
+        <p class="muted">No README summary available.</p>
+        <div class="badges"><span class="badge">PHP</span></div>
+      </div>
+    </article>
+<article class="card project-card">
+      <div class="project-image">
+        <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&h=400&fit=crop" alt="router-symfony" />
+      </div>
+      <div class="project-body">
+        <h3><a href="https://github.com/joel767443/router-symfony" target="_blank" rel="noopener noreferrer">router-symfony</a></h3>
+        <p class="muted">No README summary available.</p>
+        <div class="badges"><span class="badge">PHP</span></div>
+      </div>
+    </article>
+<article class="card project-card">
+      <div class="project-image">
+        <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&h=400&fit=crop" alt="rate-limit" />
+      </div>
+      <div class="project-body">
+        <h3><a href="https://github.com/joel767443/rate-limit" target="_blank" rel="noopener noreferrer">rate-limit</a></h3>
+        <p class="muted">No README summary available.</p>
+        <div class="badges"><span class="badge">PHP</span></div>
+      </div>
+    </article>
+<article class="card project-card">
+      <div class="project-image">
+        <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&h=400&fit=crop" alt="queue-redis" />
+      </div>
+      <div class="project-body">
+        <h3><a href="https://github.com/joel767443/queue-redis" target="_blank" rel="noopener noreferrer">queue-redis</a></h3>
+        <p class="muted">No README summary available.</p>
+        <div class="badges"><span class="badge">PHP</span></div>
+      </div>
+    </article>
+<article class="card project-card">
+      <div class="project-image">
+        <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&h=400&fit=crop" alt="openapi" />
+      </div>
+      <div class="project-body">
+        <h3><a href="https://github.com/joel767443/openapi" target="_blank" rel="noopener noreferrer">openapi</a></h3>
+        <p class="muted">No README summary available.</p>
+        <div class="badges"><span class="badge">PHP</span></div>
+      </div>
+    </article>
+<article class="card project-card">
+      <div class="project-image">
+        <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&h=400&fit=crop" alt="observability" />
+      </div>
+      <div class="project-body">
+        <h3><a href="https://github.com/joel767443/observability" target="_blank" rel="noopener noreferrer">observability</a></h3>
+        <p class="muted">No README summary available.</p>
+        <div class="badges"><span class="badge">PHP</span></div>
+      </div>
+    </article>
+<article class="card project-card">
+      <div class="project-image">
+        <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&h=400&fit=crop" alt="middleware" />
+      </div>
+      <div class="project-body">
+        <h3><a href="https://github.com/joel767443/middleware" target="_blank" rel="noopener noreferrer">middleware</a></h3>
+        <p class="muted">No README summary available.</p>
+        <div class="badges"><span class="badge">PHP</span></div>
+      </div>
+    </article>
+<article class="card project-card">
+      <div class="project-image">
+        <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&h=400&fit=crop" alt="jwt-auth" />
+      </div>
+      <div class="project-body">
+        <h3><a href="https://github.com/joel767443/jwt-auth" target="_blank" rel="noopener noreferrer">jwt-auth</a></h3>
+        <p class="muted">No README summary available.</p>
+        <div class="badges"><span class="badge">PHP</span></div>
+      </div>
+    </article>
+<article class="card project-card">
+      <div class="project-image">
+        <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&h=400&fit=crop" alt="messenger-bridge" />
+      </div>
+      <div class="project-body">
+        <h3><a href="https://github.com/joel767443/messenger-bridge" target="_blank" rel="noopener noreferrer">messenger-bridge</a></h3>
+        <p class="muted">No README summary available.</p>
+        <div class="badges"><span class="badge">PHP</span></div>
+      </div>
+    </article>
+<article class="card project-card">
+      <div class="project-image">
+        <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&h=400&fit=crop" alt="http-kernel" />
+      </div>
+      <div class="project-body">
+        <h3><a href="https://github.com/joel767443/http-kernel" target="_blank" rel="noopener noreferrer">http-kernel</a></h3>
+        <p class="muted">No README summary available.</p>
+        <div class="badges"><span class="badge">PHP</span></div>
+      </div>
+    </article>
+<article class="card project-card">
+      <div class="project-image">
+        <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&h=400&fit=crop" alt="framework-cli" />
+      </div>
+      <div class="project-body">
+        <h3><a href="https://github.com/joel767443/framework-cli" target="_blank" rel="noopener noreferrer">framework-cli</a></h3>
+        <p class="muted">No README summary available.</p>
+        <div class="badges"><span class="badge">PHP</span></div>
+      </div>
+    </article>
+<article class="card project-card">
+      <div class="project-image">
+        <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&h=400&fit=crop" alt="form-request-validation" />
+      </div>
+      <div class="project-body">
+        <h3><a href="https://github.com/joel767443/form-request-validation" target="_blank" rel="noopener noreferrer">form-request-validation</a></h3>
+        <p class="muted">No README summary available.</p>
+        <div class="badges"><span class="badge">PHP</span></div>
+      </div>
+    </article>
+    </div>
+  </div>
+</section>
+
+  <section id="contact" class="section">
+  <div class="container">
+    <header class="section-header">
+      <h2>Let's Work Together</h2>
+      <p>
+        Ready to bring your next project to life? Let's discuss how my expertise can help achieve your goals.
+      </p>
+    </header>
+
+    <div class="grid contact-grid">
+      <div class="contact-details">
+        <article class="card">
+          <div class="contact-item">
+            <h3>Email</h3>
+            <p class="muted">your@email.com</p>
+          </div>
+        </article>
+        <article class="card">
+          <div class="contact-item">
+            <h3>Phone</h3>
+            <p class="muted">—</p>
+          </div>
+        </article>
+        <article class="card">
+          <div class="contact-item">
+            <h3>Location</h3>
+            <p class="muted">Cape Town, South Africa</p>
+          </div>
+        </article>
+      </div>
+
+      <article class="card contact-form-card">
+        <h3>Send a Message</h3>
+        <form class="contact-form" novalidate>
+          <div class="form-row">
+            <input type="text" name="name" placeholder="Your Name" />
+            <input type="email" name="email" placeholder="Your Email" />
+          </div>
+          <input type="text" name="subject" placeholder="Subject" />
+          <textarea name="message" rows="5" placeholder="Your Message"></textarea>
+          <button type="submit" class="btn btn-primary btn-full">
+            Send Message
+          </button>
+        </form>
+      </article>
+    </div>
+
+  </div>
+</section>
+
+      </main>
+
+      <footer class="footer">
+  <div class="container">
+    <h3>Yoweli Kachala</h3>
+    <p class="muted">
+      Senior Software Engineer | Full-Stack Developer | DevOps Enthusiast
+    </p>
+  </div>
+</footer>
+
+    </div>
+
+    <script>
+      const navToggle = document.getElementById('navToggle');
+      const navLinks = document.getElementById('navLinks');
+
+      if (navToggle && navLinks) {
+        navToggle.addEventListener('click', () => {
+          navLinks.classList.toggle('nav-links-open');
+        });
+      }
+    </script>
+  </body>
+</html>
