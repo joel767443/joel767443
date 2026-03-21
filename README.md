@@ -21,12 +21,12 @@ Senior Systems Architect Backend Engineer Senior Systems Architect & Backend Eng
 | Event-Driven Architecture | 8 | 11.9% |
 | Pipeline Architecture | 6 | 9.0% |
 | Data Architecture | 3 | 4.5% |
-| Domain-Driven Design | 3 | 4.5% |
 | Microservices | 3 | 4.5% |
+| Domain-Driven Design | 3 | 4.5% |
 | Multi Tenant SaaS | 2 | 3.0% |
 | Actor Model | 2 | 3.0% |
-| Blockchain Architecture | 1 | 1.5% |
 | Jamstack | 1 | 1.5% |
+| Blockchain Architecture | 1 | 1.5% |
 | API Gateway | 1 | 1.5% |
 
 ---
