@@ -11,7 +11,7 @@ Senior Systems Architect Backend Engineer Senior Systems Architect & Backend Eng
 
 *Inferred patterns detected across repositories*
 
-*Detected across 24 repositories.*
+*Detected across 67 repositories.*
 
 *No architecture patterns detected yet.*
 
@@ -21,16 +21,16 @@ Senior Systems Architect Backend Engineer Senior Systems Architect & Backend Eng
 *Weighted by code volume across GitHub*
 
 **Languages**  
-**PHP** · *HTML* · *JavaScript* · *Python* · *Blade* · *Hack* · *CSS* · *Shell* · *TypeScript*
+**PHP** · **Python** · **Swift** · *Blade* · *HTML* · *MQL5* · *JavaScript* · *Java* · *CSS* · *Hack* · *TypeScript* · *PowerShell* · *C++* · *SCSS* · *Shell* · *Less* · *Roff*
 
 **Tools**  
-*—*
+*Vite* · *Docker* · *Dockerfile* · *CMake* · *Batchfile* · *Makefile*
 
 **Frontend libraries and frameworks**  
-*Vue*
+*Vue* · *React*
 
 **Other**  
-*Express* · *Prisma* · *EJS*
+*DockerCompose* · *Express* · *Prisma* · *Flask* · *EJS* · *Stylus*
 
 ---
 ## Skill distribution
@@ -125,7 +125,7 @@ TestDome · *Issued Jan 2019*
 *Public repositories, summarized from GitHub*
 
 - **[joel767443](https://github.com/joel767443/joel767443)** — No README summary available.  
-  *Tech:* HTML (75.85%), PHP (24.15%)
+  *Tech:* HTML (75.62%), PHP (24.38%)
 - **[github-personal-branding](https://github.com/joel767443/github-personal-branding)** — No README summary available.  
   *Tech:* JavaScript (75.01%), CSS (11.28%), HTML (6.71%), EJS (6.48%)
 - **[view-bridge](https://github.com/joel767443/view-bridge)** — No README summary available.  
