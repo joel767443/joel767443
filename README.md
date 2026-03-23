@@ -125,7 +125,7 @@ TestDome · *Issued Jan 2019*
 *Public repositories, summarized from GitHub*
 
 - **[joel767443](https://github.com/joel767443/joel767443)** — No README summary available.  
-  *Tech:* HTML (75.62%), PHP (24.38%)
+  *Tech:* HTML (75.85%), PHP (24.15%)
 - **[github-personal-branding](https://github.com/joel767443/github-personal-branding)** — No README summary available.  
   *Tech:* JavaScript (75.01%), CSS (11.28%), HTML (6.71%), EJS (6.48%)
 - **[view-bridge](https://github.com/joel767443/view-bridge)** — No README summary available.  
