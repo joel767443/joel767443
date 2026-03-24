@@ -20,14 +20,14 @@ Senior Systems Architect Backend Engineer Senior Systems Architect & Backend Eng
 | AI-Native Architecture | 16 | 23.9% |
 | Event-Driven Architecture | 8 | 11.9% |
 | Pipeline Architecture | 7 | 10.4% |
+| Domain-Driven Design | 3 | 4.5% |
 | Data Architecture | 3 | 4.5% |
 | Microservices | 3 | 4.5% |
-| Domain-Driven Design | 3 | 4.5% |
 | Multi Tenant SaaS | 3 | 4.5% |
 | Actor Model | 2 | 3.0% |
+| Blockchain Architecture | 1 | 1.5% |
 | API Gateway | 1 | 1.5% |
 | Jamstack | 1 | 1.5% |
-| Blockchain Architecture | 1 | 1.5% |
 
 ---
 ## Technical skills
@@ -35,16 +35,16 @@ Senior Systems Architect Backend Engineer Senior Systems Architect & Backend Eng
 *Weighted by code volume across GitHub*
 
 **Languages**  
-*—*
+**PHP** · **Python** · **Swift** · *Blade* · *HTML* · *MQL5* · *JavaScript* · *Java* · *CSS* · *Hack* · *TypeScript* · *PowerShell* · *C++* · *SCSS* · *Shell* · *Less* · *Roff*
 
 **Tools**  
-*—*
+*Vite* · *Docker* · *Dockerfile* · *CMake* · *Batchfile* · *Makefile*
 
 **Frontend libraries and frameworks**  
-*—*
+*Vue* · *React*
 
 **Other**  
-*—*
+*Express* · *DockerCompose* · *Prisma* · *Flask* · *EJS* · *Stylus*
 
 ---
 ## Skill distribution
@@ -139,7 +139,7 @@ TestDome · *Issued Jan 2019*
 *Public repositories, summarized from GitHub*
 
 - **[joel767443](https://github.com/joel767443/joel767443)** — No README summary available.  
-  *Tech:* HTML (75.85%), PHP (24.15%)
+  *Tech:* HTML (74.04%), PHP (25.96%)
 - **[github-personal-branding](https://github.com/joel767443/github-personal-branding)** — No README summary available.  
   *Tech:* JavaScript (75.01%), CSS (11.28%), HTML (6.71%), EJS (6.48%)
 - **[view-bridge](https://github.com/joel767443/view-bridge)** — No README summary available.  
