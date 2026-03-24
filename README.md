@@ -44,7 +44,7 @@ Senior Systems Architect Backend Engineer Senior Systems Architect & Backend Eng
 *Vue* · *React*
 
 **Other**  
-*Express* · *DockerCompose* · *Prisma* · *Flask* · *EJS* · *Stylus*
+*DockerCompose* · *Express* · *Prisma* · *Flask* · *EJS* · *Stylus*
 
 ---
 ## Skill distribution
