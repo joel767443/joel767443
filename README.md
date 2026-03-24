@@ -20,14 +20,14 @@ Senior Systems Architect & Backend Engineer with 15+ years of experience buildin
 | AI-Native Architecture | 16 | 23.9% |
 | Event-Driven Architecture | 8 | 11.9% |
 | Pipeline Architecture | 7 | 10.4% |
-| Multi Tenant SaaS | 3 | 4.5% |
 | Microservices | 3 | 4.5% |
 | Data Architecture | 3 | 4.5% |
+| Multi Tenant SaaS | 3 | 4.5% |
 | Domain-Driven Design | 3 | 4.5% |
 | Actor Model | 2 | 3.0% |
+| Blockchain Architecture | 1 | 1.5% |
 | API Gateway | 1 | 1.5% |
 | Jamstack | 1 | 1.5% |
-| Blockchain Architecture | 1 | 1.5% |
 
 ---
 ## Technical skills
